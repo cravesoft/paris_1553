@@ -1,1598 +1,789 @@
-// ── Shared Data for Middle-earth Map & Timeline ──────────────────────
+// ── Données pour la carte de Paris · Truschet et Hoyau (c.1553) ──────────
 
-// ── Map Dimensions ──────────────────────────────
-const IMG_W = 7680;
-const IMG_H = 4386;
+// ── Dimensions de l'image source ────────────────
+const IMG_W = 12736;
+const IMG_H = 8880;
 
-// ── Category Colors ─────────────────────────────
+// ── Couleurs par catégorie ───────────────────────
 const COLORS = {
-    silmarillion: '#9b59b6',
-    hobbit:       '#5b8fb9',
-    fellowship:   '#c9a435',
-    towers:       '#b85c38',
-    king:         '#6a9f5b',
-    appendix:     '#7f8c8d'
+    religious: '#5b8fb9',
+    royal:     '#c9a435',
+    civic:     '#6a9f5b',
+    bridge:    '#b85c38',
+    gate:      '#9b59b6',
+    place:     '#7f8c8d'
 };
 
 const CATEGORY_LABELS = {
-    silmarillion: 'The Silmarillion',
-    hobbit:       'The Hobbit',
-    fellowship:   'The Fellowship of the Ring',
-    towers:       'The Two Towers',
-    king:         'The Return of the King',
-    appendix:     'Appendices'
+    religious: 'Édifices religieux',
+    royal:     'Palais et résidences royales',
+    civic:     'Édifices civils',
+    bridge:    'Ponts',
+    gate:      'Portes et fortifications',
+    place:     'Quartiers et lieux notables'
 };
 
 const CATEGORY_ICONS = {
-    silmarillion: '\u2756',
-    hobbit:       '\u2302',
-    fellowship:   '\u2727',
-    towers:       '\u2694',
-    king:         '\u2655',
-    appendix:     '\u2637'
+    religious: '✝',
+    royal:     '♛',
+    civic:     '⚖',
+    bridge:    '⩋',
+    gate:      '⛩',
+    place:     '◎'
 };
 
-// ── SortKey system ──────────────────────────────
-// FA year 1-590 → sortKey = year
-// SA year 1-3441 → sortKey = 590 + year
-// TA year 1-3021 → sortKey = 4031 + year
-// Sub-year precision: add month/100 + day/10000
-
-// ── Event Data ──────────────────────────────────
+// ── Lieux ────────────────────────────────────────
 const events = [
-    // ── The Silmarillion ──
+
+    // ── Édifices religieux ──
     {
-        id: "cuivienen",
-        name: "Cuivi\u00e9nen \u2014 Awakening of the Elves",
-        category: 'silmarillion',
-        era: "FA", year: 1, sortKey: 0.5,
-        px: 7091, py: 1327,
-        description: "Cuivi\u00e9nen, the Water of Awakening, was a bay on the shores of the great inland Sea of Helcar in the far east of Middle-earth. Here the first Elves awoke under starlight, long before the rising of the Sun and Moon. The Valar discovered them and summoned them westward on the Great Journey to Valinor \u2014 though some refused the call and remained, becoming the Avari, the Unwilling.",
-        characters: "The first Elves, Orom\u00eb"
+        id: "notre_dame",
+        name: "Cathédrale Notre-Dame de Paris",
+        category: 'religious',
+        px: 7037, py: 4065,
+        description: "Chef-d'œuvre gothique dont la construction débuta en 1163 sous l'évêque Maurice de Sully, consacrée en 1345. Cœur spirituel de Paris et de la chrétienté française, siège de l'archevêché, lieu de célébrations royales et religieuses.",
+        quartier: "Île de la Cité"
     },
     {
-        id: "khazad-dum-awakening",
-        name: "Khazad-d\u00fbm \u2014 The Awakening of Durin",
-        category: 'silmarillion',
-        era: "FA", year: 1, sortKey: 1,
-        px: 4000, py: 1490,
-        description: "Durin the Deathless, eldest of the seven Fathers of the Dwarves, awoke at Mount Gundabad and wandered south to the Mirrormere. There he founded Khazad-d\u00fbm, the greatest mansion of the Dwarves, which endured through all the ages until the Balrog was awakened in its depths.",
-        characters: "Durin the Deathless"
+        id: "sainte_chapelle",
+        name: "Sainte-Chapelle",
+        category: 'religious',
+        px: 6842, py: 4903,
+        description: "Joyau de l'architecture gothique rayonnante, érigée entre 1242 et 1248 par Louis IX pour abriter la Couronne d'épines du Christ. Ses verrières de 15 mètres de haut composent la plus grande surface vitrée médiévale conservée.",
+        quartier: "Île de la Cité"
     },
     {
-        id: "ered-luin",
-        name: "Ered Luin \u2014 Nogrod & Belegost",
-        category: 'silmarillion',
-        era: "FA", year: 50, sortKey: 50,
-        px: 2192, py: 824,
-        description: "The Blue Mountains housed the great Dwarven cities of Nogrod and Belegost in the First Age. The Dwarves of Nogrod crafted the Nauglam\u00edr and later sacked Doriath to reclaim it. After the ruin of Beleriand, many Dwarves migrated east to Khazad-d\u00fbm.",
-        characters: "Durin's Folk, the Firebeards, the Broadbeams"
+        id: "saint_eustache",
+        name: "Église Saint-Eustache",
+        category: 'religious',
+        px: 4333, py: 5541,
+        description: "Entamée en 1532, cette vaste église gothique flamboyant du quartier des Halles était encore en construction en 1553. Dédiée à la paroisse des marchands et artisans du marché central, elle ne sera achevée qu'en 1637.",
+        quartier: "Les Halles, Rive Droite"
     },
     {
-        id: "forlindon",
-        name: "Forlindon \u2014 Northern Lindon",
-        category: 'silmarillion',
-        era: "SA", year: 1, sortKey: 590.5,
-        px: 1872, py: 1008,
-        description: "Forlindon, or North Lindon, is the land north of the Gulf of Lune and west of the Blue Mountains. A surviving remnant of ancient Beleriand after the War of Wrath drowned most of that continent, it was part of Gil-galad\u2019s realm in the Second Age. By the Third Age the region was sparsely populated, its Elven inhabitants slowly departing for the Undying Lands.",
-        characters: "Gil-galad, C\u00edrdan"
+        id: "saint_germain_des_pres",
+        name: "Abbaye Saint-Germain-des-Prés",
+        category: 'religious',
+        px: 8846, py: 6917,
+        description: "Abbaye bénédictine fondée au VIe siècle par Childebert Ier pour abriter la tunique de saint Vincent. L'une des plus puissantes abbayes de France, elle formait une seigneurie autonome aux portes de Paris, avec son propre marché et son faubourg.",
+        quartier: "Faubourg Saint-Germain, Rive Gauche"
     },
     {
-        id: "grey-havens",
-        name: "The Grey Havens \u2014 Mithlond",
-        category: 'silmarillion',
-        era: "SA", year: 1, sortKey: 591,
-        px: 2266, py: 1150,
-        description: "Founded by C\u00edrdan the Shipwright after the War of Wrath destroyed Beleriand, the Grey Havens became the chief port from which the Elves departed Middle-earth for the Undying Lands. It was from here that Gandalf, Frodo, Bilbo, Galadriel, and Elrond sailed at the end of the Third Age.",
-        characters: "C\u00edrdan, Gil-galad, Galadriel"
+        id: "saint_victor",
+        name: "Abbaye Saint-Victor",
+        category: 'religious',
+        px: 8263, py: 2621,
+        description: "Abbaye augustinienne fondée en 1113 par Guillaume de Champeaux, célèbre pour sa bibliothèque encyclopédique (la Bibliothèque de Saint-Victor). Centre intellectuel et théologique, hors des murs côté Rive Gauche.",
+        quartier: "Rive Gauche, Est"
     },
     {
-        id: "barad-dur-built",
-        name: "Barad-d\u00fbr \u2014 The Dark Tower",
-        category: 'silmarillion',
-        era: "SA", year: 1000, sortKey: 1590,
-        px: 5613, py: 2466,
-        description: "Sauron began building his fortress in Mordor around SA 1000, using the power of the One Ring. The Dark Tower was besieged and thrown down by the Last Alliance, but because it was built with the Ring's power, it could not be fully destroyed while the Ring endured. Sauron rebuilt it when he returned to Mordor in the Third Age.",
-        characters: "Sauron, the Nazg\u00fbl"
+        id: "saint_gervais",
+        name: "Église Saint-Gervais-et-Saint-Protais",
+        category: 'religious',
+        px: 5607, py: 3323,
+        description: "L'une des plus anciennes paroisses de Paris, dont l'église gothique fait face à la Place de Grève. Lieu de culte du quartier de l'Hôtel de Ville et des artisans de la Rive Droite orientale.",
+        quartier: "Marais, Rive Droite"
     },
     {
-        id: "eregion-rings",
-        name: "Eregion \u2014 The Rings of Power",
-        category: 'silmarillion',
-        era: "SA", year: 1500, sortKey: 2090,
-        px: 3885, py: 1520,
-        description: "In the land of Holly near the West-gate of Moria, Celebrimbor and the Gwaith-i-M\u00edrdain were deceived by Sauron in his fair guise of Annatar, 'Lord of Gifts.' Together they forged the Rings of Power. When Sauron forged the One Ring, the Elves perceived his treachery. Sauron destroyed Eregion and slew Celebrimbor.",
-        characters: "Celebrimbor, Sauron (as Annatar), Elrond"
+        id: "saint_severin",
+        name: "Église Saint-Séverin",
+        category: 'religious',
+        px: 7739, py: 4581,
+        description: "Église gothique flamboyant au cœur du Quartier Latin, l'une des plus anciennes de Paris. Paroisse des étudiants et des libraires de la Rive Gauche, non loin de la Sorbonne.",
+        quartier: "Quartier Latin, Rive Gauche"
     },
     {
-        id: "one-ring-forged",
-        name: "Mount Doom \u2014 The Forging of the One Ring",
-        category: 'silmarillion',
-        era: "SA", year: 1600, sortKey: 2190,
-        px: 5440, py: 2510,
-        description: "In the fires of Orodruin, Sauron forged the One Ring to control all the other Rings of Power: 'One Ring to rule them all, One Ring to find them, One Ring to bring them all, and in the darkness bind them.' The moment he put it on, the Elven ring-bearers became aware of his purpose.",
-        characters: "Sauron"
+        id: "cordeliers",
+        name: "Couvent des Cordeliers",
+        category: 'religious',
+        px: 8545, py: 5418,
+        description: "Grand couvent franciscain de la Rive Gauche, fondé en 1230. Ses bâtiments s'étendaient sur un vaste terrain entre la Seine et le Quartier Latin. Le réfectoire, encore debout, accueille aujourd'hui un musée.",
+        quartier: "Rive Gauche"
     },
     {
-        id: "umbar-haven",
-        name: "Umbar \u2014 Haven of the Corsairs",
-        category: 'silmarillion',
-        era: "SA", year: 2280, sortKey: 2870,
-        px: 4204, py: 3995,
-        description: "Umbar was a great natural harbour far to the south, first established as a fortress by the N\u00famen\u00f3reans in the Second Age. After the Downfall, the Black N\u00famen\u00f3reans held it as a base of power hostile to Gondor. It became the stronghold of the Corsairs, who raided Gondor's coasts for centuries. Their fleet sailed north during the War of the Ring, only to be captured by Aragorn at Pelargir.",
-        characters: "The Corsairs, Castamir, Aragorn"
+        id: "abbaye_saint_antoine",
+        name: "Abbaye Saint-Antoine-des-Champs",
+        category: 'religious',
+        px: 5326, py: 1100,
+        description: "Abbaye cistercienne fondée en 1198 par Foulques de Neuilly, à l'est de Paris hors les murs. Elle a donné son nom au faubourg Saint-Antoine et à la rue éponyme. Ses terres s'étendaient jusqu'à la Bastille. Transformée en hôpital après la Révolution, elle subsiste sous le nom d'Hôpital Saint-Antoine.",
+        quartier: "Faubourg Saint-Antoine, Hors les murs"
     },
     {
-        id: "numenor-downfall",
-        name: "Meneltarma \u2014 The Downfall of N\u00famenor",
-        category: 'silmarillion',
-        era: "SA", year: 3319, sortKey: 3909,
-        px: 237, py: 3780,
-        description: "Meneltarma, the Pillar of the Heavens, was the sacred mountain at the heart of N\u00famenor. When King Ar-Pharaz\u00f4n the Golden sailed with a great armada against Valinor, Eru Il\u00favatar broke and changed the world. N\u00famenor was swallowed by the sea, and the Undying Lands were removed from the circles of the world forever. Only the Faithful, led by Elendil and his sons, escaped to found the kingdoms of Arnor and Gondor.",
-        characters: "Ar-Pharaz\u00f4n, Sauron, Elendil, Isildur, An\u00e1rion"
+        id: "abbaye_sainte_genevieve",
+        name: "Abbaye Sainte-Geneviève",
+        category: 'religious',
+        px: 9406, py: 3594,
+        description: "Abbaye bénédictine fondée sur la Montagne Sainte-Geneviève, abritant les reliques de la patronne de Paris. L'une des fondations religieuses les plus anciennes de la ville, réformée au XIe siècle par le chanoine Ivo. Le Panthéon sera construit sur son emplacement au XVIIIe siècle.",
+        quartier: "Montagne Sainte-Geneviève, Rive Gauche"
     },
     {
-        id: "last-alliance",
-        name: "Dagorlad \u2014 The Last Alliance",
-        category: 'silmarillion',
-        era: "SA", year: 3434, sortKey: 4024,
-        px: 5100, py: 2220,
-        description: "The Last Alliance of Elves and Men, led by Gil-galad and Elendil, fought the greatest battle of the Second Age on the plains before the Black Gate. After seven years besieging Barad-d\u00fbr, they overthrew Sauron, but both Gil-galad and Elendil fell. Isildur cut the One Ring from Sauron's hand.",
-        characters: "Gil-galad, Elendil, Isildur, An\u00e1rion, Elrond, Sauron"
+        id: "college_bernardins",
+        name: "Collège des Bernardins",
+        category: 'religious',
+        px: 7789, py: 3516,
+        description: "Collège cistercien fondé en 1245, l'un des plus grands édifices gothiques médiévaux de Paris. Destiné aux moines bernardins venant étudier à l'Université de Paris, il pouvait accueillir jusqu'à vingt religieux. Son réfectoire gothique, rue de Poissy, est toujours debout.",
+        quartier: "Quartier Latin, Rive Gauche"
     },
     {
-        id: "gladden-fields",
-        name: "Gladden Fields \u2014 The Disaster of the Gladden Fields",
-        category: 'silmarillion',
-        era: "TA", year: 2, sortKey: 4033,
-        px: 4400, py: 1360,
-        description: "Two years after the defeat of Sauron, Isildur and his company were ambushed by Orcs while marching north along the Anduin. Isildur put on the One Ring to escape, but it slipped from his finger in the river and he was slain by Orc arrows. The Ring was lost for nearly 2,500 years.",
-        characters: "Isildur, Ohtar"
-    },
-    {
-        id: "dol-guldur-shadow",
-        name: "Dol Guldur \u2014 The Shadow over Mirkwood",
-        category: 'silmarillion',
-        era: "TA", year: 1000, sortKey: 5031,
-        px: 4672, py: 1578,
-        description: "Around TA 1000, Sauron took secret refuge in southern Mirkwood, building the fortress of Dol Guldur and disguising himself as 'the Necromancer.' His shadow corrupted the Greenwood, turning it dark. From here he bred evil creatures and searched for the One Ring, until the White Council drove him out in TA 2941.",
-        characters: "Sauron, Gandalf, Galadriel, Saruman"
+        id: "celestins",
+        name: "Couvent des Célestins",
+        category: 'religious',
+        px: 6119, py: 1752,
+        description: "Couvent de l'ordre des Célestins (branche réformée des bénédictins fondée par le pape Célestin V) sur la Rive Droite, entre l'Hôtel de Ville et la Bastille, au bord de la Seine. Fondé en 1352, il jouissait de la protection royale et abritait des sépultures princières. Supprimé et démoli à la Révolution.",
+        quartier: "Rive Droite, Est"
     },
 
-    // ── Appendices ──
     {
-        id: "himling",
-        name: "Himling \u2014 Remnant of Beleriand",
-        category: 'appendix',
-        era: "FA", year: 1, sortKey: 1.01,
-        px: 1202, py: 752,
-        description: "A small island in the northwestern sea, Himling is the surviving peak of the great hill of Himring. In the First Age, Maedhros son of F\u00ebanor fortified Himring as the anchor of his defensive line against Morgoth. When Beleriand was broken and drowned in the War of Wrath, the summit endured above the waves. By the Third Age it is a barren, uninhabited island \u2014 a silent monument to the wars and kingdoms long lost beneath the sea.",
-        characters: "Maedhros, F\u00ebanor"
+        id: "saint_germain_auxerrois",
+        name: "Église Saint-Germain-l'Auxerrois",
+        category: 'religious',
+        px: 5548, py: 5711,
+        description: "Paroisse royale immédiatement à l'est du Louvre, dont les rois de France et leurs courtisans étaient les paroissiens habituels. Édifice gothique flamboyant des XIIe–XVe siècles. Son porche gothique et sa rosace en font l'un des plus beaux exemples de l'architecture parisienne. En 1572, son bourdon donnera le signal de la Saint-Barthélemy.",
+        quartier: "Rive Droite, Ouest"
     },
     {
-        id: "mountains-east",
-        name: "Mountains of the East \u2014 The Orocarni",
-        category: 'appendix',
-        era: "FA", year: 1, sortKey: 1.02,
-        px: 7252, py: 2538,
-        description: "The Orocarni, or Red Mountains, formed the eastern boundary of Middle-earth in the earliest ages. In Tolkien's cosmology, four of the seven Dwarf clans \u2014 the Ironfists, Stiffbeards, Blacklocks, and Stonefoots \u2014 awoke at sites in or near these mountains. The Blue Wizards, Alatar and Pallando, were sent east and may have worked among the peoples of these distant lands to counter Sauron's influence.",
-        characters: "Alatar, Pallando (Blue Wizards)"
+        id: "saint_jacques_boucherie",
+        name: "Église Saint-Jacques-de-la-Boucherie",
+        category: 'religious',
+        px: 5258, py: 4482,
+        description: "Grande église paroissiale de la Rive Droite, près du Grand Châtelet, point de départ du pèlerinage vers Saint-Jacques-de-Compostelle pour les Parisiens de la rive droite. Entièrement reconstruite en gothique flamboyant aux XVe–XVIe siècles. Son beffroi (Tour Saint-Jacques), seul vestige après la démolition de l'église en 1797, est toujours debout.",
+        quartier: "Rive Droite"
     },
     {
-        id: "northern-waste",
-        name: "Northern Waste \u2014 Forodwaith",
-        category: 'appendix',
-        era: "FA", year: 1, sortKey: 1.03,
-        px: 4212, py: 205,
-        description: "The vast frozen wasteland of Forodwaith stretched across the entire far north of Middle-earth. In the First Age it lay in the shadow of Morgoth's fortress of Angband, and an unnatural cold lingered long after his defeat. Few dared enter these lands \u2014 only the Lossoth (Snowmen of Forochel) survived on its western fringes. Dragons bred in the Withered Heath on its southern border, and the remnants of Morgoth's Iron Mountains may have endured in the furthest north.",
-        characters: "The Lossoth, Morgoth"
+        id: "prieure_saint_martin",
+        name: "Prieuré Saint-Martin-des-Champs",
+        category: 'religious',
+        px: 0, py: 0,
+        px: 2968, py: 3982,
+        description: "Prieuré clunisien fondé en 1067 par Henri Ier, l'un des plus anciens établissements religieux de Paris. Son église romane et ses bâtiments conventuels forment un vaste ensemble au nord du Marais. En 1553, le prieuré conserve une grande influence religieuse et foncière. Ses bâtiments abritent aujourd'hui le Musée des Arts et Métiers.",
+        quartier: "Rive Droite, Nord-Est"
     },
     {
-        id: "fanuidhol",
-        name: "Fanuidhol \u2014 Cloudyhead",
-        category: 'appendix',
-        era: "FA", year: 1, sortKey: 1.04,
-        px: 4023, py: 1430,
-        description: "Fanuidhol, Cloudyhead (Bundushath\u00fbr in Khuzdul), is the easternmost of the three peaks above Moria, overlooking the Dimrill Dale and the Mirrormere from the south. Together with Caradhras to the north and Celebdil to the west, these three mountains form the crown above the ancient Dwarven kingdom of Khazad-d\u00fbm.",
-        characters: ""
+        id: "jacobins",
+        name: "Couvent des Jacobins (Dominicains)",
+        category: 'religious',
+        px: 9351, py: 4572,
+        description: "Grand prieuré dominicain fondé en 1218 rue Saint-Jacques, sur la Rive Gauche, l'un des premiers et des plus influents couvents mendiants de Paris. Centre intellectuel de premier plan au Moyen Âge (saint Thomas d'Aquin y enseigna). En 1553, il reste un foyer de théologie et de prédication. Détruit à la Révolution.",
+        quartier: "Quartier Latin, Rive Gauche"
     },
     {
-        id: "eryn-vorn",
-        name: "Eryn Vorn \u2014 The Dark Wood",
-        category: 'appendix',
-        era: "FA", year: 1, sortKey: 1.05,
-        px: 2742, py: 1929,
-        description: "A dense, dark cape of ancient forest jutting into the sea south of the mouth of the Brandywine. Eryn Vorn is one of the last remnants of the vast primeval woodlands that once covered all of Eriador. When the N\u00famen\u00f3reans felled great swathes of forest for their shipbuilding in the Second Age, the native pre-N\u00famen\u00f3rean peoples \u2014 hostile to the newcomers \u2014 retreated into this dark wood and were left alone. It remained wild and uninhabited through all the ages that followed.",
-        characters: ""
+        id: "augustins",
+        name: "Couvent des Augustins",
+        category: 'religious',
+        px: 7245, py: 5814,
+        description: "Couvent des ermites de Saint-Augustin sur la Rive Gauche, au bord de la Seine, fondé en 1293. L'un des plus grands couvents mendiants parisiens, avec une belle église gothique. Sa bibliothèque était réputée. Les Quai et Rue des Grands-Augustins conservent son souvenir. Supprimé à la Révolution, ses bâtiments servirent à conserver les œuvres d'art nationalisées.",
+        quartier: "Rive Gauche, Ouest"
     },
     {
-        id: "lond-daer",
-        name: "Lond Daer \u2014 Great Haven of the N\u00famen\u00f3reans",
-        category: 'appendix',
-        era: "SA", year: 800, sortKey: 1390,
-        px: 3043, py: 2039,
-        description: "Lond Daer Enedh, the Great Middle Haven, was the first major N\u00famen\u00f3rean harbour in Middle-earth. Founded by Tar-Aldarion as Vinyalond\u00eb around SA 800 at the mouth of the River Gwathl\u00f3 (Greyflood), it served as a shipbuilding port that consumed the vast forests of Enedwaith and Minhiriath on an enormous scale. This deforestation earned the lasting hatred of the native peoples, who retreated into refuges like Eryn Vorn. The haven remained important through the Second Age but declined after the Downfall of N\u00famenor and lay in ruins by the Third Age.",
-        characters: "Tar-Aldarion"
+        id: "saint_merri",
+        name: "Église Saint-Merry",
+        category: 'religious',
+        px: 4838, py: 4240,
+        description: "Église gothique flamboyant de la Rive Droite, entre le Grand Châtelet et les Halles, construite entre 1500 et 1552 — pratiquement achevée au moment de la carte. Dédiée à saint Méderic, abbé du VIIe siècle. Sa façade sculptée et son clocher sont représentatifs du gothique parisien tardif. Toujours debout, rue Saint-Martin.",
+        quartier: "Rive Droite"
     },
     {
-        id: "andrast",
-        name: "Andrast \u2014 The Long Cape",
-        category: 'appendix',
-        era: "FA", year: 1, sortKey: 1.06,
-        px: 2770, py: 2828,
-        description: "Andrast, also called Ras Morthil (Dark Cape), is the long uninhabited promontory jutting westward into the sea south of the Gap of Rohan, forming the northern arm of the Bay of Belfalas. The Dr\u00faedain (Woses) once lived in its forests, but they were hunted and persecuted by the N\u00famen\u00f3reans and eventually driven out or into hiding. The cape was left wild and shunned \u2014 Gondor's coastal defences and beacons never extended to it, and mariners avoided its shores.",
-        characters: ""
+        id: "crypte_martyrium_saint_denis",
+        name: "Crypte du Martyrium de saint Denis",
+        category: 'religious',
+        px: 780, py: 6538,
+        description: "Sous la butte Montmartre — le Mons Martyrum —, une crypte perpétue le souvenir de la décapitation de saint Denis, premier évêque de Paris, vers 258 après J.-C. L'abbaye bénédictine Notre-Dame-de-Montmartre, fondée en 1133 par la reine Adèle de Savoie, en entretint le culte. Le 15 août 1534, Ignace de Loyola et six compagnons y prononcèrent leurs vœux fondateurs de la Compagnie de Jésus.",
+        quartier: "Montmartre, Hors les murs"
     },
     {
-        id: "edhellond",
-        name: "Edhellond \u2014 The Elf-haven",
-        category: 'appendix',
-        era: "FA", year: 1, sortKey: 1.07,
-        px: 3787, py: 2803,
-        description: "Edhellond, the Elf-haven, was a small Elvish port hidden at the mouth of the River Ringl\u00f3 near Dol Amroth in Belfalas. Founded by Sindarin Elves who fled the ruin of Beleriand, it was one of the last places in southern Middle-earth where Elves lingered, quietly building ships and departing west over the centuries. When Amroth, King of L\u00f3rien, and his beloved Nimrodel tried to reach Edhellond to sail into the West together, Nimrodel was lost in the White Mountains. Amroth arrived to find the last ship breaking its moorings in a storm. He leapt into the sea to swim ashore but was swept away and drowned \u2014 giving nearby Dol Amroth its name.",
-        characters: "Amroth, Nimrodel"
+        id: "crypte_notre_dame_des_champs",
+        name: "Crypte Notre-Dame-des-Champs",
+        category: 'religious',
+        px: 11090, py: 4460,
+        description: "La tradition attribue à saint Denis lui-même la fondation d'un premier lieu de culte chrétien dans cet espace souterrain, vers le IIIe siècle. Au XIe siècle, les bénédictins de Marmoutier y élevèrent l'église Sainte-Marie-des-Vignes, étape du cortège funèbre des rois de France en route vers Saint-Denis — les corps de Charles VII, Charles VIII et Anne de Bretagne y reposèrent avant leur inhumation. En 1553, le sanctuaire, niché dans les vignes du faubourg sud, demeurait un lieu de dévotion mariale et un souvenir des origines de la chrétienté parisienne.",
+        quartier: "Faubourg, Rive Gauche Sud"
     },
     {
-        id: "tol-fuin",
-        name: "Tol Fuin \u2014 Remnant of Dorthonion",
-        category: 'appendix',
-        era: "FA", year: 460, sortKey: 460,
-        px: 747, py: 874,
-        description: "An island in the far northwestern sea, Tol Fuin is the surviving highland of Dorthonion (Taur-nu-Fuin). In the First Age, this forested plateau was held by Angrod and Aegnor against Morgoth until the Dagor Bragollach. Afterwards it became a haunted wilderness where Barahir and his outlaws hid, and where his son Beren wandered alone before escaping south to Doriath and his fateful meeting with L\u00fathien. When Beleriand was drowned, only this peak endured above the waves.",
-        characters: "Barahir, Beren, Angrod, Aegnor"
+        id: "collegiale_saint_marcel",
+        name: "Collégiale Saint-Marcel",
+        category: 'religious',
+        px: 10006, py: 1491,
+        description: "Fondée sur le tombeau de saint Marcel, huitième évêque de Paris mort en 436, cette collégiale est l'un des foyers chrétiens les plus anciens de la rive gauche. Rebâtie vers 1040 puis élevée au rang de collégiale en 1158, elle accueillait le pèlerinage au saint et renfermait la sépulture du théologien Pierre Lombard. En 1553, l'église, hors les murs dans le faubourg Saint-Marcel, restait un pôle religieux du sud de Paris.",
+        quartier: "Faubourg Saint-Marcel, Rive Gauche"
     },
     {
-        id: "tol-morwen",
-        name: "Tol Morwen \u2014 The Gravestone Isle",
-        category: 'appendix',
-        era: "FA", year: 500, sortKey: 500,
-        px: 334, py: 1094,
-        description: "The smallest of the island remnants of Beleriand. In the First Age, T\u00farin Turambar and his mother Morwen were buried together beneath a great stone on the mound of the slain near the ruined halls of Nargothrond. When Beleriand was drowned in the War of Wrath, the gravestone alone stood above the waves \u2014 an island bearing the names of T\u00farin and Nienor, a last testament to the tragic children of H\u00farin.",
-        characters: "T\u00farin Turambar, Morwen, Nienor, H\u00farin"
+        id: "eglise_saint_julien_le_pauvre",
+        name: "Église Saint-Julien-le-Pauvre",
+        category: 'religious',
+        px: 7549, py: 4367,
+        description: "Comptant parmi les plus anciens lieux de culte de Paris, Saint-Julien-le-Pauvre fut reconstruite vers 1160–1170 par les chanoines de Longpont-sur-Orge dans un style roman-gothique de transition si proche de celui de Notre-Dame qu'on y voit la main des mêmes bâtisseurs. Jusqu'en 1524, l'Université de Paris y tenait ses assemblées générales et y élisait son recteur. En 1553, l'église et son hospice de pèlerins demeuraient au cœur de la vie universitaire et spirituelle du Quartier Latin.",
+        quartier: "Quartier Latin, Rive Gauche"
     },
     {
-        id: "sea-rhun",
-        name: "Sea of Rh\u00fbn \u2014 Waters of the East",
-        category: 'appendix',
-        era: "SA", year: 1, sortKey: 591.01,
-        px: 6164, py: 1684,
-        description: "A vast inland sea in the far east of Middle-earth, the Sea of Rh\u00fbn was the heartland of the Easterling peoples who repeatedly invaded Gondor throughout the ages. Little is known of the lands beyond it. The Blue Wizards, Alatar and Pallando, were sent east and are believed to have journeyed beyond the sea, but their fate remains unknown.",
-        characters: "The Easterlings, Alatar, Pallando"
+        id: "eglise_saint_andre_des_arts",
+        name: "Église Saint-André-des-Arts",
+        category: 'religious',
+        px: 7760, py: 5155,
+        description: "Érigée entre 1210 et 1212 sur des terres enclavées par l'enceinte de Philippe Auguste, Saint-André-des-Arts fut l'une des premières paroisses à naître intra-muros sur la rive gauche. Longtemps sous la dépendance de l'abbaye Saint-Germain-des-Prés, elle passa en 1345 sous le patronage de l'Université. En 1553, la paroisse animait un quartier étudiant et artisanal dense ; l'église fut démolie en 1807, laissant son nom à la place et aux rues voisines.",
+        quartier: "Rive Gauche"
     },
     {
-        id: "sea-nurnen",
-        name: "Sea of N\u00farnen \u2014 The Slave Lands",
-        category: 'appendix',
-        era: "SA", year: 1000, sortKey: 1590.01,
-        px: 5836, py: 2972,
-        description: "An inland sea in southern Mordor, fed by rivers flowing down from the Ephel D\u00faath and Ash Mountains. The fertile lands of Nurn surrounding it were tended by vast armies of slaves who grew food to feed Sauron's war machine. After the fall of Barad-d\u00fbr, King Elessar freed the slaves and granted them the lands of Nurn as their own.",
-        characters: "Aragorn (Elessar), the slaves of Nurn"
+        id: "augustines_madeleine",
+        name: "Augustines de la Pénitence de la Madeleine",
+        category: 'religious',
+        px: 4513, py: 5879,
+        description: "Fondé vers 1492 par le prédicateur franciscain Jean Tisserand pour recueillir des femmes pénitentes, cet ordre féminin adopta la règle de saint Augustin, approuvée par Alexandre VI en 1497. Installées à l'Hôtel d'Orléans dès 1498, les religieuses jouissaient de la faveur royale de Louis XII puis de Henri IV. En 1553, la communauté occupait encore sa première demeure, avant son déménagement contraint vers la rue Saint-Denis en 1572.",
+        quartier: "Rive Droite"
     },
     {
-        id: "annuminas",
-        name: "Ann\u00faminas \u2014 Capital of Arnor",
-        category: 'appendix',
-        era: "SA", year: 3320, sortKey: 3910,
-        px: 2765, py: 919,
-        description: "Built by Elendil on the shores of Lake Evendim after the Downfall of N\u00famenor, Ann\u00faminas served as the first capital of the North-kingdom of Arnor. As the D\u00fanedain dwindled, the city was abandoned and fell into ruin. After the War of the Ring, Aragorn restored it as his northern seat of power.",
-        characters: "Elendil, Aragorn"
+        id: "eglise_saint_julien_menestriers",
+        name: "Église Saint-Julien-des-Ménétriers",
+        category: 'religious',
+        px: 3950, py: 4250,
+        description: "Fondée en 1328 par deux ménestrels, l'un lombard, l'autre lorrain, cette chapelle-hôpital était l'émanation corporative des musiciens parisiens, organisés en confrérie dès 1331. Son portail sculpté de musiciens en relief en faisait une curiosité architecturale unique dans Paris. En 1553, l'église demeurait le lieu de rassemblement et de dévotion de la guilde des ménétriers, gardiens de la musique profane dans la capitale.",
+        quartier: "Rive Droite"
     },
     {
-        id: "tower-hills",
-        name: "Tower Hills \u2014 The Elostirion Stone",
-        category: 'appendix',
-        era: "SA", year: 3320, sortKey: 3910.01,
-        px: 2386, py: 1159,
-        description: "The Tower Hills (Emyn Beraid) stood between the Shire and the Grey Havens, crowned by the tall white tower of Elostirion. It housed one of the three Palant\u00edri given to the North-kingdom \u2014 but unlike the others, this stone looked only west, toward the Undying Lands across the sea. It was kept by the Elves of Lindon and taken aboard the last ship from the Grey Havens.",
-        characters: "Elendil, Gil-galad"
+        id: "eglise_saint_medard",
+        name: "Église Saint-Médard",
+        category: 'religious',
+        px: 10030, py: 2156,
+        description: "Ancrée dans le faubourg Saint-Marcel, Saint-Médard perpétuait un lieu de culte dont les racines remontaient aux premiers siècles chrétiens, des sépultures mérovingiennes témoignant d'une continuité depuis le VIe siècle. Reconstruite en pierre à partir du XVe siècle en mêlant gothique flamboyant et premières influences Renaissance, son chantier se poursuivait encore en 1553. La paroisse desservait la population laborieuse du faubourg, avant que l'église ne devienne célèbre au XVIIIe siècle pour les convulsionnaires jansénistes.",
+        quartier: "Faubourg Saint-Marcel, Rive Gauche"
     },
     {
-        id: "white-mountains",
-        name: "White Mountains \u2014 Ered Nimrais",
-        category: 'appendix',
-        era: "SA", year: 3320, sortKey: 3910.02,
-        px: 4253, py: 2607,
-        description: "The great mountain range running east to west between Rohan and Gondor. Beneath its peaks lie the Paths of the Dead, and along its northern feet stand Edoras, Dunharrow, and Helm's Deep. Its eastern end overlooks Minas Tirith and the Pelennor Fields. The beacons of Gondor are lit along its summits to call Rohan to war.",
-        characters: "Th\u00e9oden, Aragorn"
+        id: "eglise_saint_paul_des_champs",
+        name: "Ancienne église Saint-Paul-des-Champs",
+        category: 'religious',
+        px: 5460, py: 2179,
+        description: "Issue d'une chapelle fondée vers 631 par saint Éloi, Saint-Paul-des-Champs devint paroisse en 1125, puis, par la proximité des résidences royales (Hôtel Saint-Pol, Hôtel des Tournelles), l'église paroissiale de la cour capétienne dans le Marais : Charles VI y fut baptisé en 1368, Charles VII en 1403. En 1553, c'est encore une église de prestige dans un quartier aristocratique en pleine transformation, avant d'être remplacée au XVIIe siècle par Saint-Paul-Saint-Louis, chef-d'œuvre des jésuites.",
+        quartier: "Marais, Rive Droite"
     },
     {
-        id: "brown-lands",
-        name: "The Brown Lands \u2014 Gardens of the Entwives",
-        category: 'appendix',
-        era: "SA", year: 3429, sortKey: 4019,
-        px: 4975, py: 1915,
-        description: "Once a fertile region east of the Anduin tended by the Entwives, the Brown Lands were scorched and destroyed by Sauron during the War of the Last Alliance. The Entwives vanished and were never found \u2014 their loss is the source of Treebeard\u2019s great sorrow. By the Third Age the land was a barren, treeless waste. The Fellowship passed along its western edge while travelling down the Great River.",
-        characters: "Treebeard, the Entwives"
+        id: "eglise_saint_sulpice",
+        name: "Église Saint-Sulpice",
+        category: 'religious',
+        px: 9347, py: 6138,
+        description: "Un oratoire existe sur ce site dès le IXe siècle, dans la mouvance du domaine de l'abbaye Saint-Germain-des-Prés ; une première église paroissiale y est attestée vers 1180. En 1553, l'édifice médiéval dessert une paroisse du Faubourg Saint-Germain, hors les murs de la ville close. La grande reconstruction baroque — l'un des édifices les plus vastes de Paris — ne débutera qu'en 1646.",
+        quartier: "Faubourg Saint-Germain, Rive Gauche"
     },
     {
-        id: "emyn-nu-fuin",
-        name: "Emyn-nu-Fuin \u2014 Mountains of Mirkwood",
-        category: 'appendix',
-        era: "TA", year: 1000, sortKey: 5031.01,
-        px: 4996, py: 1235,
-        description: "The Emyn-nu-Fuin, or 'Mountains under Night,' are a range of forested hills in southern Mirkwood. When Sauron established his stronghold at Dol Guldur, the shadow spread through the forest, transforming Greenwood the Great into Mirkwood. These mountains, shrouded in the darkness of the Necromancer's influence, became part of the perilous southern reaches that travellers avoided. The Old Forest Road once passed near here but fell into disuse as the forest grew ever more dangerous.",
-        characters: "Sauron (as the Necromancer), Thranduil"
+        id: "eglise_saint_jean_rond",
+        name: "Église Saint-Jean-le-Rond",
+        category: 'religious',
+        px: 6886, py: 4093,
+        description: "Accolée au flanc nord de la cathédrale Notre-Dame, Saint-Jean-le-Rond était un baptistère de plan circulaire, vestige des complexes cathédraux paléochrétiens. Reconstruite au XIIIe siècle, elle servait aux cérémonies baptismales du diocèse et à la vie paroissiale des chanoines. En 1553, discrète dans l'ombre de Notre-Dame, elle demeurait le lieu du baptême de nombreux Parisiens de l'Île de la Cité, avant sa démolition en 1748.",
+        quartier: "Île de la Cité"
     },
     {
-        id: "carn-dum",
-        name: "Carn D\u00fbm \u2014 Fortress of Angmar",
-        category: 'appendix',
-        era: "TA", year: 1300, sortKey: 5331,
-        px: 3374, py: 357,
-        description: "The iron fortress of Carn D\u00fbm was the capital of Angmar, the realm the Witch-king founded around TA 1300 with the sole purpose of destroying the D\u00fanedain of the North. For nearly 700 years, Angmar waged war against the successor kingdoms of Arnor, eventually destroying all three.",
-        characters: "The Witch-king"
+        id: "religieuses_hospitalieres_saint_gervais",
+        name: "Hôpital des Hospitalières Saint-Gervais",
+        category: 'religious',
+        px: 5370, py: 3308,
+        description: "Fondé en 1171 près de l'église Saint-Gervais pour offrir aux pauvres de passage un abri de trois nuits, cet hôpital paroissial fut repris par des religieuses hospitalières à partir du XIVe siècle. Financé par la gestion de terres agricoles, il constituait en 1553 l'un des rares refuges pour les indigents du quartier du Marais. Transféré rue Vieille-du-Temple en 1656, il fut supprimé à la Révolution.",
+        quartier: "Marais, Rive Droite"
     },
     {
-        id: "argonath",
-        name: "Argonath \u2014 The Pillars of the Kings",
-        category: 'appendix',
-        era: "TA", year: 1340, sortKey: 5371,
-        px: 4511, py: 2105,
-        description: "Two immense stone statues of Isildur and An\u00e1rion stand upon either side of the Anduin, their left hands raised in warning to enemies of Gondor. Built by R\u00f3mendacil II, the Argonath marked the northern border of Gondor. The Fellowship passed between them on their journey south from Lothl\u00f3rien.",
-        characters: "Isildur, An\u00e1rion, R\u00f3mendacil II"
+        id: "college_cluny",
+        name: "Collège de Cluny",
+        category: 'religious',
+        px: 9221, py: 4760,
+        description: "Fondé en 1269 par l'abbé de Cluny Yves de Vergy pour accueillir les moines bénédictins venus étudier à Paris, ce collège formait un îlot monastique — chapelle, cloître, bibliothèque — au cœur du Quartier Latin. À ne pas confondre avec l'Hôtel de Cluny voisin (résidence des abbés), le Collège de Cluny était l'institution académique proprement dite. En 1553, il contribuait à la vitalité intellectuelle de la Montagne Sainte-Geneviève.",
+        quartier: "Quartier Latin, Rive Gauche"
     },
     {
-        id: "shire-homeland",
-        name: "The Shire \u2014 Homeland of the Hobbits",
-        category: 'appendix',
-        era: "TA", year: 1601, sortKey: 5632,
-        px: 2772, py: 1258,
-        description: "A fertile, well-ordered region in Eriador settled by Hobbits in TA 1601 when the brothers Marcho and Blanco received a land-grant from King Argeleb II of Arthedain. Bounded by the Brandywine River to the east, the Far Downs to the west, and roughly the East Road to the south, the Shire was divided into four Farthings \u2014 North, South, East, and West. Its chief town was Michel Delving on the White Downs, seat of the Mayor. The Shire's pastoral peace was quietly maintained by the Rangers of the North \u2014 D\u00fanedain who guarded its borders without the Hobbits' knowledge. After the War of the Ring, King Elessar made the Shire a Free Land under the protection of the Northern Sceptre and forbade Men from entering it.",
-        characters: "Bilbo, Frodo, Sam, Merry, Pippin, the Thain, the Mayor"
-    },
-    {
-        id: "michel-delving",
-        name: "Michel Delving \u2014 Chief Town of the Shire",
-        category: 'appendix',
-        era: "TA", year: 1601, sortKey: 5632.1,
-        px: 2648, py: 1144,
-        description: "Michel Delving on the White Downs was the chief town of the Shire and seat of the Mayor, the only real official in the land. It was the closest thing the hobbits had to a capital. The Mathom-house, the Shire's museum of curiosities, was located here \u2014 Bilbo donated the mithril coat he received from Thorin to its collection before later reclaiming it. The Lockholes, converted smials used as prisons by Sharkey's ruffians during the occupation, were also in Michel Delving.",
-        characters: "Will Whitfoot (the Mayor), Lobelia Sackville-Baggins"
-    },
-    {
-        id: "fornost-fall",
-        name: "Fornost \u2014 Fall of the North-kingdom",
-        category: 'appendix',
-        era: "TA", year: 1974, sortKey: 6005,
-        px: 3111, py: 866,
-        description: "Fornost Erain, the Norbury of the Kings, became the capital of Arthedain after Ann\u00faminas was abandoned. In TA 1974 the Witch-king of Angmar overran the city and destroyed Arthedain. A year later, a combined force from Gondor, Lindon, and Rivendell defeated the Witch-king at the Battle of Fornost\u2014but too late to save the kingdom.",
-        characters: "Arvedui, E\u00e4rnur, Gl\u00f3rfindel, the Witch-king"
-    },
-    {
-        id: "forochel",
-        name: "Forochel \u2014 The Last King of Arthedain",
-        category: 'appendix',
-        era: "TA", year: 1975, sortKey: 6006,
-        px: 2572, py: 266,
-        description: "After the fall of Fornost, King Arvedui fled north to the Ice Bay of Forochel, where the Lossoth (Snowmen) sheltered him. C\u00edrdan sent a ship to rescue him, but it was crushed in the ice and Arvedui drowned. With him were lost two of the seven Palant\u00edri, sinking beneath the frozen waters forever.",
-        characters: "Arvedui, the Lossoth, C\u00edrdan"
-    },
-    {
-        id: "mount-gram",
-        name: "Mount Gram \u2014 Goblins of the North",
-        category: 'appendix',
-        era: "TA", year: 2747, sortKey: 6778,
-        px: 3463, py: 726,
-        description: "An Orc stronghold in the northern Misty Mountains. In TA 2747, a goblin army under chieftain Golfimbul marched from Mount Gram and invaded the Shire. Bandobras \u2018Bullroarer\u2019 Took \u2014 the tallest hobbit ever to live, big enough to ride a horse \u2014 led the defence at the Battle of Greenfields and knocked Golfimbul's head clean off with a club. It sailed through the air and down a rabbit hole, thus (according to hobbit legend) inventing the game of golf. It was the only battle fought inside the Shire before the Scouring of the Shire.",
-        characters: "Golfimbul, Bandobras \u2018Bullroarer\u2019 Took"
-    },
-    {
-        id: "gollum-origin",
-        name: "River-folk \u2014 The Origin of Gollum",
-        category: 'appendix',
-        era: "TA", year: 2463, sortKey: 6494,
-        px: 4434, py: 1380,
-        description: "In the upper vales of the Anduin, near the Gladden River, lived a small community of Stoors \u2014 a hobbit-like river-folk. It was here that D\u00e9agol found the One Ring while fishing, and his cousin Sm\u00e9agol murdered him to possess it. Corrupted by the Ring over five centuries, Sm\u00e9agol became the wretched creature Gollum, eventually retreating to the roots of the Misty Mountains. The Ring's long journey from Isildur's loss at the Gladden Fields to Bilbo's finding it in Gollum's cave began in these quiet woods.",
-        characters: "Sm\u00e9agol (Gollum), D\u00e9agol"
-    },
-    {
-        id: "field-celebrant",
-        name: "Field of Celebrant \u2014 Birth of Rohan",
-        category: 'appendix',
-        era: "TA", year: 2510, sortKey: 6541,
-        px: 4310, py: 1723,
-        description: "In TA 2510, a great host of Easterlings invaded Gondor and pushed its armies back to the Field of Celebrant. In Gondor's darkest hour, Eorl the Young rode south from the far north with his entire people, the \u00c9oth\u00e9od, and routed the invaders. In gratitude, Steward Cirion granted Eorl the province of Calenardhon, which became Rohan.",
-        characters: "Eorl the Young, Cirion"
-    },
-    {
-        id: "framsburg",
-        name: "Framsburg \u2014 Home of the \u00c9oth\u00e9od",
-        category: 'appendix',
-        era: "TA", year: 2000, sortKey: 6031,
-        px: 4177, py: 685,
-        description: "Framsburg was the chief settlement of the \u00c9oth\u00e9od, the horse-lords who were ancestors of the Rohirrim. It stood in the far north between the Grey Mountains and the upper vales of the Anduin, and was named after Fram son of Frumgar, who slew the great cold-drake Scatha and claimed its hoard \u2014 sparking a bitter quarrel with the Dwarves, who held the treasure was theirs. In TA 2510, Eorl the Young led the entire \u00c9oth\u00e9od south from here to answer Gondor's call at the Field of Celebrant. They never returned north; Framsburg was abandoned when they settled in Calenardhon, the land that became Rohan.",
-        characters: "Fram, Eorl the Young"
-    },
-    {
-        id: "withered-heath",
-        name: "Withered Heath \u2014 The Dragon Lands",
-        category: 'appendix',
-        era: "TA", year: 2770, sortKey: 6801,
-        px: 5020, py: 488,
-        description: "The Withered Heath lay between the arms of the Grey Mountains in the far north, and was the breeding ground of the great dragons. It was from here that Smaug descended upon Erebor in TA 2770, driving the Dwarves into exile. Other dragons from the Heath had previously attacked the Grey Mountains, slaying King D\u00e1in I.",
-        characters: "Smaug, D\u00e1in I"
-    },
-    {
-        id: "crossings-poros",
-        name: "Crossings of Poros \u2014 The Mound of the Twins",
-        category: 'appendix',
-        era: "TA", year: 2885, sortKey: 6916,
-        px: 4769, py: 3122,
-        description: "The fords across the River Poros marked the southern boundary of Gondor. In TA 2885, Haradrim invaded in force across the crossing. Steward T\u00farin II called on Rohan for aid, and King Folcwine sent his twin sons Fastred and Folcred south to honour the Oath of Eorl. Gondor won the battle, but both twins were slain. T\u00farin built the Haudh in Gwan\u00fbr, the Mound of the Twins, on the battlefield \u2014 and the enemy did not cross the Poros again for nearly a century.",
-        characters: "Fastred, Folcred, T\u00farin II, King Folcwine"
-    },
-    {
-        id: "harondor",
-        name: "Harondor \u2014 South Gondor",
-        category: 'appendix',
-        era: "TA", year: 1944, sortKey: 5975,
-        px: 4598, py: 3388,
-        description: "Harondor, or South Gondor, was the contested borderland between the Rivers Poros and Harnen. In Gondor's prime it was a settled province, but as Gondor waned and Harad waxed, the region became a desolate no-man's-land fought over for centuries. Neither side held it securely for long. By the time of the War of the Ring, Harondor was effectively abandoned \u2014 a buffer zone between two hostile powers.",
-        characters: ""
-    },
-    {
-        id: "east-bight",
-        name: "East Bight \u2014 The Cleared Land",
-        category: 'appendix',
-        era: "TA", year: 1000, sortKey: 5031.02,
-        px: 4922, py: 1556,
-        description: "A great indentation in the eastern edge of Mirkwood, the East Bight was formed by Northmen who felled the trees over many generations. This clearing pushed deep into the forest, creating open land for settlement and agriculture. The Men who dwelt here were kin to the Rohirrim and the Lake-men, part of the broader peoples of Rhovanion. Their proximity to Dol Guldur made these lands perilous as the shadow grew in southern Mirkwood.",
-        characters: "The Northmen of Rhovanion"
-    },
-    {
-        id: "iron-hills",
-        name: "Iron Hills \u2014 Realm of D\u00e1in Ironfoot",
-        category: 'appendix',
-        era: "TA", year: 2941, sortKey: 6972,
-        px: 6154, py: 794,
-        description: "The Iron Hills were a Dwarven stronghold east of Erebor, ruled by D\u00e1in Ironfoot of Durin's line. When word reached him of Thorin's reclaiming of Erebor, D\u00e1in marched with 500 Dwarves and arrived just in time for the Battle of Five Armies. After Thorin's death, D\u00e1in became King under the Mountain.",
-        characters: "D\u00e1in Ironfoot, N\u00e1in"
-    },
-    {
-        id: "dorwinion",
-        name: "Dorwinion \u2014 Land of Wines",
-        category: 'appendix',
-        era: "TA", year: 2941, sortKey: 6972.01,
-        px: 5964, py: 1428,
-        description: "A wine-producing region on the northwestern shores of the Sea of Rh\u00fbn, Dorwinion was famed for its heady vintages. Barrels of Dorwinion wine were shipped to Thranduil's Halls in Mirkwood \u2014 and it was these potent wines that made the Elven-king's guards fall asleep, allowing Bilbo to engineer the Dwarves' escape in barrels.",
-        characters: "Bilbo, Thranduil's butler"
-    },
-    {
-        id: "confluence-celduin",
-        name: "Confluence of Celduin and Carnen",
-        category: 'appendix',
-        era: "TA", year: 2941, sortKey: 6972.02,
-        px: 5706, py: 1422,
-        description: "Here the River Carnen (Redwater), flowing from the Iron Hills, merges with the River Running (Celduin) from Erebor and the Long Lake. The combined waters then flow south into the Sea of Rh\u00fbn. The Carnen's name, meaning 'Redwater,' likely refers to iron-rich sediments carried from the Dwarven mines of the Iron Hills. This confluence lay in the broad lands of Rhovanion, far from the centres of power in the west.",
-        characters: "D\u00e1in Ironfoot's folk"
-    },
-    {
-        id: "sarn-ford",
-        name: "Sarn Ford \u2014 The Breach of the Shire",
-        category: 'appendix',
-        era: "TA", year: 3018, sortKey: 7049.08,
-        px: 3025, py: 1444,
-        description: "The main southern ford across the Brandywine River, Sarn Ford was secretly guarded by Aragorn's Rangers to protect the Shire \u2014 a service the hobbits never knew about. In September TA 3018, the Nazg\u00fbl forced the crossing, scattering the D\u00fanedain and entering the Shire to hunt for 'Baggins.' This breach of the Shire's invisible defences set the entire chase in motion.",
-        characters: "The Nazg\u00fbl, the Rangers of the North, Aragorn"
-    },
-    {
-        id: "last-bridge",
-        name: "Last Bridge \u2014 The Elf-stone",
-        category: 'appendix',
-        era: "TA", year: 3018, sortKey: 7049.1015,
-        px: 3681, py: 1154,
-        description: "The Last Bridge crossed the River Hoarwell (Mitheithel) on the Great East Road \u2014 the last bridge before Rivendell. After the attack on Weathertop, Aragorn led the wounded Frodo and the hobbits here, fearing a Nazg\u00fbl ambush. Instead he found a pale green beryl set upon the bridge \u2014 a sign from Glorfindel that the crossing was safe and the Black Riders had been driven off.",
-        characters: "Aragorn, Frodo, Sam, Merry, Pippin, Glorfindel"
-    },
-    {
-        id: "tharbad",
-        name: "Tharbad \u2014 Crossing of the Greyflood",
-        category: 'appendix',
-        era: "TA", year: 3018, sortKey: 7049.07,
-        px: 3372, py: 1578,
-        description: "Once a thriving trade town at the crossing of the Greyflood on the North-South Road, Tharbad fell into ruin as both Arnor and Gondor declined. By the time of the War of the Ring, only crumbling walls remained. Boromir lost his horse fording the river here on his long journey from Minas Tirith to Rivendell, and had to continue on foot.",
-        characters: "Boromir"
-    },
-    {
-        id: "brandywine-bridge",
-        name: "Brandywine Bridge \u2014 The Scouring of the Shire",
-        category: 'appendix',
-        era: "TA", year: 3019, sortKey: 7050.11,
-        px: 2974, py: 1126,
-        description: "The Bridge of Stonebows, built by the kings of Arnor on the Great East Road, was the only bridge across the Brandywine and the eastern gateway to the Shire. When Frodo and company returned from the War of the Ring, they found it barricaded with spiked gates and guarded by Shirriffs under Saruman's control \u2014 their first sign the Shire had been taken over. The hobbits broke through the gates and sparked the liberation of the Shire.",
-        characters: "Frodo, Sam, Merry, Pippin, Saruman"
-    },
-    {
-        id: "cair-andros",
-        name: "Cair Andros \u2014 Island Fortress",
-        category: 'appendix',
-        era: "TA", year: 3019, sortKey: 7050.0385,
-        px: 4750, py: 2515,
-        description: "A fortified island in the Anduin north of Osgiliath, shaped like a great ship with its prow pointing upstream. Gondor garrisoned it to guard the northern approaches to Minas Tirith. During the War of the Ring, Sauron's forces captured the island, threatening to cut off any reinforcements from Rohan.",
-        characters: "Faramir, the garrison of Gondor"
-    },
-    {
-        id: "dol-amroth",
-        name: "Dol Amroth \u2014 City of the Swan Knights",
-        category: 'appendix',
-        era: "TA", year: 3019, sortKey: 7050.041,
-        px: 3702, py: 2892,
-        description: "The coastal stronghold of Dol Amroth was the seat of the Princes of Belfalas, who claimed descent from the Elves. Prince Imrahil led the renowned Swan Knights to the defence of Minas Tirith, and his company was among the most valiant at the Battle of the Pelennor Fields. He ruled Gondor briefly after Denethor's death.",
-        characters: "Imrahil, Galador"
-    },
-    {
-        id: "gap-rohan",
-        name: "Gap of Rohan",
-        category: 'appendix',
-        era: "TA", year: 3019, sortKey: 7050.0295,
-        px: 3742, py: 2135,
-        description: "The wide pass between the southern end of the Misty Mountains and the northern end of the White Mountains, the Gap of Rohan was the only major land route between Eriador and Gondor that avoided mountain crossings. Saruman's control of Isengard at its northern end made the Gap a contested corridor throughout the War of the Ring.",
-        characters: "Saruman"
-    },
-    {
-        id: "near-harad",
-        name: "Near Harad \u2014 Realm of the Southrons",
-        category: 'appendix',
-        era: "TA", year: 3019, sortKey: 7050.037,
-        px: 5229, py: 3697,
-        description: "The northern lands of the Haradrim, or Southrons, who were long enemies of Gondor. They fought alongside Sauron in the War of the Ring, riding great M\u00fbmakil (Oliphaunts) into battle at the Pelennor Fields. In Ithilien, Sam witnesses a skirmish between Faramir's rangers and a Haradrim column and reflects on the humanity of a fallen Southron warrior.",
-        characters: "The Haradrim, Faramir, Sam"
-    },
-    {
-        id: "khand",
-        name: "Khand \u2014 Land of the Variags",
-        category: 'appendix',
-        era: "TA", year: 3019, sortKey: 7050.038,
-        px: 6771, py: 3513,
-        description: "Khand is a little-known land southeast of Mordor, home to the Variags \u2014 a fierce warrior people under Sauron\u2019s dominion. The Variags marched to war alongside the Haradrim and Easterlings at the Battle of the Pelennor Fields. Tolkien reveals almost nothing else of their culture or history, leaving Khand one of the most mysterious regions on the map of Middle-earth.",
-        characters: "The Variags"
-    },
-    {
-        id: "fords-isen",
-        name: "Fords of Isen \u2014 Death of Th\u00e9odred",
-        category: 'appendix',
-        era: "TA", year: 3019, sortKey: 7050.025,
-        px: 3700, py: 2104,
-        description: "The Fords of Isen were the main crossing of the River Isen and a key strategic point between Rohan and Isengard. Saruman's forces attacked the Fords twice. In the first battle, Th\u00e9odred, son of King Th\u00e9oden and heir to Rohan, was slain\u2014an event that plunged the kingdom into crisis and left it leaderless as war approached.",
-        characters: "Th\u00e9odred, Grimbold, \u00c9omer"
-    },
-    {
-        id: "osgiliath-ruin",
-        name: "Osgiliath \u2014 The Ruined Capital",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.039,
-        px: 4856, py: 2658,
-        description: "The ancient capital of Gondor, once spanning both banks of the Anduin, now a shattered ruin contested by Gondor and Mordor. Boromir led the defence that held the western bank, and it was a dream of Osgiliath's fall that prompted his journey to Rivendell. During the War of the Ring, Faramir's forces fight a desperate rearguard action as Sauron's armies pour across the river toward Minas Tirith.",
-        characters: "Boromir, Faramir"
+        id: "prieure_saint_jean_latran",
+        name: "Prieuré de Saint-Jean de Latran",
+        category: 'religious',
+        px: 8316, py: 4380,
+        description: "Commanderie principale des chevaliers Hospitaliers de Saint-Jean de Jérusalem à Paris, fondée avant 1130 et documentée dès 1171. Centré sur une église romane dédiée à saint Jean-Baptiste, le prieuré administrait de vastes domaines fonciers en Île-de-France et offrait l'hospitalité aux pauvres et aux pèlerins. En 1553, cette commanderie formait un îlot d'extraterritorialité ecclésiastique sur la rive gauche, distinct de l'Enclos du Temple (Rive Droite) tenu par les mêmes Hospitaliers.",
+        quartier: "Rive Gauche"
     },
 
-    // ── The Hobbit ──
+    // ── Palais et résidences royales ──
     {
-        id: "unexpected-party",
-        name: "Bag End \u2014 An Unexpected Party",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.04,
-        px: 2746, py: 1115,
-        description: "Gandalf and thirteen Dwarves led by Thorin Oakenshield arrive uninvited at Bilbo Baggins' hobbit-hole, recruiting the bewildered hobbit as their burglar for a quest to reclaim the Lonely Mountain from the dragon Smaug.",
-        characters: "Bilbo, Gandalf, Thorin, Balin, Dwalin, F\u00edli, K\u00edli, and company"
+        id: "palais_cite",
+        name: "Palais de la Cité",
+        category: 'royal',
+        px: 6689, py: 4950,
+        description: "Ancienne résidence des rois de France jusqu'à Charles V (fin XIVe s.), devenu ensuite siège du Parlement de Paris et de la justice royale. En 1553, c'est déjà le Palais de Justice, abritant les grandes chambres du Parlement.",
+        quartier: "Île de la Cité"
     },
     {
-        id: "trollshaws",
-        name: "The Trollshaws \u2014 Three Trolls",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.06,
-        px: 3811, py: 937,
-        description: "The company encounters three Stone-trolls\u2014Tom, Bert, and William\u2014who capture the Dwarves and plan to cook them. Gandalf tricks the trolls by mimicking their voices until dawn turns them to stone.",
-        characters: "Bilbo, Gandalf, Thorin, the Trolls"
+        id: "louvre",
+        name: "Le Louvre",
+        category: 'royal',
+        px: 5644, py: 6296,
+        description: "Forteresse médiévale bâtie vers 1190 par Philippe Auguste, progressivement transformée en résidence royale. François Ier (r.1515–1547) ordonna sa reconstruction en style Renaissance. En 1553, sous Henri II, les travaux se poursuivent avec à l'angle la création du pavillon du roi.",
+        quartier: "Rive Droite, Ouest"
     },
     {
-        id: "rivendell-moon-letters",
-        name: "Rivendell \u2014 The Moon Letters",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.062,
-        px: 3922, py: 1096,
-        description: "Elrond hosts the company and reads the moon letters on Thr\u00f3r's map, revealing the secret entrance to Erebor: 'Stand by the grey stone when the thrush knocks, and the last light of Durin's Day will shine upon the keyhole.'",
-        characters: "Bilbo, Gandalf, Thorin, Elrond"
+        id: "hotel_tournelles",
+        name: "Hôtel des Tournelles",
+        category: 'royal',
+        px: 4786, py: 1858,
+        description: "Résidence royale dans le Marais, appréciée de Charles VI, Louis XI et François Ier. Henri II y mourra en 1559 des suites d'un tournoi. Catherine de Médicis, dévastée, le fera démolir ; la Place Royale (actuelle Place des Vosges) sera construite à son emplacement en 1612.",
+        quartier: "Marais, Rive Droite"
     },
     {
-        id: "goblin-town",
-        name: "Goblin-town / High Pass",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.07,
-        px: 4080, py: 1030,
-        description: "The High Pass over the Misty Mountains conceals Goblin-town beneath it, a sprawling underground warren ruled by the Great Goblin. Thorin's company is captured here while sheltering from a thunder-battle, and Gandalf slays the Great Goblin to lead their escape through the tunnels.",
-        characters: "Gandalf, Thorin, the Great Goblin"
+        id: "hotel_sens",
+        name: "Hôtel de Sens",
+        category: 'royal',
+        px: 5903, py: 2580,
+        description: "Résidence parisienne des archevêques de Sens, construite entre 1475 et 1519, l'un des rares hôtels particuliers médiévaux encore debout à Paris. Marguerite de Valois y séjourna au début du XVIIe siècle.",
+        quartier: "Marais, Rive Droite"
     },
     {
-        id: "riddles-in-dark",
-        name: "Misty Mountains \u2014 Riddles in the Dark",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.071,
-        px: 4094, py: 1049,
-        description: "Captured by goblins in the High Pass, the company fights free, but Bilbo is separated and lost in the deep tunnels. There he discovers a golden ring and meets Gollum, defeating him in a game of riddles to find the way out.",
-        characters: "Bilbo, Gollum, the Great Goblin"
+        id: "chateau_vincennes",
+        name: "Château de Vincennes",
+        category: 'royal',
+        px: 5566, py: 645,
+        description: "Résidence royale fortifiée à l'est de Paris, dont le donjon (le plus haut d'Europe médiévale) fut achevé sous Charles V vers 1370. En 1553, Henri II y tient parfois sa cour. Il possède sa propre Sainte-Chapelle, commencée sous Philippe VI et encore inachevée à cette époque.",
+        quartier: "Hors les murs, Est"
     },
     {
-        id: "carrock",
-        name: "The Carrock \u2014 Rescue by Eagles",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.072,
-        px: 4319, py: 976,
-        description: "Pursued by Wargs and goblins, the company is trapped in trees and saved by the Great Eagles, who carry them to safety at the Carrock, a great rock in the river Anduin.",
-        characters: "Bilbo, Gandalf, Thorin, the Great Eagles"
+        id: "petit_bourbon",
+        name: "Hôtel du Petit-Bourbon",
+        category: 'royal',
+        px: 5658, py: 5993,
+        description: "Érigé en 1390 à l'ombre du Louvre pour les ducs de Bourbon, le Petit-Bourbon était l'un des plus fastueux hôtels princiers de Paris. Confisqué par François Ier en 1523 après la trahison du connétable de Bourbon, il devint résidence et salle de fêtes royale, accueillant ambassades et ballets de cour. En 1553, il jouxte le Louvre en pleine mutation et témoigne du prestige de la Couronne dans le quartier occidental.",
+        quartier: "Rive Droite, Ouest"
     },
     {
-        id: "beorns-hall",
-        name: "Beorn's Hall",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.073,
-        px: 4444, py: 944,
-        description: "The company takes refuge with Beorn, a great skin-changer who can take the form of a bear. He confirms the goblins' pursuit and lends them ponies and provisions for the journey through Mirkwood.",
-        characters: "Bilbo, Gandalf, Thorin, Beorn"
+        id: "hotel_nesle",
+        name: "Hôtel de Nesle",
+        category: 'royal',
+        px: 7327, py: 6107,
+        description: "Vaste résidence aristocratique sur la rive gauche, contiguë à la Tour de Nesle, fondée au XIIIe siècle et passée dans les mains royales sous Philippe IV le Bel. Jean de Berry en fit au début du XVe siècle l'un des hôtels les plus fastueux de Paris, orné de tapisseries et de jardins. En 1553, l'hôtel, plusieurs fois divisé et revendu, est en voie de dislocation : il occupait le site où Louis XIV fera construire le Collège des Quatre-Nations, l'actuel Institut de France.",
+        quartier: "Rive Gauche, Ouest"
     },
     {
-        id: "mirkwood-spiders",
-        name: "Mirkwood \u2014 Spiders and Shadows",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.08,
-        px: 4637, py: 945,
-        description: "Without Gandalf, the company enters the dark forest of Mirkwood. They are ensnared by giant spiders. Bilbo uses the Ring and his Elven blade (which he names Sting) to free the Dwarves in his first true act of heroism.",
-        characters: "Bilbo, Thorin, the Dwarves"
-    },
-    {
-        id: "dol-guldur-council",
-        name: "Dol Guldur \u2014 The White Council Strikes",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.081,
-        px: 4690, py: 1578,
-        description: "While the Dwarves journey through Mirkwood, Gandalf departs to join the White Council in an assault on Dol Guldur. They drive out the Necromancer\u2014revealed to be Sauron himself\u2014from the fortress. This is why Gandalf is absent during the company's capture by spiders and Wood-elves.",
-        characters: "Gandalf, Saruman, the White Council, Sauron"
-    },
-    {
-        id: "thranduils-halls",
-        name: "Thranduil's Halls \u2014 The Woodland Realm",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.09,
-        px: 4815, py: 962,
-        description: "The Wood-elves of King Thranduil capture the Dwarves and imprison them. Bilbo, invisible with the Ring, sneaks through the halls for weeks before devising an escape plan using empty barrels floated down the Forest River.",
-        characters: "Bilbo, Thorin, Thranduil"
-    },
-    {
-        id: "lake-town",
-        name: "Lake-town \u2014 Welcome to Esgaroth",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.10,
-        px: 5105, py: 1125,
-        description: "The company arrives at the trade town of Esgaroth on the Long Lake. Thorin declares himself King under the Mountain, and the Men of the Lake welcome the Dwarves, hoping for the return of the old prosperity foretold in legend.",
-        characters: "Bilbo, Thorin, Bard, the Master of Lake-town"
-    },
-    {
-        id: "erebor-inside",
-        name: "Erebor \u2014 Inside the Lonely Mountain",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.101,
-        px: 5161, py: 941,
-        description: "Bilbo creeps down the secret passage and confronts Smaug the Golden in his vast treasure hoard. The hobbit's clever riddling conversation reveals the dragon's one weak spot\u2014a bare patch on his left breast.",
-        characters: "Bilbo, Smaug, Thorin"
-    },
-    {
-        id: "death-of-smaug",
-        name: "Long Lake \u2014 The Death of Smaug",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.11,
-        px: 5140, py: 1125,
-        description: "Enraged by Bilbo's theft, Smaug descends on Lake-town in a storm of fire, setting the town ablaze. As the dragon wheels for another pass, Bard the Bowman\u2014guided by the thrush's message about the bare patch in Smaug's jewelled armour\u2014looses the Black Arrow and strikes true. Smaug crashes down full upon the town, his last throes splintering it to sparks. The lake roars in over the ruins, swallowing the dragon forever.",
-        characters: "Smaug, Bard the Bowman, Bilbo"
-    },
-    {
-        id: "mount-gundabad",
-        name: "Mount Gundabad \u2014 The Goblin Horde",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.111,
-        px: 3842, py: 447,
-        description: "An ancient Dwarven holy site where Durin first awoke, Mount Gundabad was long ago seized by Orcs. In the Battle of Five Armies, Bolg leads a vast goblin army from Gundabad to Erebor, turning what had been a standoff between Dwarves, Elves, and Men into a desperate battle for survival.",
-        characters: "Bolg, Thorin, D\u00e1in Ironfoot"
-    },
-    {
-        id: "five-armies",
-        name: "Dale \u2014 The Battle of Five Armies",
-        category: 'hobbit',
-        era: "TA", year: 2941, sortKey: 6972.112,
-        px: 5123, py: 983,
-        description: "After Bard slays Smaug, five armies converge on the Lonely Mountain: Men, Elves, Dwarves, Goblins, and Wargs. The Free Peoples unite against the goblin horde. Thorin is mortally wounded but reconciles with Bilbo before dying.",
-        characters: "Thorin, Bilbo, Bard, Thranduil, D\u00e1in, Beorn, the Great Eagles"
+        id: "hotel_saint_pol",
+        name: "Hôtel Saint-Pol",
+        category: 'royal',
+        px: 5695, py: 2090,
+        description: "Immense palais royal édifié par Charles V à partir de 1361, ceint par le quai des Célestins, la rue Saint-Antoine, la rue du Petit-Musc et la Seine : un labyrinthe de galeries, de jardins et de pavillons qui fut pendant soixante ans la résidence principale des rois de France. Abandonné sous Louis XI, François Ier le déclara « vieux, inutile, inhabité » et en commença la vente par lots dès 1544. En 1553, le palais n'est plus qu'un chantier de démolition ; des rues nouvelles — la rue Neuve-Saint-Paul, la rue des Lions — découpent ses jardins en parcelles urbaines.",
+        quartier: "Marais, Rive Droite"
     },
 
-    // ── The Fellowship of the Ring ──
+    // ── Édifices civils ──
     {
-        id: "bilbo-farewell",
-        name: "Bag End \u2014 Bilbo's Farewell",
-        category: 'fellowship',
-        era: "TA", year: 3001, sortKey: 7032.09,
-        px: 2764, py: 1115,
-        description: "Bilbo Baggins celebrates his 111th birthday with a magnificent party, then vanishes using the One Ring. He leaves the Ring to his nephew Frodo, setting the quest in motion.",
-        characters: "Bilbo, Frodo, Gandalf"
+        id: "hotel_de_ville",
+        name: "Hôtel de Ville (en construction)",
+        category: 'civic',
+        px: 5556, py: 3720,
+        description: "Siège du Bureau de la Ville de Paris, dont la reconstruction en style Renaissance fut décidée en 1533 par François Ier sur la Place de Grève. En 1553, les travaux sont en cours sur les plans de Boccador ; l'édifice ne sera achevé qu'en 1628.",
+        quartier: "Rive Droite"
     },
     {
-        id: "bucklebury-ferry",
-        name: "Bucklebury Ferry \u2014 Escape from the Black Rider",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.0923,
-        px: 2988, py: 1178,
-        description: "The ferry across the Brandywine south of the Bridge, connecting the Shire to Buckland. Frodo, Sam, and Pippin race to the ferry with a Black Rider closing behind them. They push off just in time, watching the dark shape halt at the water's edge before turning away toward the Bridge.",
-        characters: "Frodo, Sam, Merry, Pippin, the Nazg\u00fbl"
+        id: "grand_chatelet",
+        name: "Grand Châtelet",
+        category: 'civic',
+        px: 5745, py: 4718,
+        description: "Forteresse à l'entrée du Pont au Change, siège de la prévôté de Paris et de la haute justice royale. Ses cachots servaient de prison. Démoli en 1802, son souvenir est perpétué par la Place du Châtelet.",
+        quartier: "Rive Droite"
     },
     {
-        id: "crickhollow",
-        name: "Crickhollow \u2014 The Conspiracy Unmasked",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.0924,
-        px: 3034, py: 1204,
-        description: "Frodo's house in Buckland, purchased as a cover story for leaving the Shire. Here Merry, Pippin, Sam, and Fatty Bolger reveal they have known about the Ring all along and insist on joining Frodo's journey. After the company departs into the Old Forest, a Nazg\u00fbl attacks the house at night. Fatty Bolger escapes and sounds the Horn-call of Buckland, the first time it had been blown in generations.",
-        characters: "Frodo, Sam, Merry, Pippin, Fatty Bolger, the Nazg\u00fbl"
+        id: "petit_chatelet",
+        name: "Petit Châtelet",
+        category: 'civic',
+        px: 7402, py: 4453,
+        description: "Petite forteresse gardant l'accès au Petit Pont depuis la Rive Gauche, utilisée comme prison. Démolie en 1782, elle contrôlait l'une des deux entrées sud de l'Île de la Cité.",
+        quartier: "Rive Gauche"
     },
     {
-        id: "old-forest",
-        name: "Old Forest \u2014 Tom Bombadil",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.0926,
-        px: 3098, py: 1178,
-        description: "Leaving the Shire through the High Hay, the hobbits enter the ancient Old Forest where Old Man Willow traps Merry and Pippin. They are rescued by Tom Bombadil, the enigmatic master of the forest, who is unaffected by the One Ring's power \u2014 one of the great mysteries of Middle-earth.",
-        characters: "Frodo, Sam, Merry, Pippin, Tom Bombadil, Goldberry"
+        id: "les_halles",
+        name: "Les Halles",
+        category: 'civic',
+        px: 4647, py: 5252,
+        description: "Marché central de Paris, établi au XIIe siècle par Louis VI et agrandi par Philippe Auguste. En 1553, c'est le cœur économique de la Rive Droite : grains, viandes, draps, mercerie et toutes denrées y transitent quotidiennement.",
+        quartier: "Rive Droite"
     },
     {
-        id: "barrow-downs",
-        name: "Barrow-downs \u2014 Blades of Westernesse",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.0928,
-        px: 3185, py: 1144,
-        description: "Crossing the ancient burial mounds, the hobbits are ensnared by a Barrow-wight. Tom Bombadil rescues them again. In the wight's hoard, they find D\u00fanedain swords forged to fight Angmar \u2014 it is Merry's blade that later helps slay the Witch-king at the Pelennor Fields.",
-        characters: "Frodo, Sam, Merry, Pippin, Tom Bombadil, the Barrow-wight"
+        id: "sorbonne",
+        name: "Université de Paris – La Sorbonne",
+        category: 'civic',
+        px: 8830, py: 4663,
+        description: "L'une des plus anciennes universités d'Europe, fondée au XIIIe siècle. Le collège de Robert de Sorbon (1257) lui a donné son nom. En 1553, la faculté de théologie domine la pensée intellectuelle française, parfois en tension avec les idées humanistes.",
+        quartier: "Quartier Latin, Rive Gauche"
     },
     {
-        id: "bree",
-        name: "Bree \u2014 The Prancing Pony",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.0929,
-        px: 3254, py: 1139,
-        description: "Frodo and the hobbits meet the mysterious ranger Strider (Aragorn) at the Prancing Pony inn. Frodo accidentally puts on the Ring, drawing the attention of the Nazg\u00fbl.",
-        characters: "Frodo, Sam, Merry, Pippin, Aragorn"
+        id: "hotel_cluny",
+        name: "Hôtel de Cluny",
+        category: 'civic',
+        px: 8250, py: 4719,
+        description: "Résidence parisienne des abbés de Cluny, édifiée à la fin du XVe siècle sur les vestiges des thermes romains de Julien (IIIe s.). Exemple parfait de l'architecture gothique civile parisienne. Musée de Cluny depuis 1843.",
+        quartier: "Quartier Latin, Rive Gauche"
     },
     {
-        id: "midgewater",
-        name: "Midgewater Marshes",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.10,
-        px: 3367, py: 1084,
-        description: "After leaving Bree, Aragorn leads the hobbits off the Road to avoid the Nazg\u00fbl, and they spend several miserable days crossing the Midgewater Marshes \u2014 a trackless bog east of Bree infested with clouds of biting midges. It is unglamorous but necessary, and the hobbits begin to understand the hardship of life in the wild.",
-        characters: "Frodo, Sam, Merry, Pippin, Aragorn"
+        id: "enclos_temple",
+        name: "Enclos du Temple",
+        category: 'civic',
+        px: 3139, py: 2850,
+        description: "Ancienne commanderie des Templiers (fondée vers 1140), passée aux Hospitaliers après la dissolution de l'ordre en 1312. L'enclos formait une juridiction indépendante dans la ville, avec sa tour-forteresse, son église et ses maisons. La Tour du Temple accueillera Louis XVI en 1792.",
+        quartier: "Rive Droite, Nord-Est"
     },
     {
-        id: "weathertop",
-        name: "Weathertop \u2014 Attack of the Nazg\u00fbl",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.1006,
-        px: 3484, py: 1097,
-        description: "The Witch-king of Angmar stabs Frodo with a Morgul blade atop the ancient watchtower of Amon S\u00fbl. The wound nearly claims Frodo's life, leaving a lasting mark.",
-        characters: "Frodo, Aragorn, the Nazg\u00fbl"
+        id: "college_navarre",
+        name: "Collège de Navarre",
+        category: 'civic',
+        px: 8630, py: 3693,
+        description: "Fondé en 1304 par Jeanne de Navarre, épouse de Philippe IV, l'un des collèges les plus prestigieux de l'Université de Paris. Situé sur la Montagne Sainte-Geneviève, il accueillait étudiants pauvres et nobles. Henri V d'Angleterre y séjourna. Devenu École Polytechnique en 1794.",
+        quartier: "Montagne Sainte-Geneviève, Rive Gauche"
     },
     {
-        id: "ford-bruinen",
-        name: "Ford of Bruinen \u2014 Flight to the Ford",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.1020,
-        px: 3850, py: 1134,
-        description: "With a Morgul wound slowly claiming his life, Frodo races on Glorfindel's horse Asfaloth toward the Ford of Bruinen, the last crossing before Rivendell. The Nine Nazg\u00fbl pursue him to the river's edge. As they enter the water, Elrond unleashes the river in a great flood shaped as white horses, sweeping the Black Riders away and breaking their pursuit at last.",
-        characters: "Frodo, Glorfindel, Aragorn, the Nazg\u00fbl, Elrond, Gandalf"
+        id: "arsenal",
+        name: "Arsenal de Paris",
+        category: 'civic',
+        px: 6536, py: 1458,
+        description: "Dépôt royal d'armes, de poudre et de munitions établi sur la Rive Droite à l'est, entre la Bastille et la Seine. Lieu stratégique de stockage de l'artillerie royale. Une explosion dévastatrice s'y produira en 1563. Transformé en bibliothèque (Bibliothèque de l'Arsenal) après la Révolution.",
+        quartier: "Rive Droite, Est"
     },
     {
-        id: "council-elrond",
-        name: "Rivendell \u2014 The Council of Elrond",
-        category: 'fellowship',
-        era: "TA", year: 3018, sortKey: 7049.1025,
-        px: 3940, py: 1096,
-        description: "Representatives of the Free Peoples gather at the Last Homely House. The Fellowship of the Ring is formed: nine companions to counter the nine Nazg\u00fbl, tasked with destroying the One Ring.",
-        characters: "Frodo, Gandalf, Aragorn, Legolas, Gimli, Boromir, Sam, Merry, Pippin"
+        id: "fontaine_innocents",
+        name: "Fontaine des Innocents",
+        category: 'civic',
+        px: 4404, py: 4820,
+        description: "Fontaine monumentale en marbre érigée en 1549 par Pierre Lescot et sculptée par Jean Goujon, à l'angle du cimetière des Innocents, pour célébrer l'entrée solennelle d'Henri II dans Paris. Premier monument Renaissance de l'espace public parisien, orné de nymphes en bas-relief d'une grâce inégalée. Déplacée au centre du square en 1788, elle est toujours visible.",
+        quartier: "Les Halles, Rive Droite"
     },
     {
-        id: "caradhras",
-        name: "Caradhras \u2014 The Redhorn Pass",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.0112,
-        px: 3973, py: 1447,
-        description: "Caradhras, the Redhorn (Barazinbar in Khuzdul), is the northernmost and tallest of the three peaks above Moria. The Fellowship attempts to cross the Redhorn Pass over its shoulder but is driven back by blizzard and malice \u2014 whether from the cruel mountain itself or from Sauron. Their failure on the pass forces the fateful decision to go under the mountains through Moria.",
-        characters: "Gandalf, Aragorn, the Fellowship"
+        id: "college_france",
+        name: "Collège de France",
+        category: 'civic',
+        px: 8165, py: 4410,
+        description: "Fondé en 1530 par François Ier sous le nom de Collège des Lecteurs Royaux, sur les conseils de Guillaume Budé, pour enseigner le grec, l'hébreu et les mathématiques hors du contrôle de la Sorbonne. En 1553, ses lecteurs royaux – humanistes et érudits – représentent le ferment intellectuel de la Renaissance française. Institution toujours en activité.",
+        quartier: "Montagne Sainte-Geneviève, Rive Gauche"
     },
     {
-        id: "doors-durin",
-        name: "Doors of Durin \u2014 Speak Friend and Enter",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.0113,
-        px: 3940, py: 1490,
-        description: "At the West-gate of Moria, the Fellowship finds the ancient Doors of Durin sealed shut. An inscription reads 'Speak, friend, and enter.' Gandalf tries spell after spell before realising it is a simple riddle \u2014 the Elvish word for friend, mellon, opens the doors. As they enter, the Watcher in the Water attacks from the dark lake, seizing Frodo. The others rescue him, but the creature pulls the doors shut and collapses the entrance, trapping the Fellowship inside.",
-        characters: "Gandalf, Frodo, the Watcher in the Water, the Fellowship"
+        id: "hotel_dieu",
+        name: "Hôtel-Dieu de Paris",
+        category: 'civic',
+        px: 7144, py: 4213,
+        description: "Fondé selon la tradition vers 651 par l'évêque saint Landry, l'Hôtel-Dieu est le plus ancien hôpital de Paris, établi au pied de la cathédrale Notre-Dame sur l'île de la Cité. Reconstruit et agrandi sous Maurice de Sully à partir de 1165, il accueillait pèlerins, malades et indigents, servi par des sœurs augustiniennes. En 1553, c'est l'institution caritative la plus importante de la capitale, toujours en activité aujourd'hui.",
+        quartier: "Île de la Cité"
     },
     {
-        id: "bridge-khazad-dum",
-        name: "Moria \u2014 The Bridge of Khazad-d\u00fbm",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.0115,
-        px: 3981, py: 1515,
-        description: "The Fellowship passes through the abandoned Dwarven kingdom. After discovering the fate of Balin's colony, they are attacked by Orcs and a cave troll. Gandalf confronts the Balrog on the Bridge and falls into shadow.",
-        characters: "Gandalf, the Balrog, the Fellowship"
+        id: "hopital_sainte_catherine",
+        name: "Hôpital Sainte-Catherine",
+        category: 'civic',
+        px: 4979, py: 4736,
+        description: "Établi en 1181 à l'angle de la rue Saint-Denis et de la rue des Lombards, cet hôpital hébergea d'abord les pèlerins de passage avant de se spécialiser dans l'accueil des femmes démunies venues de province. L'institution gérait également la sépulture des noyés et des inconnus repêchés dans la Seine. En 1553, Sainte-Catherine est l'un des points d'ancrage de la charité chrétienne au cœur de la Rive Droite commerçante.",
+        quartier: "Rive Droite"
     },
     {
-        id: "dimrill-dale",
-        name: "Dimrill Dale \u2014 The Mirrormere",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.0115,
-        px: 4058, py: 1555,
-        description: "Emerging grief-stricken from Moria after Gandalf's fall, the Fellowship pauses at the Dimrill Dale. Gimli looks into the Mirrormere (Kheled-z\u00e2ram), the sacred lake where Durin the Deathless first saw a crown of stars reflected about his head, and the sight strengthens his resolve.",
-        characters: "Aragorn, Legolas, Gimli, Frodo, Sam, Merry, Pippin, Boromir"
-    },
-    {
-        id: "lothlorien",
-        name: "Lothl\u00f3rien \u2014 The Golden Wood",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.0117,
-        px: 4214, py: 1609,
-        description: "The grieving Fellowship takes refuge in the Elven realm of Lady Galadriel. She shows Frodo the Mirror of Galadriel and resists the temptation of the Ring. The company receives Elven gifts and boats.",
-        characters: "Galadriel, Celeborn, the Fellowship"
-    },
-    {
-        id: "caras-galadhon",
-        name: "Caras Galadhon \u2014 The Heart of Lothl\u00f3rien",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.02,
-        px: 4190, py: 1640,
-        description: "The city of the Galadhrim, built on a great hill among the mallorn trees. Here stand the high telain of Celeborn and Galadriel, and the Mirror of Galadriel in its garden hollow. From this city the Fellowship receives the Elven cloaks, lembas, and other gifts \u2014 including the Phial of Galadriel and the three golden hairs she gives to Gimli.",
-        characters: "Galadriel, Celeborn, Frodo, Gimli, the Fellowship"
-    },
-    {
-        id: "amon-hen",
-        name: "Amon Hen \u2014 The Breaking of the Fellowship",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.0226,
-        px: 4480, py: 2174,
-        description: "Boromir succumbs to the Ring's temptation and tries to take it from Frodo. Orcs attack; Boromir redeems himself defending Merry and Pippin but is slain. Frodo and Sam depart alone for Mordor.",
-        characters: "Boromir, Frodo, Aragorn, Merry, Pippin"
-    },
-    {
-        id: "rauros-falls",
-        name: "Rauros Falls \u2014 Boromir's Funeral",
-        category: 'fellowship',
-        era: "TA", year: 3019, sortKey: 7050.0226,
-        px: 4502, py: 2196,
-        description: "The great waterfall of Rauros on the Anduin, near the hills of Emyn Muil. After Boromir falls defending Merry and Pippin, Aragorn, Legolas, and Gimli place his body in an Elven boat and send it over the falls as a funeral rite \u2014 a solemn farewell to the son of Gondor.",
-        characters: "Aragorn, Legolas, Gimli, Boromir"
+        id: "chambre_comptes",
+        name: "Chambre des comptes de Paris",
+        category: 'civic',
+        px: 6831, py: 5008,
+        description: "Héritière d'un contrôle financier royal remontant à Saint Louis, la Chambre des comptes fut érigée en cour souveraine par l'ordonnance de janvier 1319. Installée au Palais de la Cité, elle vérifiait les recettes et dépenses du domaine royal, enregistrait les actes et conservait les archives de la Couronne. En 1553, c'était l'une des grandes cours souveraines du royaume, pivot de la gestion financière d'une monarchie en pleine centralisation.",
+        quartier: "Île de la Cité"
     },
 
-    // ── The Two Towers ──
+    // ── Ponts ──
     {
-        id: "celebdil",
-        name: "Celebdil \u2014 Durin\u2019s Tower",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0125,
-        px: 3917, py: 1457,
-        description: "Celebdil, the Silvertine (Zirakzigil in Khuzdul), is the westernmost of the three peaks above Moria. At its summit stands Durin\u2019s Tower, carved in the living rock and reached by the Endless Stair spiralling up from the deepest foundations of Khazad-d\u00fbm. After falling from the Bridge, Gandalf pursues the Balrog up the Endless Stair to this peak. For two days they battle on the mountainside until Gandalf throws down the Balrog, shattering the tower and the mountainside where he fell. Gandalf himself passes away on the peak before being sent back as the White.",
-        characters: "Gandalf, Durin\u2019s Bane (the Balrog)"
+        id: "pont_notre_dame",
+        name: "Pont Notre-Dame",
+        category: 'bridge',
+        px: 6235, py: 4298,
+        description: "Principal pont entre la Rive Droite et l'Île de la Cité, reconstruit en pierre en 1507 après l'effondrement du pont de bois. Remarquable : ses 68 maisons identiques numérotées en forment la première rue numérotée de Paris.",
+        quartier: "Seine"
     },
     {
-        id: "eaves-fangorn",
-        name: "Eaves of Fangorn \u2014 Escape from the Uruk-hai",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0229,
-        px: 4017, py: 2086,
-        description: "At the edge of Fangorn Forest, the Riders of Rohan under \u00c9omer surround and destroy the Uruk-hai band carrying Merry and Pippin. In the chaos of the night battle, the two hobbits slip their bonds and crawl into the eaves of the forest, where they will encounter Treebeard. Aragorn, Legolas, and Gimli arrive the next morning to find the smouldering orc pyre and track the hobbits' trail into the trees.",
-        characters: "\u00c9omer, Merry, Pippin, Ugl\u00fak, Grish\u00e1kh, Aragorn, Legolas, Gimli"
+        id: "pont_au_change",
+        name: "Pont au Change",
+        category: 'bridge',
+        px: 6197, py: 4636,
+        description: "Pont historique entre la Rive Droite et l'Île de la Cité, attesté depuis le Moyen Âge. Son nom vient des changeurs de monnaies qui y tenaient boutique. Il était également bordé de maisons et d'échoppes.",
+        quartier: "Seine"
     },
     {
-        id: "fangorn-treebeard",
-        name: "Fangorn Forest \u2014 The Meeting with Treebeard",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0299,
-        px: 4043, py: 1918,
-        description: "After escaping the Uruk-hai during the battle at the forest\u2019s edge, Merry and Pippin flee into the depths of Fangorn. There they encounter Treebeard, the oldest of the Ents and shepherd of the trees. He carries them to his home at Wellinghall, and their tales of Saruman\u2019s treachery against the forest rouse the Ents to march on Isengard.",
-        characters: "Treebeard, Merry, Pippin"
+        id: "petit_pont",
+        name: "Petit Pont",
+        category: 'bridge',
+        px: 7181, py: 4493,
+        description: "Le plus ancien pont de Paris, utilisé depuis l'époque gallo-romaine comme passage vers le sud. En 1553, il reliait l'Île de la Cité à la Rive Gauche et au Quartier Latin, bordé de maisons à colombages.",
+        quartier: "Seine"
     },
     {
-        id: "fangorn-white-wizard",
-        name: "Fangorn Forest \u2014 The White Wizard",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0301,
-        px: 4004, py: 2000,
-        description: "Tracking Merry and Pippin into Fangorn, Aragorn, Legolas, and Gimli encounter a figure in white they mistake for Saruman. It is Gandalf, returned from death after his battle with the Balrog in the depths of Moria. Reborn as Gandalf the White, he tells them the hobbits are safe and leads them to Edoras to free King Th\u00e9oden from Saruman\u2019s influence.",
-        characters: "Gandalf, Aragorn, Legolas, Gimli"
+        id: "pont_saint_michel",
+        name: "Pont Saint-Michel",
+        category: 'bridge',
+        px: 7255, py: 4787,
+        description: "Pont reliant la Rive Gauche à l'Île de la Cité à l'ouest du Petit Pont, reconstruit en pierre en 1378. Comme les autres ponts parisiens, il était couvert de maisons et de boutiques formant une véritable rue sur l'eau.",
+        quartier: "Seine"
     },
     {
-        id: "emyn-muil",
-        name: "Emyn Muil \u2014 The Taming of Gollum",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0301,
-        px: 4623, py: 2147,
-        description: "Frodo and Sam become lost in the rocky maze of Emyn Muil. They capture Gollum, who has been stalking them, and Frodo makes him swear on the Precious to serve as their guide to Mordor.",
-        characters: "Frodo, Sam, Gollum"
-    },
-    {
-        id: "edoras",
-        name: "Edoras \u2014 The Golden Hall of Meduseld",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0302,
-        px: 3969, py: 2344,
-        description: "Gandalf frees King Th\u00e9oden from the influence of Saruman, channeled through Gr\u00edma Wormtongue. The people of Rohan prepare for war against Isengard's forces.",
-        characters: "Gandalf, Th\u00e9oden, \u00c9owyn, \u00c9omer, Gr\u00edma"
-    },
-    {
-        id: "helms-deep",
-        name: "Helm's Deep \u2014 The Battle of the Hornburg",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0303,
-        px: 3760, py: 2277,
-        description: "The Rohirrim make a desperate stand against Saruman's army of 10,000 Uruk-hai at the fortress of Helm's Deep. Victory comes at dawn with the charge of Gandalf and the Rohirrim, and the arrival of the Huorns.",
-        characters: "Th\u00e9oden, Aragorn, Legolas, Gimli, Gandalf, Erkenbrand"
-    },
-    {
-        id: "dead-marshes",
-        name: "The Dead Marshes",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0304,
-        px: 4894, py: 2150,
-        description: "Gollum leads the hobbits through the treacherous Dead Marshes, where ghostly lights and the faces of the ancient dead lie beneath the water. A Nazg\u00fbl on a fell beast passes overhead.",
-        characters: "Frodo, Sam, Gollum"
-    },
-    {
-        id: "isen-dam",
-        name: "Dam on the River Isen",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0303,
-        px: 3793, py: 1978,
-        description: "The Ents broke the great dam on the River Isen during their assault on Isengard, unleashing the waters into the Ring of Isengard and flooding Saruman\u2019s underground armouries, furnaces, and war machinery. The deluge drowned his forces and rendered the fortress useless, trapping the wizard in the tower of Orthanc.",
-        characters: "Treebeard, the Ents"
-    },
-    {
-        id: "isengard-ents",
-        name: "Isengard \u2014 The Ents' Assault",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0304,
-        px: 3775, py: 2039,
-        description: "Roused to fury by Saruman's destruction of the forest, the Ents march on Isengard and break the dam, flooding the fortress and trapping Saruman in the tower of Orthanc.",
-        characters: "Treebeard, Merry, Pippin, Saruman"
-    },
-    {
-        id: "orthanc-saruman",
-        name: "Orthanc \u2014 The Voice of Saruman",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0305,
-        px: 3744, py: 2017,
-        description: "After the flooding of Isengard, Gandalf and the company confront Saruman atop the tower of Orthanc. Saruman attempts to sway them with his persuasive voice but is broken by Gandalf, who casts him from the order. Gr\u00edma Wormtongue hurls the palant\u00edr of Orthanc from the tower. That night Pippin steals a look into the seeing-stone and is seen by Sauron \u2014 forcing Gandalf to ride at once to Minas Tirith with Pippin.",
-        characters: "Gandalf, Saruman, Gr\u00edma, Pippin, Aragorn, Th\u00e9oden"
-    },
-    {
-        id: "henneth-annun",
-        name: "Henneth Ann\u00fbn \u2014 Window of the Sunset",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0307,
-        px: 5029, py: 2491,
-        description: "A hidden refuge of the Rangers of Ithilien behind a curtain waterfall. Faramir brings Frodo and Sam here after capturing them in the wilds of Ithilien. Behind the falls, Faramir questions Frodo about the Ring and learns of Boromir's death \u2014 and unlike his brother, chooses not to seize the Ring.",
-        characters: "Faramir, Frodo, Sam, Gollum"
-    },
-    {
-        id: "cross-roads",
-        name: "The Cross-roads \u2014 The Fallen King",
-        category: 'towers',
-        era: "TA", year: 3019, sortKey: 7050.0309,
-        px: 4927, py: 2678,
-        description: "At the junction where the road from Osgiliath meets the southward road to Minas Morgul, Frodo finds the old statue of a seated king. Its head has been struck off and replaced with a crude stone carved with a leering face, but the severed head lies nearby in the grass, crowned by trailing plants with white and gold flowers. A fleeting beam of sunlight illuminates the crowned head \u2014 a quiet sign that Sauron cannot conquer all.",
-        characters: "Frodo, Sam, Gollum"
+        id: "pont_meuniers",
+        name: "Pont aux Meuniers",
+        category: 'bridge',
+        px: 6184, py: 4828,
+        description: "Pont à l'extrémité occidentale de l'Île de la Cité, supportant des moulins à eau qui exploitaient le courant de la Seine. Emporté par une crue en 1596, il ne fut pas reconstruit.",
+        quartier: "Seine"
     },
 
-    // ── The Return of the King ──
+    // ── Portes et fortifications ──
     {
-        id: "dunharrow",
-        name: "Dunharrow \u2014 Muster of Rohan",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0309,
-        px: 4005, py: 2440,
-        description: "A mountain refuge on a sheer cliff above Harrowdale, reached by a switchback path lined with ancient P\u00fakel-men statues. The Rohirrim muster here before riding to Gondor's aid. Behind the Firienfeld lies the Dark Door \u2014 entrance to the Paths of the Dead, which Aragorn alone dares to enter.",
-        characters: "Th\u00e9oden, \u00c9owyn, Merry, Aragorn"
+        id: "bastille",
+        name: "La Bastille",
+        category: 'gate',
+        px: 5188, py: 1522,
+        description: "Forteresse commencée en 1357 pour défendre l'entrée est de Paris, achevée sous Charles V. Rapidement reconvertie en prison d'État pour les prisonniers de la Couronne. Sa prise le 14 juillet 1789 marquera le début de la Révolution française.",
+        quartier: "Rive Droite, Est"
     },
     {
-        id: "minas-morgul",
-        name: "Minas Morgul \u2014 The Dead City",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0310,
-        px: 5033, py: 2660,
-        description: "The hobbits pass the Dead City of Minas Morgul, once Minas Ithil, now home to the Witch-king and his Nazg\u00fbl. As they climb the stairs beside it, the army of Morgul issues forth, led by the Witch-king, marching to war against Gondor.",
-        characters: "Frodo, Sam, Gollum, the Witch-king"
+        id: "porte_saint_antoine",
+        name: "Porte Saint-Antoine",
+        category: 'gate',
+        px: 4941, py: 1510,
+        description: "Principale porte orientale de Paris, encadrée par la Bastille. Principal accès pour les voyageurs venant de l'est (Meaux, Reims, Champagne). Démolie au XVIIIe siècle lors de l'extension de la ville.",
+        quartier: "Rive Droite"
     },
     {
-        id: "paths-dead",
-        name: "Paths of the Dead \u2014 The Haunted Way",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0308,
-        px: 3945, py: 2458,
-        description: "A dread passage beneath the White Mountains connecting Dunharrow to the vale beyond. The Dead Men who broke their oath to Isildur haunt its darkness. None had dared enter for centuries until Aragorn, as Isildur's heir, rode through with Legolas, Gimli, and the Grey Company, commanding the Dead to follow and fulfil their ancient pledge.",
-        characters: "Aragorn, Legolas, Gimli, the Grey Company, the Dead Men"
+        id: "porte_saint_denis",
+        name: "Porte Saint-Denis",
+        category: 'gate',
+        px: 2276, py: 4854,
+        description: "Porte septentrionale principale de la Rive Droite, sur l'axe vers Saint-Denis et la Flandre. Porte d'entrée des cortèges royaux venant de Saint-Denis. Remplacée en 1672 par l'arc de triomphe de la Porte Saint-Denis, encore visible aujourd'hui.",
+        quartier: "Rive Droite, Nord"
     },
     {
-        id: "erech",
-        name: "Erech \u2014 The Paths of the Dead",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0308,
-        px: 3886, py: 2470,
-        description: "Aragorn, Legolas, and Gimli ride the Paths of the Dead beneath the White Mountains and emerge at the Stone of Erech. There Aragorn, as heir of Isildur, summons the oathbreaking Dead Men of Dunharrow to fulfil their ancient pledge. The ghostly army follows him south to Pelargir, where they overwhelm the Corsairs of Umbar in terror. Their oath fulfilled, the Dead are released and depart forever.",
-        characters: "Aragorn, Legolas, Gimli, the Dead Men of Dunharrow"
+        id: "porte_saint_honore",
+        name: "Porte Saint-Honoré",
+        category: 'gate',
+        px: 4801, py: 6950,
+        description: "Porte occidentale de la Rive Droite, sur la route de Normandie et de la mer. Jeanne d'Arc fut blessée lors du siège de Paris en 1429 en tentant d'y pénétrer. Démolie au XVIIe siècle lors des réaménagements de la ville.",
+        quartier: "Rive Droite, Ouest"
     },
     {
-        id: "cirith-ungol-shelob",
-        name: "Cirith Ungol \u2014 Shelob's Lair",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0312,
-        px: 5082, py: 2526,
-        description: "Gollum's treachery is revealed as he leads the hobbits into the lair of the giant spider Shelob. Frodo is stung and paralyzed. Sam drives Shelob away with the Phial of Galadriel and Sting, then rescues Frodo from the tower of Cirith Ungol.",
-        characters: "Frodo, Sam, Gollum, Shelob"
+        id: "porte_saint_martin",
+        name: "Porte Saint-Martin",
+        category: 'gate',
+        px: 2314, py: 4137,
+        description: "Porte nord de la Rive Droite, à l'est de la Porte Saint-Denis, sur l'axe vers Soissons et les Flandres. Remplacée en 1674 par l'arc de triomphe de la Porte Saint-Martin, visible de nos jours.",
+        quartier: "Rive Droite, Nord"
     },
     {
-        id: "tower-cirith-ungol",
-        name: "Tower of Cirith Ungol \u2014 Sam's Rescue",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0314,
-        px: 5120, py: 2530,
-        description: "After Shelob stings Frodo, the orcs of the tower carry his body inside. Sam, believing Frodo dead, takes the Ring \u2014 but overhears the orcs and realises Frodo is alive. He storms the tower alone, finding the garrison has slaughtered itself in a quarrel over Frodo's mithril coat. Sam returns the Ring and the two hobbits escape disguised as orcs into Mordor.",
-        characters: "Sam, Frodo, Shagrat, Gorbag"
+        id: "porte_saint_jacques",
+        name: "Porte Saint-Jacques",
+        category: 'gate',
+        px: 9680, py: 4533,
+        description: "Porte méridionale de la Rive Gauche, point de départ du pèlerinage vers Saint-Jacques-de-Compostelle. Des pèlerins de toute la France et d'Europe s'y retrouvaient avant d'entreprendre le long chemin vers la Galice.",
+        quartier: "Rive Gauche, Sud"
     },
     {
-        id: "pelargir",
-        name: "Pelargir \u2014 Capture of the Corsair Fleet",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0313,
-        px: 4508, py: 3010,
-        description: "Aragorn leads the Dead south from Erech to the ancient port of Pelargir, where the Corsairs of Umbar have anchored their fleet. The Dead sweep through the Corsairs in terror, and Aragorn seizes the ships. He releases the Dead Men from their oath, and they vanish at last. Aragorn then mans the ships with Rangers, men of Lebennin and Lamedon, and sails up the Anduin to the Pelennor Fields.",
-        characters: "Aragorn, Legolas, Gimli, the Dead Men of Dunharrow, the Corsairs of Umbar"
+        id: "porte_saint_germain",
+        name: "Porte Saint-Germain",
+        category: 'gate',
+        px: 8301, py: 5887,
+        description: "Porte occidentale de la Rive Gauche, donnant accès au faubourg Saint-Germain et à l'abbaye du même nom. Elle ouvrait sur les routes menant au sud-ouest de la France.",
+        quartier: "Rive Gauche, Ouest"
     },
     {
-        id: "lamedon",
-        name: "Lamedon \u2014 Angbor's Rally",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0313,
-        px: 4125, py: 2795,
-        description: "A valley fiefdom of Gondor on the southern slopes of the White Mountains, along the River Ciril. After Aragorn emerged from the Paths of the Dead and routed the Corsairs at Pelargir, Lord Angbor of Lamedon rallied his men and joined Aragorn's force sailing up the Anduin to relieve Minas Tirith at the Battle of the Pelennor Fields.",
-        characters: "Angbor, Aragorn"
+        id: "porte_montmartre",
+        name: "Porte Montmartre",
+        category: 'gate',
+        px: 2990, py: 6138,
+        description: "Porte nord de l'Enceinte de Charles V, entre la Porte Saint-Denis et la Porte Saint-Honoré. Elle ouvrait sur le chemin menant au village et à l'abbaye de Montmartre, et sur les routes vers le nord-ouest. Démolie lors des extensions de la ville au XVIIe siècle.",
+        quartier: "Rive Droite, Nord"
     },
     {
-        id: "linhir",
-        name: "Linhir \u2014 Battle at the Gilrain Crossing",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.03135,
-        px: 4130, py: 2892,
-        description: "A town in Lebennin at the crossing of the River Gilrain. During the War of the Ring, the Corsairs of Umbar and their Haradrim allies advanced inland and fought a battle here, overwhelming the local defenders. Aragorn arrived with the Grey Company and the Army of the Dead, whose terrifying presence routed the enemy. From Linhir, Aragorn pressed on south to seize the Corsair fleet at Pelargir.",
-        characters: "Aragorn, Legolas, Gimli, the Dead Men of Dunharrow"
+        id: "porte_du_temple",
+        name: "Porte du Temple",
+        category: 'gate',
+        px: 2528, py: 2868,
+        description: "Porte nord-est de l'Enceinte de Charles V, donnant accès à l'Enclos du Temple et aux routes vers la Flandre orientale. Parfois appelée Porte des Boulets ou Porte Barbette selon les sources. Disparue au XVIIe siècle lors de l'agrandissement de la ville.",
+        quartier: "Rive Droite, Nord-Est"
     },
     {
-        id: "druadan-forest",
-        name: "Dr\u00faadan Forest \u2014 The Wild Men",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0314,
-        px: 4618, py: 2531,
-        description: "When the road to Minas Tirith is blocked by Sauron's forces, Gh\u00e2n-buri-Gh\u00e2n of the Dr\u00faedain (Wild Men) guides the Rohirrim through secret paths in the ancient forest, allowing them to reach the Pelennor Fields in time. In gratitude, Aragorn later grants the Dr\u00faadan Forest to the Wild Men forever.",
-        characters: "Gh\u00e2n-buri-Gh\u00e2n, Th\u00e9oden, \u00c9omer, Merry"
+        id: "tour_nesle",
+        name: "Tour de Nesle",
+        category: 'gate',
+        px: 7026, py: 6324,
+        description: "Tour d'angle de l'Enceinte de Philippe Auguste sur la Rive Gauche, à l'extrémité de la muraille longeant la Seine, face à la Tour du Louvre. Célèbre pour le scandale de 1314 : la reine Marguerite de Bourgogne y aurait reçu ses amants avant de les faire jeter dans la Seine. Démolie en 1665 pour la construction du collège Mazarin (actuel Institut de France).",
+        quartier: "Rive Gauche, Ouest"
     },
     {
-        id: "minas-tirith-siege",
-        name: "Minas Tirith \u2014 The Siege of Gondor",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0314,
-        px: 4720, py: 2641,
-        description: "Sauron's forces besiege the White City. The Witch-king breaks the Great Gate. Denethor, driven mad by the palant\u00edr, attempts to burn Faramir alive. The Rohirrim arrive at dawn to turn the tide.",
-        characters: "Gandalf, Denethor, Faramir, Pippin"
+        id: "porte_nesle",
+        name: "Porte de Nesle",
+        category: 'gate',
+        px: 7177, py: 6313,
+        description: "Porte occidentale de l'Enceinte de Philippe Auguste sur la Rive Gauche, à l'angle de la muraille et de la Seine, face à la Tour du Louvre de l'autre côté du fleuve. La Tour de Nesle voisine (aujourd'hui disparue) était célèbre pour les scandales de la reine Marguerite de Bourgogne.",
+        quartier: "Rive Gauche, Ouest"
     },
     {
-        id: "pelennor-fields",
-        name: "Pelennor Fields \u2014 The Great Battle",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0315,
-        px: 4784, py: 2638,
-        description: "The greatest battle of the War of the Ring. Th\u00e9oden leads the Rohirrim charge and falls beneath his horse. \u00c9owyn and Merry slay the Witch-king. Aragorn arrives on captured Corsair ships with reinforcements from southern Gondor to turn the tide.",
-        characters: "Th\u00e9oden, \u00c9owyn, Merry, Aragorn, the Witch-king"
+        id: "porte_tournelle",
+        name: "Porte de la Tournelle",
+        category: 'gate',
+        px: 7340, py: 3091,
+        description: "Porte aussi connue sous le nom de porte Saint-Bernard, située à l'angle de la muraille et de la Seine, face aux Îles aux Vaches. Elle ouvrait sur le chemin longeant le fleuve vers l'amont et donnait accès aux faubourgs de l'est de la Rive Gauche.",
+        quartier: "Rive Gauche, Est"
     },
     {
-        id: "black-gate",
-        name: "The Black Gate \u2014 The Last Debate",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0325,
-        px: 5141, py: 2272,
-        description: "Aragorn leads the armies of the West to the Black Gate of Mordor in a desperate gambit to draw Sauron's Eye away from Frodo. Vastly outnumbered, they fight to buy time for the Ring-bearer.",
-        characters: "Aragorn, Gandalf, Legolas, Gimli, Merry, Pippin"
+        id: "porte_saint_victor_rg",
+        name: "Porte Saint-Victor",
+        category: 'gate',
+        px: 8176, py: 3272,
+        description: "Porte est de l'Enceinte de Philippe Auguste sur la Rive Gauche, sur la route menant à l'abbaye Saint-Victor et aux faubourgs orientaux. L'une des principales sorties de la ville vers l'est, empruntée par les voyageurs et les charrois.",
+        quartier: "Rive Gauche, Est"
     },
     {
-        id: "mount-doom-end",
-        name: "Mount Doom \u2014 The End of All Things",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.0325,
-        px: 5419, py: 2532,
-        description: "Frodo and Sam reach the Crack of Doom after an agonizing journey across Mordor. At the last moment, Frodo claims the Ring\u2014but Gollum bites it from his finger and falls into the fire, destroying the One Ring and Sauron forever.",
-        characters: "Frodo, Sam, Gollum"
+        id: "porte_saint_marcel",
+        name: "Porte Saint-Marcel",
+        category: 'gate',
+        px: 9362, py: 3379,
+        description: "Porte également connue sous les noms de porte Bordet ou porte Bordelle, elle constituait l'accès  méridional de l'Enceinte de Philippe Auguste, sur la route menant au bourg Saint-Marcel et à la Bièvre. Elle ouvrait sur les faubourgs du sud, peuplés de teinturiers et de tanneurs qui exploitaient la rivière Bièvre. Démolie lors de la construction de l'enceinte des Fermiers généraux.",
+        quartier: "Rive Gauche, Sud"
     },
     {
-        id: "field-cormallen",
-        name: "Field of Cormallen \u2014 The Eagles Are Coming",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.04,
-        px: 4799, py: 2565,
-        description: "After the destruction of the Ring, Gandalf rides the great Eagle Gwaihir to rescue Frodo and Sam from the slopes of Mount Doom. They awake in Ithilien to find Gandalf at their bedside. The Host of the West honours the hobbits before the gates of the field, and Aragorn bows to them, saying 'Praise them with great praise!'",
-        characters: "Frodo, Sam, Gandalf, Aragorn, Gwaihir"
+        id: "tour_du_coin_louvre",
+        name: "Tour du Coin du Louvre",
+        category: 'gate',
+        px: 6068, py: 6063,
+        description: "Tour d'angle sud-ouest du château du Louvre médiéval, érigée vers 1200 dans le programme défensif de Philippe Auguste. Haute d'environ 25 mètres pour 10 mètres de diamètre, elle commandait l'accès à la Seine depuis le flanc occidental de la forteresse royale. La nuit, des chaînes tendues sur des bateaux reliaient cette tour à la Tour de Nesle sur la rive gauche, fermant le fleuve à toute intrusion.",
+        quartier: "Rive Droite, Ouest"
     },
     {
-        id: "coronation",
-        name: "Minas Tirith \u2014 The Coronation of Elessar",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.05,
-        px: 4730, py: 2650,
-        description: "Aragorn is crowned King Elessar on the plain before Minas Tirith. Gandalf sets the White Crown upon his head, and Aragorn speaks the words of Elendil: 'Et E\u00e4rello Endorenna ut\u00falien.' At the city gate Arwen awaits him, and they are wed at last \u2014 the union of the lines of Elros and Elrond, long sundered.",
-        characters: "Aragorn, Arwen, Gandalf, Frodo, Faramir"
+        id: "porte_buci",
+        name: "Porte de Buci",
+        category: 'gate',
+        px: 7957, py: 6052,
+        description: "Percée dans l'enceinte de Philippe Auguste vers 1209, cette porte de la rive gauche ouvrait sur le chemin menant à Saint-Germain-des-Prés et aux faubourgs occidentaux. Elle prit le nom de Buci en 1350 lorsque Simon de Buci en obtint le bail pour vingt livres de rente. La nuit du 28 au 29 mai 1418, Perrinet Leclerc livra ses clés aux Bourguignons, déclenchant le massacre des partisans armagnacs dans Paris.",
+        quartier: "Rive Gauche"
     },
     {
-        id: "mindolluin",
-        name: "Mindolluin \u2014 The White Tree",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.06,
-        px: 4740, py: 2665,
-        description: "Gandalf leads Aragorn up the slopes of Mount Mindolluin above Minas Tirith. In a high hallow of snow they find a sapling of the White Tree, descended from Nimloth of N\u00famenor and ultimately from Telperion, the eldest of Trees. Aragorn plants it in the Court of the Fountain, where it flowers \u2014 a sign that his kingdom will endure.",
-        characters: "Aragorn, Gandalf"
+        id: "porte_enfer",
+        name: "Porte d'Enfer",
+        category: 'gate',
+        px: 9396, py: 4886,
+        description: "Érigée vers 1200 à l'extrémité sud de la rue de la Harpe, la Porte d'Enfer — nom d'origine incertaine, peut-être issu du voisinage de carrières profondes — constituait l'un des accès méridionaux de l'enceinte de Philippe Auguste. Après d'importants travaux en 1394, elle prit le nom de Porte Saint-Michel. En 1553, ce point de passage marquait la limite de Paris vers les faubourgs du sud et la route de Vaugirard.",
+        quartier: "Rive Gauche, Sud"
     },
     {
-        id: "bywater-scouring",
-        name: "Bywater \u2014 The Scouring of the Shire",
-        category: 'king',
-        era: "TA", year: 3019, sortKey: 7050.11,
-        px: 2848, py: 1147,
-        description: "Returning home, the four hobbits find the Shire under the tyranny of 'Sharkey' \u2014 Saruman, diminished but vengeful. Merry and Pippin rouse the Shire-folk, and at the Battle of Bywater the ruffians are overthrown. Frodo confronts Saruman at Bag End and offers mercy, but Gr\u00edma Wormtongue turns on his master and slays him. It is the last killing in the War of the Ring.",
-        characters: "Frodo, Sam, Merry, Pippin, Saruman, Gr\u00edma"
+        id: "tour_barbeau",
+        name: "Tour Barbeau",
+        category: 'gate',
+        px: 6135, py: 2498,
+        description: "Érigée vers 1209 sur la rive droite de la Seine, la Tour Barbeau était l'un des piliers orientaux de la défense fluviale de Paris selon le programme de Philippe Auguste. Haute d'environ 25 mètres, elle commandait le passage du fleuve avec la Tour Loriaux, reliées la nuit par de lourdes chaînes tendues sur l'eau pour interdire l'accès à la ville. En 1553, sa masse imposante marquait encore le front de Seine du quartier des Célestins.",
+        quartier: "Rive Droite, Est"
     },
     {
-        id: "westmarch",
-        name: "Westmarch \u2014 The Red Book",
-        category: 'king',
-        era: "TA", year: 3021, sortKey: 7052.09,
-        px: 2524, py: 1019,
-        description: "After the War of the Ring, King Elessar granted the hobbits the land between the Far Downs and the Tower Hills, extending the Shire westward. This region became the Westmarch. Sam's eldest daughter Elanor and her husband Fastred of Greenholm settled here as Wardens of Westmarch. The Red Book of Westmarch \u2014 the in-universe manuscript from which The Lord of the Rings is said to be copied \u2014 was kept by their descendants in this land.",
-        characters: "Elanor, Fastred, Samwise Gamgee"
+        id: "tour_du_bois",
+        name: "Tour du Bois",
+        category: 'gate',
+        px: 6162, py: 6866,
+        description: "Érigée vers 1380 à l'extrémité occidentale de l'enceinte de Charles V, la Tour du Bois flanquait la Seine sur la rive droite, à hauteur de ce qui est aujourd'hui le Pont du Carrousel. Haute d'environ vingt-cinq mètres, elle constituait le verrou défensif de la ville côté Normandie — front alors considéré comme le plus exposé aux menaces anglaises et normandes. Un pan de courtine la reliait à l'est à la Tour du Coin, vestige de l'enceinte de Philippe Auguste, formant une double ceinture de pierre entre terre et fleuve. Elle sera démolie vers 1670.",
+        quartier: "Rive Droite, Ouest"
+    },
+
+    // ── Quartiers et lieux notables ──
+    {
+        id: "ile_cite",
+        name: "Île de la Cité",
+        category: 'place',
+        px: 6830, py: 4388,
+        description: "Berceau de Paris (Lutèce pour les Romains), île naturelle de la Seine et cœur historique de la ville. En 1553, elle est densément bâtie : cathédrale, palais royal, chapelle royale, maisons bourgeoises et ruelles enchevêtrées.",
+        quartier: "Île de la Cité"
+    },
+    {
+        id: "ile_aux_vaches",
+        name: "Île aux Vaches et Île Notre-Dame",
+        category: 'place',
+        px: 6744, py: 2700,
+        description: "Deux petites îles non bâties à l'est de l'Île de la Cité, visibles sur cette carte. Utilisées pour des pâturages et des dépôts de bois. Réunies et lotties au XVIIe siècle, elles formeront l'Île Saint-Louis.",
+        quartier: "Seine, Est"
+    },
+    {
+        id: "montmartre",
+        name: "La Butte Montmartre",
+        category: 'place',
+        px: 683, py: 6211,
+        description: "Colline dominant Paris au nord, couronnée par l'abbaye bénédictine Notre-Dame de Montmartre (fondée en 1133). En 1553, c'est un village extra-muros avec ses moulins et ses vignes, offrant une vue panoramique sur la ville en contrebas.",
+        quartier: "Hors les murs, Nord"
+    },
+    {
+        id: "foire_saint_germain",
+        name: "Foire Saint-Germain",
+        category: 'place',
+        px: 8914, py: 6303,
+        description: "Grande foire annuelle tenue dans le faubourg Saint-Germain, sur des terres appartenant à l'abbaye. L'une des plus importantes de France, elle attire marchands, artisans et forains de toute l'Europe chaque hiver. Son emplacement correspond aujourd'hui au marché Saint-Germain.",
+        quartier: "Faubourg Saint-Germain, Rive Gauche"
+    },
+    {
+        id: "quartier_latin",
+        name: "Quartier Latin",
+        category: 'place',
+        px: 8680, py: 4169,
+        description: "Quartier universitaire de la Rive Gauche, où se concentrent collèges, libraires, imprimeurs et étudiants venus de toute l'Europe. Le latin y est la langue commune des clercs et des savants, d'où son nom. Centre de l'humanisme français au XVIe siècle.",
+        quartier: "Rive Gauche"
+    },
+    {
+        id: "marais",
+        name: "Le Marais",
+        category: 'place',
+        px: 5096, py: 2506,
+        description: "Quartier aristocratique de la Rive Droite orientale, en pleine expansion au XVIe siècle. Ses hôtels particuliers accueillent la haute noblesse et la riche bourgeoisie. L'Hôtel des Tournelles (résidence royale) en est le fleuron en 1553.",
+        quartier: "Rive Droite, Est"
+    },
+    {
+        id: "gibet_montfaucon",
+        name: "Gibet de Montfaucon",
+        category: 'place',
+        px: 720, py: 3248,
+        description: "Gibet permanent érigé hors les murs au nord de Paris, en usage du XIIIe au XVIIe siècle. Sa structure de pierre pouvait exposer simultanément des dizaines de corps pendus, symbole de la justice royale visible à grande distance. Lieu de terreur et de fascination pour les Parisiens.",
+        quartier: "Hors les murs, Nord"
+    },
+    {
+        id: "place_greve",
+        name: "Place de Grève",
+        category: 'place',
+        px: 5532, py: 3878,
+        description: "Grande place sur la Rive Droite, au bord de la Seine, devant l'Hôtel de Ville en construction. Cœur de la vie civique parisienne : lieu d'exécutions publiques, de rassemblements d'ouvriers sans travail (les « grévistes »), de fêtes royales et de marchés. Actuelle Place de l'Hôtel de Ville.",
+        quartier: "Rive Droite"
+    },
+    {
+        id: "cimetiere_innocents",
+        name: "Cimetière des Innocents",
+        category: 'place',
+        px: 4648, py: 4972,
+        description: "Le plus grand et le plus ancien cimetière de Paris, attenant aux Halles, en usage depuis l'époque mérovingienne jusqu'en 1786. Entouré de charniers à plusieurs étages débordants d'ossements, il accueillait des dizaines de milliers de sépultures superposées. Lieu de promenade, de commerce et de spectacle macabre au cœur de la ville. Transformé en marché puis en square (Square des Innocents).",
+        quartier: "Les Halles, Rive Droite"
+    },
+    {
+        id: "port_greve",
+        name: "Port de la Grève",
+        category: 'place',
+        px: 6201, py: 3588,
+        description: "Principal port fluvial de Paris, sur la berge de la Seine en face de la Place de Grève. Les marchandises pondéreuses (bois, vin, grain, foin) arrivaient par bateau et étaient déchargées sur cette grève de sable et de gravier. Les débardeurs et mariniers y cherchaient l'embauche — d'où le mot « gréviste ». Lieu névralgique du commerce parisien.",
+        quartier: "Rive Droite"
+    },
+    {
+        id: "gobelins",
+        name: "Teintureries des Gobelins",
+        category: 'place',
+        px: 11140, py: 3596,
+        description: "Dès 1443, la famille Gobelin, teinturiers d'origine champenoise, s'installa dans le Faubourg Saint-Marcel en bordure de la Bièvre pour exploiter leur procédé exclusif de teinture en écarlate. En 1553, ce quartier artisanal extra-muros est le fief de plusieurs générations de Gobelins, dont la renommée a donné son nom au lieu. Sous Henri IV, en 1601, l'emplacement deviendra la Manufacture royale de tapisseries, consacrant définitivement la vocation textile du site.",
+        quartier: "Faubourg Saint-Marcel, Rive Gauche"
+    },
+    {
+        id: "ile_louviers",
+        name: "Île Louviers",
+        category: 'place',
+        px: 7278, py: 1662,
+        description: "Îlot alluvial de la Seine, l'île Louviers doit son nom à Nicolas de Louviers, prévôt des marchands qui en fit don à la ville en 1408. Longtemps terrain d'exercice pour les arbalétriers parisiens, elle se dota à l'initiative du prévôt des marchands et des échevins d'un petit fort et d'un havre destinés à offrir au roi Henri II un spectacle de siège et de combat naval. La seule construction figurée sur le plan de Truschet et Hoyau représente vraisemblablement ce bâtiment royal. L'île sera rattachée à la rive droite par comblement en 1847.",
+        quartier: "Seine, Est"
+    },
+    {
+        id: "orme_saint_gervais",
+        name: "Orme Saint-Gervais",
+        category: 'place',
+        px: 5513, py: 3388,
+        description: "Depuis au moins le XIIIe siècle, un orme se dresse devant l'église Saint-Gervais-Saint-Protais, servant de point de rassemblement pour régler les dettes et rendre une justice populaire informelle. Ce rôle d'arbre à justice ancré dans la vie civique parisienne engendra l'expression « Attendez-moi sous l'orme ! », synonyme d'une promesse que l'on ne tient pas. En 1553, l'orme trône encore sur la place, symbole vivant de la communauté du Marais.",
+        quartier: "Marais, Rive Droite"
+    },
+    {
+        id: "place_maubert",
+        name: "Place Maubert",
+        category: 'place',
+        px: 7852, py: 4124,
+        description: "L'une des plus anciennes places publiques de la rive gauche, la place Maubert — « la Maube » pour les Parisiens — prit forme dès le début du XIIIe siècle au carrefour des voies menant vers l'Université. Lieu de marché, d'exécutions et de supplices, elle vit notamment l'imprimeur humaniste Étienne Dolet brûlé vif avec ses livres le 3 août 1546. En 1553, c'est une place animée et redoutée, carrefour du savoir universitaire et de la répression religieuse.",
+        quartier: "Quartier Latin, Rive Gauche"
     }
 ];
 
-// ── Event Links ──────────────────────────────────
-const EVENT_LINKS = [
-    // ── The Ring's Journey ──
-    { from: "one-ring-forged", to: "eregion-rings", type: "cause", label: "Elves perceive Sauron's treachery" },
-    { from: "one-ring-forged", to: "last-alliance", type: "cause", label: "Leads to the Last Alliance" },
-    { from: "last-alliance", to: "gladden-fields", type: "sequel", label: "Isildur loses the Ring" },
-    { from: "gladden-fields", to: "gollum-origin", type: "sequel", label: "Ring found by D\u00e9agol centuries later" },
-    { from: "gollum-origin", to: "riddles-in-dark", type: "sequel", label: "Bilbo finds the Ring" },
-    { from: "riddles-in-dark", to: "bilbo-farewell", type: "sequel", label: "Ring passes to Frodo" },
-    { from: "bilbo-farewell", to: "council-elrond", type: "sequel", label: "The Quest is formed" },
-    { from: "council-elrond", to: "mount-doom-end", type: "sequel", label: "The Ring is destroyed" },
-
-    // ── Gandalf's arc ──
-    { from: "dol-guldur-shadow", to: "dol-guldur-council", type: "sequel", label: "White Council drives out Sauron" },
-
-    // ── N\u00famenor → Exile Kingdoms ──
-    { from: "numenor-downfall", to: "annuminas", type: "sequel", label: "Faithful found Arnor" },
-    { from: "numenor-downfall", to: "last-alliance", type: "cause", label: "Exiles confront Sauron" },
-
-    // ── Northern Kingdom ──
-    { from: "annuminas", to: "fornost-fall", type: "sequel", label: "Capital moves to Fornost, then falls" },
-    { from: "carn-dum", to: "fornost-fall", type: "cause", label: "Angmar destroys Arthedain" },
-    { from: "fornost-fall", to: "forochel", type: "sequel", label: "Last king flees north" },
-
-    // ── Rohan ──
-    { from: "field-celebrant", to: "edoras", type: "legacy", label: "Rohan endures for 500 years" },
-    { from: "fords-isen", to: "helms-deep", type: "cause", label: "Rohan leaderless as war comes" },
-
-    // ── Parallel events (War of the Ring) ──
-    { from: "helms-deep", to: "dead-marshes", type: "parallel", label: "Simultaneous events" },
-    { from: "helms-deep", to: "isengard-ents", type: "parallel", label: "Simultaneous events" },
-    { from: "pelennor-fields", to: "tower-cirith-ungol", type: "parallel", label: "Simultaneous events" },
-    { from: "black-gate", to: "mount-doom-end", type: "parallel", label: "Distraction enables the Ring's destruction" },
-
-    // ── Hobbit → LOTR connections ──
-    { from: "unexpected-party", to: "bilbo-farewell", type: "sequel", label: "Bilbo's later years" },
-    { from: "five-armies", to: "council-elrond", type: "legacy", label: "Erebor sends envoy to Rivendell" },
-    { from: "dol-guldur-council", to: "dol-guldur-shadow", type: "sequel", label: "Sauron driven out but returns to Mordor" },
-
-    // ── Location echoes across ages ──
-    { from: "khazad-dum-awakening", to: "bridge-khazad-dum", type: "location", label: "Same halls, millennia apart" },
-    { from: "barad-dur-built", to: "mount-doom-end", type: "location", label: "The Dark Tower falls at last" },
-    { from: "one-ring-forged", to: "mount-doom-end", type: "location", label: "Forged and destroyed in the same fire" },
-    { from: "eregion-rings", to: "doors-durin", type: "location", label: "Near the West-gate of Moria" },
-
-    // ── Breaking of the Fellowship ──
-    { from: "amon-hen", to: "eaves-fangorn", type: "sequel", label: "Merry and Pippin taken to Fangorn" },
-    { from: "eaves-fangorn", to: "fangorn-treebeard", type: "sequel", label: "Hobbits flee into the forest" },
-    { from: "bridge-khazad-dum", to: "fangorn-white-wizard", type: "sequel", label: "Gandalf returns as the White" },
-    { from: "amon-hen", to: "emyn-muil", type: "sequel", label: "Frodo and Sam go alone to Mordor" },
-
-    // ── Scouring ──
-    { from: "orthanc-saruman", to: "bywater-scouring", type: "sequel", label: "Saruman takes revenge on the Shire" },
-    { from: "sarn-ford", to: "bucklebury-ferry", type: "cause", label: "Nazg\u00fbl enter the Shire" },
-
-    // ── The Shire ──
-    { from: "shire-homeland", to: "unexpected-party", type: "legacy", label: "Where the story begins" },
-    { from: "bywater-scouring", to: "westmarch", type: "sequel", label: "The Shire is restored and extended" },
-
-    // ── Dwarven heritage ──
-    { from: "ered-luin", to: "khazad-dum-awakening", type: "legacy", label: "Dwarven kingdoms east and west" },
-    { from: "withered-heath", to: "erebor-inside", type: "cause", label: "Smaug descends from the north" },
-
-    // ── New marker connections ──
-    { from: "framsburg", to: "field-celebrant", type: "cause", label: "Eorl rides south from Framsburg" },
-    { from: "lond-daer", to: "eryn-vorn", type: "cause", label: "Deforestation drives natives into the dark wood" },
-    { from: "mount-gram", to: "shire-homeland", type: "legacy", label: "Battle of Greenfields" },
-    { from: "edhellond", to: "dol-amroth", type: "legacy", label: "Amroth\u2019s drowning names the city" },
-    { from: "mount-gundabad", to: "five-armies", type: "cause", label: "Goblin army marches on Erebor" },
-    { from: "crossings-poros", to: "pelennor-fields", type: "legacy", label: "Rohan honours the alliance again" }
-];
-
-// ── Journey Paths ──────────────────────────────
-// Shared Fellowship path: Rivendell to Rauros Falls
-const FELLOWSHIP_PATH = [
-    [3940, 1096],  // Rivendell
-    [3930, 1190],  // South from Rivendell
-    [3915, 1280],  // Western foothills
-    [3900, 1370],  // Hollin (Eregion)
-    [3930, 1440],  // Approaching Caradhras
-    [3940, 1490],  // Doors of Durin
-    [3981, 1515],  // Moria
-    [4026, 1516],  // Dimrill Dale
-    [4214, 1609],  // Lothl\u00f3rien
-    [4224, 1658, 1],  // Nimrodel
-    [4261, 1661, 1],  // Nimrodel
-    [4289, 1684, 1],  // Nimrodel
-    [4320, 1686, 1],  // Nimrodel merges into the Anduin
-    [4355, 1707, 1],  // Anduin
-    [4365, 1724, 1],  // Anduin
-    [4356, 1744, 1],  // Anduin
-    [4396, 1747, 1],  // Anduin
-    [4417, 1729, 1],  // Anduin
-    [4464, 1744, 1],  // Anduin
-    [4471, 1771, 1],  // Anduin
-    [4465, 1788, 1],  // Anduin
-    [4452, 1813, 1],  // Anduin
-    [4479, 1838, 1],  // Anduin
-    [4499, 1840, 1],  // Anduin
-    [4531, 1829, 1],  // Anduin
-    [4558, 1837, 1],  // Anduin
-    [4574, 1867, 1],  // Anduin
-    [4559, 1892, 1],  // Anduin
-    [4533, 1929, 1],  // Anduin
-    [4563, 1966, 1],  // Anduin
-    [4561, 2016, 1],  // Anduin
-    [4561, 2016, 1],  // Anduin
-    [4512, 2088, 1],  // Anduin
-    [4511, 2105],  // Argonath
-    [4480, 2174],  // Amon Hen
-    [4502, 2196]   // Rauros Falls
-];
-
-const JOURNEYS = {
-    fellowship: {
-        label: "The Fellowship",
-        color: '#7b2d8e',
-        points: FELLOWSHIP_PATH
-    },
-    bilbo: {
-        label: "Bilbo's Journey",
-        color: '#5b8fb9',
-        points: [
-            [2746, 1115],  // Bag End
-            [2974, 1126],  // Brandywine Bridge
-            [3254, 1139],  // Bree
-            [3370, 1175],  // East Road
-            [3491, 1195],  // East Road
-            [3590, 1185],  // East Road
-            [3681, 1154],  // Last Bridge
-            [3811, 937],   // Trollshaws
-            [3850, 1134],  // Ford of Bruinen
-            [3922, 1096],  // Rivendell
-            [4094, 1049],  // Misty Mountains
-            [4319, 976],   // Carrock
-            [4444, 944],   // Beorn's Hall
-            [4637, 945],   // Mirkwood
-            [4815, 962],   // Thranduil's Halls
-            [5105, 1125],  // Lake-town
-            [5161, 941],   // Erebor
-            [5105, 1125],  // Lake-town (return)
-            [4444, 944],   // Beorn's Hall
-            [3922, 1096],  // Rivendell
-            [3681, 1154],  // Last Bridge (return)
-            [3590, 1200],  // East Road
-            [3491, 1210],  // East Road
-            [3370, 1190],  // East Road
-            [3254, 1139],  // Bree (return)
-            [2974, 1126],  // Brandywine Bridge
-            [2746, 1115],  // Bag End (home)
-            [2974, 1126],  // Brandywine Bridge (retirement)
-            [3681, 1154],  // Last Bridge
-            [3922, 1096],  // Rivendell (retires here)
-            [3681, 1154],  // Last Bridge (Grey Havens)
-            [2974, 1126],  // Brandywine Bridge
-            [2266, 1150]   // Grey Havens
-        ]
-    },
-    frodo: {
-        label: "Frodo's Journey",
-        color: '#c0392b',
-        points: [
-            [2764, 1115],  // Bag End
-            [2988, 1178],  // Bucklebury Ferry
-            [3034, 1204],  // Crickhollow
-            [3098, 1178],  // Old Forest
-            [3185, 1144],  // Barrow-downs
-            [3254, 1139],  // Bree
-            [3367, 1084],  // Midgewater Marshes
-            [3484, 1097],  // Weathertop
-            [3681, 1154],  // Last Bridge
-            [3850, 1134],  // Ford of Bruinen
-            ...FELLOWSHIP_PATH,
-            [4623, 2147],  // Emyn Muil
-            [4894, 2150],  // Dead Marshes
-            [5050, 2280],  // North Ithilien
-            [5029, 2491],  // Henneth Ann\u00fbn
-            [4927, 2678],  // Cross-roads
-            [5033, 2660],  // Minas Morgul
-            [5082, 2526],  // Cirith Ungol
-            [5120, 2530],  // Tower of Cirith Ungol
-            [5419, 2532],  // Mount Doom
-            [4799, 2565],  // Field of Cormallen
-            [4720, 2641],  // Minas Tirith
-            [3969, 2344],  // Edoras
-            [3849, 2295],  // en route to Helm's Deep
-            [3760, 2277],  // Helm's Deep
-            [3775, 2039],  // Isengard
-            [3742, 2135],  // Gap of Rohan
-            [3550, 1850],  // Dunland
-            [3500, 1500],  // Eriador
-            [3940, 1096],  // Rivendell
-            [3850, 1134],  // Ford of Bruinen
-            [3681, 1154],  // Last Bridge
-            [3254, 1139],  // Bree
-            [2974, 1126],  // Brandywine Bridge
-            [2848, 1147],  // Bywater
-            [2764, 1115],  // Bag End
-            [2974, 1126],  // Brandywine Bridge
-            [2266, 1150]   // Grey Havens
-        ]
-    },
-    aragorn: {
-        label: "Aragorn's Journey",
-        color: '#6a9f5b',
-        points: [
-            [3254, 1139],  // Bree
-            [3367, 1084],  // Midgewater Marshes
-            [3484, 1097],  // Weathertop
-            [3681, 1154],  // Last Bridge
-            [3850, 1134],  // Ford of Bruinen
-            ...FELLOWSHIP_PATH,
-            [4017, 2086],  // Eaves of Fangorn
-            [4004, 2000],  // Fangorn (White Wizard)
-            [3969, 2344],  // Edoras
-            [3849, 2295],  // en route to Helm's Deep
-            [3760, 2277],  // Helm's Deep
-            [3775, 2039],  // Isengard
-            [3969, 2344],  // Edoras (return)
-            [4005, 2440],  // Dunharrow
-            [3886, 2470],  // Erech
-            [3779, 2638],  // Morthond Vale
-            [3890, 2767],  // Calembel
-            [4125, 2795],  // Lamedon
-            [4130, 2892],  // Linhir
-            [4508, 3010],  // Pelargir
-            [4784, 2638],  // Pelennor Fields
-            [4720, 2641],  // Minas Tirith
-            [4939, 2329],  // Ithilien
-            [5051, 2250],  // Dagorlad
-            [5141, 2272],  // Black Gate
-            [5051, 2250],  // Dagorlad (return)
-            [4939, 2329],  // Ithilien (return)
-            [4799, 2565],  // Field of Cormallen
-            [4720, 2641]   // Minas Tirith (coronation)
-        ]
-    },
-    boromir: {
-        label: "Boromir's Journey",
-        color: '#8e6b3e',
-        points: [
-            [4720, 2641],  // Minas Tirith
-            [4400, 2550],  // Anorien
-            [4100, 2400],  // Rohan
-            [3742, 2135],  // Gap of Rohan
-            [3574, 2022],  // Dunland
-            [3550, 1850],  // Enedwaith
-            [3372, 1578],  // Tharbad
-            [3500, 1350],  // Lone-lands
-            [3681, 1154],  // Last Bridge
-            [3850, 1134],  // Ford of Bruinen
-            ...FELLOWSHIP_PATH
-        ]
-    },
-    merry_pippin: {
-        label: "Merry & Pippin's Journey",
-        color: '#d4813a',
-        points: [
-            [2764, 1115],  // Bag End
-            [2988, 1178],  // Bucklebury Ferry
-            [3034, 1204],  // Crickhollow
-            [3098, 1178],  // Old Forest
-            [3185, 1144],  // Barrow-downs
-            [3254, 1139],  // Bree
-            [3367, 1084],  // Midgewater Marshes
-            [3484, 1097],  // Weathertop
-            [3681, 1154],  // Last Bridge
-            [3850, 1134],  // Ford of Bruinen
-            ...FELLOWSHIP_PATH.slice(0, -1),  // Up to Amon Hen (excludes Rauros Falls)
-            [4017, 2086],  // Eaves of Fangorn
-            [4043, 1918],  // Fangorn
-            [3775, 2039]   // Isengard
-        ],
-        branches: {
-            pippin: [
-                [3775, 2039],  // Isengard
-                [3742, 2135],  // Gap of Rohan
-                [3969, 2380],  // Edoras
-                [4400, 2550],  // Anorien
-                [4720, 2641],  // Minas Tirith
-                [4784, 2638],  // Pelennor Fields
-                [4939, 2329],  // Ithilien
-                [5051, 2250],  // Dagorlad
-                [5141, 2272],  // Black Gate
-                [5051, 2250],  // Dagorlad (return)
-                [4939, 2329],  // Ithilien (return)
-                [4799, 2565],  // Field of Cormallen
-                [4720, 2641],  // Minas Tirith (coronation)
-                [3969, 2344],  // Edoras
-                [3760, 2277],  // Helm's Deep
-                [3775, 2039],  // Isengard
-                [3742, 2135],  // Gap of Rohan
-                [3550, 1850],  // Dunland
-                [3500, 1500],  // Eriador
-                [3940, 1096],  // Rivendell
-                [3850, 1134],  // Ford of Bruinen
-                [3681, 1154],  // Last Bridge
-                [3254, 1139],  // Bree
-                [2974, 1126],  // Brandywine Bridge
-                [2848, 1147],  // Bywater
-                [2764, 1115]   // Bag End
-            ],
-            merry: {
-                color: '#c4a24a',
-                points: [
-                    [3775, 2039],  // Isengard
-                    [3969, 2344],  // Edoras
-                    [4005, 2440],  // Dunharrow
-                    [4618, 2531],  // Dr\u00faadan Forest
-                    [4784, 2638],  // Pelennor Fields
-                    [4939, 2329],  // Ithilien
-                    [5051, 2250],  // Dagorlad
-                    [5141, 2272],  // Black Gate
-                    [5051, 2250],  // Dagorlad (return)
-                    [4939, 2329],  // Ithilien (return)
-                    [4799, 2565],  // Field of Cormallen
-                    [4720, 2641],  // Minas Tirith (coronation)
-                    [3969, 2344],  // Edoras
-                    [3760, 2277],  // Helm's Deep
-                    [3775, 2039],  // Isengard
-                    [3742, 2135],  // Gap of Rohan
-                    [3550, 1850],  // Dunland
-                    [3500, 1500],  // Eriador
-                    [3940, 1096],  // Rivendell
-                    [3850, 1134],  // Ford of Bruinen
-                    [3681, 1154],  // Last Bridge
-                    [3254, 1139],  // Bree
-                    [2974, 1126],  // Brandywine Bridge
-                    [2848, 1147],  // Bywater
-                    [2764, 1115]   // Bag End
-                ]
-            }
-        }
-    },
-    gollum: {
-        label: "Gollum's Journey",
-        color: '#708090',
-        points: [
-            [4434, 1380],  // River-folk
-            [4434, 1380],  // Gladden Fields
-            [4094, 1049],  // Misty Mountains
-            [4400, 1360],  // Gladden Fields
-            [4463, 1801],  // Anduin valley
-            [4623, 2147],  // Emyn Muil
-            [4894, 2150],  // Dead Marshes
-            [5141, 2272],  // Black Gate
-            [4894, 2150],  // Dead Marshes
-            [4463, 1801],  // Anduin valley
-            [3981, 1515],  // Moria
-            [4026, 1516],  // Dimrill Dale
-            [4300, 1609],  // East of Lothl\u00f3rien
-            [4463, 1801],  // Anduin
-            [4569, 1985],  // Anduin
-            [4511, 2105],  // Argonath area
-            [4623, 2147],  // Emyn Muil
-            [4894, 2150],  // Dead Marshes
-            [5141, 2272],  // Black Gate
-            [5029, 2491],  // Henneth Ann\u00fbn
-            [5033, 2660],  // Minas Morgul
-            [5082, 2526],  // Cirith Ungol
-            [5120, 2530],  // Tower of Cirith Ungol
-            [5419, 2532]   // Mount Doom
-        ]
-    },
-    gandalf_hobbit: {
-        label: "Gandalf's Journey (Hobbit)",
-        color: '#00bcd4',
-        points: [
-            [2746, 1115],  // Bag End
-            [2974, 1126],  // Brandywine Bridge
-            [3254, 1139],  // Bree
-            [3370, 1175],  // East Road
-            [3491, 1195],  // East Road
-            [3590, 1185],  // East Road
-            [3681, 1154],  // Last Bridge
-            [3811, 937],   // Trollshaws
-            [3850, 1134],  // Ford of Bruinen
-            [3922, 1096],  // Rivendell
-            [4094, 1049],  // Misty Mountains
-            [4319, 976],   // Carrock
-            [4444, 944],   // Beorn's Hall
-            [4444, 944]    // Leaves company
-        ],
-        branches: {
-            dol_guldur: [
-                [4444, 944],   // Leaves company
-                [4672, 1578],  // Dol Guldur
-                [4521, 1430],  // Northwest out of Mirkwood
-                [4358, 917],   // Anduin vales
-                [4324, 777],   // Upper Anduin
-                [4467, 676],   // North of Mirkwood
-                [4973, 688],   // Grey Mountains foothills
-                [5114, 890],   // Approach to Erebor
-                [5161, 941]    // Erebor
-            ]
-        }
-    },
-    gandalf_lotr: {
-        label: "Gandalf's Journey (LOTR)",
-        color: '#00bcd4',
-        points: [
-            [2764, 1115],  // Bag End
-            [4720, 2641],  // Minas Tirith
-            [2764, 1115],  // Bag End
-            [3775, 2039],  // Isengard
-            [3969, 2344],  // Edoras
-            [3484, 1097],  // Weathertop
-            [3681, 1154],  // Last Bridge
-            [3940, 1096],  // Rivendell
-            [3930, 1190],  // South from Rivendell
-            [3915, 1280],  // Western foothills
-            [3900, 1370],  // Hollin
-            [3930, 1440],  // Approaching Caradhras
-            [3981, 1515],  // Moria (falls)
-            [4004, 2000],  // Fangorn (returns as the White)
-            [3969, 2344],  // Edoras
-            [3849, 2295],  // en route to Helm's Deep
-            [3760, 2277],  // Helm's Deep
-            [3700, 2104],  // Fords of Isen (rallies Erkenbrand)
-            [3760, 2277],  // Helm's Deep (returns at dawn)
-            [3775, 2039],  // Isengard
-            [3742, 2135],  // Gap of Rohan
-            [3969, 2380],  // Edoras
-            [4400, 2550],  // Anorien
-            [4720, 2641],  // Minas Tirith
-            [4784, 2638],  // Pelennor Fields
-            [4939, 2329],  // Ithilien
-            [5051, 2250],  // Dagorlad
-            [5141, 2272],  // Black Gate
-            [5051, 2250],  // Dagorlad (return)
-            [4939, 2329],  // Ithilien (return)
-            [4799, 2565],  // Field of Cormallen
-            [4720, 2641]   // Minas Tirith (coronation)
-        ]
-    }
-};
+const JOURNEYS = {};

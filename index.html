@@ -1,630 +1,699 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Middle-earth — Interactive Map</title>
-    <meta name="description" content="Explore an interactive map of Tolkien's Middle-earth with over 100 events from The Silmarillion, The Hobbit, and The Lord of the Rings. Click markers, trace journeys, and discover the history of every age.">
-    <link rel="canonical" href="https://frasermarlow.github.io/middle-earth-map/">
+    <title>Paris 1553 — Carte de Truschet et Hoyau</title>
+    <meta name="description" content="Explorez Paris en 1553 grâce à la carte de Truschet et Hoyau, une des plus anciennes représentations topographiques de Paris. Découvrez cathédrales, palais, ponts et portes de la ville médiévale.">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Middle-earth — Interactive Map">
-    <meta property="og:description" content="Explore an interactive map of Tolkien's Middle-earth with over 100 events from The Silmarillion, The Hobbit, and The Lord of the Rings.">
-    <meta property="og:url" content="https://frasermarlow.github.io/middle-earth-map/">
-    <meta property="og:image" content="https://frasermarlow.github.io/middle-earth-map/og-image.jpg">
+    <meta property="og:title" content="Paris 1553 — Carte de Truschet et Hoyau">
+    <meta property="og:description" content="Explorez Paris en 1553 grâce à la carte de Truschet et Hoyau, une des plus anciennes représentations topographiques de Paris.">
+    <meta property="og:image" content="og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Middle-earth — Interactive Map">
-    <meta name="twitter:description" content="Explore an interactive map of Tolkien's Middle-earth with over 100 events from The Silmarillion, The Hobbit, and The Lord of the Rings.">
-    <meta name="twitter:image" content="https://frasermarlow.github.io/middle-earth-map/og-image.jpg">
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Middle-earth Interactive Map",
-        "url": "https://frasermarlow.github.io/middle-earth-map/",
-        "description": "An interactive map of Tolkien's Middle-earth with events from across the legendarium.",
-        "author": {
-            "@type": "Person",
-            "name": "Fraser Marlow",
-            "url": "https://github.com/frasermarlow"
-        }
-    }
-    </script>
+    <meta name="twitter:title" content="Paris 1553 — Carte de Truschet et Hoyau">
+    <meta name="twitter:description" content="Explorez Paris en 1553 grâce à la carte de Truschet et Hoyau, une des plus anciennes représentations topographiques de Paris.">
+    <meta name="twitter:image" content="og-image.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
+        /* ── Palette Renaissance (parchemin) ─────── */
+        :root {
+            --bg:        #2c2419;   /* Parchemin page */
+            --panel:     #f5eedc;   /* Panneaux, légende, popups */
+            --gold:      #c9a435;
+            --gold-lt:   #8a5a08;   /* Ambre foncé, lisible sur parchemin */
+            --gold-dk:   #6a4810;
+            --gold-rule: rgba(160, 112, 16, 0.45);
+            --ink:       #1a0e04;   /* Encre foncée */
+            --quill:     #4a3018;   /* Texte secondaire */
+            --fade:      #6a4818;   /* Texte tertiaire */
+            --crimson:   #8b2020;
+            --verdigris: #2a6a1a;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
-            background: #1a1a1a;
+            font-family: 'EB Garamond', 'Palatino Linotype', Georgia, serif;
+            font-size: 16px;
+            background: var(--bg);
             overflow: hidden;
         }
 
         #map {
             width: 100vw;
             height: 100vh;
-            background: #2c2418;
+            background: var(--bg);
         }
 
-        /* Legend Panel */
+        /* ══════════════════════════════════
+           Barre de navigation
+        ══════════════════════════════════ */
         #nav-bar {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 44px;
+            top: 0; left: 0; right: 0;
+            height: 46px;
             z-index: 1100;
-            background: rgba(26, 26, 26, 0.92);
-            border-bottom: 1px solid #5a4a36;
+            background: rgba(235, 221, 188, 0.97);
+            border-bottom: 1px solid var(--gold-dk);
+            box-shadow: 0 1px 0 rgba(160,112,16,0.2), 0 4px 16px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
+
         .nav-link {
-            color: #8b7355;
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--fade);
             text-decoration: none;
-            font-size: 13px;
             padding: 6px 14px;
-            border-radius: 4px;
-            transition: color 0.2s, background 0.2s;
+            border: 1px solid transparent;
+            border-radius: 2px;
+            transition: color 0.25s, border-color 0.25s, background 0.25s;
         }
         .nav-link:hover, .nav-link.active {
-            color: #e8d9b0;
-            background: rgba(139, 115, 85, 0.2);
+            color: var(--gold-lt);
+            border-color: var(--gold-dk);
+            background: rgba(201,164,53,0.07);
         }
+
         .nav-title {
-            font-size: 15px;
-            color: #e8d9b0;
-            letter-spacing: 2px;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
         }
-        @media (max-width: 500px) {
-            .nav-title { display: none; }
-        }
+        @media (max-width: 500px) { .nav-title { display: none; } }
+
+        /* ══════════════════════════════════
+           Panneau Légende
+        ══════════════════════════════════ */
+
         #legend {
             position: absolute;
-            top: 60px;
+            top: 62px;
             right: 16px;
             z-index: 1000;
-            background: rgba(44, 36, 24, 0.95);
-            border: 2px solid #8b7355;
-            border-radius: 8px;
-            padding: 16px;
-            color: #d4c5a9;
-            max-width: 280px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            max-height: calc(100vh - 32px);
+            background-color: var(--panel);
+            background-image:
+                linear-gradient(var(--gold-rule), var(--gold-rule)),
+                linear-gradient(var(--gold-rule), var(--gold-rule)),
+                linear-gradient(var(--gold-rule), var(--gold-rule)),
+                linear-gradient(var(--gold-rule), var(--gold-rule));
+            background-size:
+                calc(100% - 18px) 1px,
+                calc(100% - 18px) 1px,
+                1px calc(100% - 18px),
+                1px calc(100% - 18px);
+            background-position:
+                9px 9px,
+                9px calc(100% - 9px),
+                9px 9px,
+                calc(100% - 9px) 9px;
+            background-attachment: local, local, local, local;
+            background-repeat: no-repeat;
+            border: 2px solid var(--gold);
+            border-radius: 3px;
+            padding: 18px 16px 16px;
+            color: var(--ink);
+            max-width: 285px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+            max-height: calc(100vh - 78px);
             overflow-y: auto;
             padding-bottom: 120px;
         }
 
         #legend h2 {
-            font-size: 16px;
-            color: #e8d9b0;
-            margin-bottom: 12px;
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 14px;
             text-align: center;
-            border-bottom: 1px solid #8b7355;
-            padding-bottom: 8px;
-            padding-right: 32px;
-            letter-spacing: 1px;
+            padding-bottom: 12px;
+            padding-right: 30px;
             position: relative;
+            border-bottom: none;
+        }
+        /* Gradient rule below legend title */
+        #legend h2::after {
+            content: '';
+            display: block;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold-dk) 25%, var(--gold-dk) 75%, transparent);
+            margin-top: 10px;
         }
 
         #legend-close {
             position: absolute;
-            top: -4px;
-            right: 0;
+            top: 0; right: 0;
             background: none;
-            border: 1px solid #8b7355;
-            border-radius: 4px;
-            color: #a89070;
-            font-size: 18px;
+            border: 1px solid var(--gold-dk);
+            border-radius: 2px;
+            color: var(--fade);
+            font-size: 16px;
             cursor: pointer;
-            width: 26px;
-            height: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
             transition: color 0.2s, border-color 0.2s;
         }
+        #legend-close:hover { color: var(--gold-lt); border-color: var(--gold); }
 
-        #legend-close:hover {
-            color: #f0e6cc;
-            border-color: #d4c5a9;
-        }
-
-        .legend-category {
-            margin-bottom: 10px;
-        }
+        /* ── Catégories ── */
+        .legend-category { margin-bottom: 8px; }
 
         .legend-category-header {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            padding: 6px 0;
+            display: flex; align-items: center;
+            cursor: pointer; padding: 5px 0;
             user-select: none;
+            transition: color 0.2s;
         }
-
-        .legend-category-header:hover {
-            color: #f0e6cc;
-        }
+        .legend-category-header:hover { color: var(--gold-lt); }
 
         .legend-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px; height: 10px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 9px;
             flex-shrink: 0;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0,0,0,0.25);
         }
 
         .legend-category-label {
-            font-size: 13px;
-            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
             flex-grow: 1;
         }
 
-        .legend-toggle {
-            font-size: 11px;
-            opacity: 0.7;
-            margin-left: 8px;
-        }
+        .legend-toggle { font-size: 10px; opacity: 0.6; margin-left: 6px; }
 
         .legend-items {
-            margin-left: 20px;
-            font-size: 12px;
-            color: #b8a88a;
+            margin-left: 19px;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 13.5px;
+            color: var(--quill);
+            line-height: 1.4;
         }
 
         .legend-item {
-            padding: 3px 0;
+            padding: 2px 0;
             cursor: pointer;
             transition: color 0.2s;
         }
+        .legend-item:hover { color: var(--gold-lt); }
 
-        .legend-item:hover {
-            color: #f0e6cc;
-        }
+        .legend-category.disabled .legend-dot { opacity: 0.25; }
+        .legend-category.disabled .legend-category-label { opacity: 0.35; text-decoration: line-through; }
+        .legend-category.disabled .legend-items { display: none; }
 
-        .legend-category.disabled .legend-dot {
-            opacity: 0.3;
-        }
-
-        .legend-category.disabled .legend-category-label {
-            opacity: 0.4;
-            text-decoration: line-through;
-        }
-
-        .legend-category.disabled .legend-items {
-            display: none;
-        }
-
+        /* ── Bouton réduire ── */
         #collapse-btn {
             position: absolute;
-            top: 60px;
-            right: 16px;
+            top: 62px; right: 16px;
             z-index: 1001;
-            background: rgba(44, 36, 24, 0.95);
-            border: 2px solid #8b7355;
-            border-radius: 8px;
-            color: #d4c5a9;
-            padding: 10px 14px;
+            background: var(--panel);
+            border: 2px solid var(--gold);
+            border-radius: 3px;
+            color: var(--ink);
+            padding: 9px 14px;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-            display: none;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            display: none; align-items: center; gap: 9px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             transition: background 0.2s, border-color 0.2s;
         }
+        #collapse-btn:hover { background: #e0cfa0; border-color: var(--gold-lt); }
 
-        #collapse-btn:hover {
-            background: rgba(60, 48, 30, 0.95);
-            border-color: #d4c5a9;
-        }
+        .menu-icon { display: flex; flex-direction: column; gap: 3px; }
+        .menu-icon span { display: block; width: 15px; height: 2px; background: var(--gold); border-radius: 1px; }
 
-        .menu-icon {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .menu-icon span {
-            display: block;
-            width: 16px;
-            height: 2px;
-            background: #d4c5a9;
-            border-radius: 1px;
-        }
-
-        /* Custom marker styles */
+        /* ══════════════════════════════════
+           Marqueurs
+        ══════════════════════════════════ */
         .event-marker {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255,255,255,0.7);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 12px rgba(0,0,0,0.4);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            font-size: 12px;
-            line-height: 1;
+            font-size: 11px; line-height: 1;
         }
-
         .event-marker:hover {
-            transform: scale(1.3);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.2);
+            transform: scale(1.35);
+            box-shadow: 0 3px 14px rgba(0,0,0,0.7), 0 0 22px rgba(201,164,53,0.3);
         }
 
-        /* Popup styling */
+        /* ══════════════════════════════════
+           Popups
+        ══════════════════════════════════ */
         .leaflet-popup-content-wrapper {
-            background: rgba(44, 36, 24, 0.97);
-            color: #d4c5a9;
-            border: 2px solid #8b7355;
-            border-radius: 8px;
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+            background: var(--panel);
+            border: 2px solid var(--gold);
+            border-radius: 3px;
+            font-family: 'EB Garamond', Georgia, serif;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            padding: 0;
         }
-
-        .leaflet-popup-tip {
-            background: rgba(44, 36, 24, 0.97);
-            border: 1px solid #8b7355;
+        .leaflet-popup-content {
+            margin: 0;
+            font-family: 'EB Garamond', Georgia, serif;
         }
-
+        .leaflet-popup-tip-container { display: none; }
         .leaflet-popup-close-button {
-            color: #d4c5a9 !important;
+            color: var(--fade) !important;
+            font-size: 20px !important;
+            top: 6px !important; right: 8px !important;
+            transition: color 0.2s;
+        }
+        .leaflet-popup-close-button:hover { color: var(--gold) !important; }
+
+        .popup-inner {
+            padding: 16px 18px 14px;
+            max-width: 280px;
         }
 
         .popup-title {
-            font-size: 15px;
-            font-weight: bold;
-            color: #e8d9b0;
-            margin-bottom: 6px;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 16px;
+            font-weight: 500;
+            font-style: italic;
+            color: var(--gold-lt);
+            margin-bottom: 4px;
+            padding-right: 18px;
+            line-height: 1.25;
         }
 
-        .popup-book {
-            font-size: 11px;
-            color: #a89070;
-            margin-bottom: 6px;
-            font-style: italic;
+        .popup-category {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--quill);
+            margin-bottom: 9px;
+        }
+
+        .popup-rule {
+            height: 1px;
+            background: linear-gradient(to right, var(--gold-dk), transparent);
+            margin-bottom: 9px;
         }
 
         .popup-description {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #c8b898;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 15px;
+            line-height: 1.58;
+            color: var(--ink);
         }
 
-        .popup-characters {
-            font-size: 11px;
-            color: #a89070;
-            margin-top: 8px;
-            border-top: 1px solid #6b5b45;
-            padding-top: 6px;
+        .popup-quartier {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--quill);
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(160,112,16,0.4);
         }
 
-        /* Leaflet controls theming */
+        /* ══════════════════════════════════
+           Contrôles Leaflet (zoom)
+        ══════════════════════════════════ */
+        .leaflet-control-zoom {
+            border: 2px solid var(--gold) !important;
+            border-radius: 3px !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+            overflow: hidden;
+        }
         .leaflet-control-zoom a {
-            background: rgba(44, 36, 24, 0.95) !important;
-            color: #d4c5a9 !important;
-            border-color: #8b7355 !important;
+            font-family: 'Cinzel', serif !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            background: var(--panel) !important;
+            color: var(--gold) !important;
+            border-color: var(--gold-dk) !important;
+            width: 30px !important; height: 30px !important;
+            line-height: 30px !important;
+            transition: background 0.2s, color 0.2s;
         }
-
         .leaflet-control-zoom a:hover {
-            background: rgba(60, 48, 30, 0.95) !important;
+            background: #e0cfa0 !important;
+            color: var(--gold-lt) !important;
         }
 
-        /* Scrollbar styling for legend */
-        #legend::-webkit-scrollbar {
-            width: 6px;
-        }
+        /* ══════════════════════════════════
+           Scrollbar légende
+        ══════════════════════════════════ */
+        #legend::-webkit-scrollbar { width: 5px; }
+        #legend::-webkit-scrollbar-track { background: transparent; }
+        #legend::-webkit-scrollbar-thumb { background: var(--gold-dk); border-radius: 2px; }
 
-        #legend::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        #legend::-webkit-scrollbar-thumb {
-            background: #8b7355;
-            border-radius: 3px;
-        }
-
-        /* Journey paths — marching ants */
-        @keyframes march {
-            to { stroke-dashoffset: -20; }
-        }
-
-        .journey-path {
-            animation: march 0.67s linear infinite;
-        }
-
-        /* Journey legend section */
+        /* ══════════════════════════════════
+           Sections de la légende
+        ══════════════════════════════════ */
         .legend-divider {
             border: none;
-            border-top: 1px solid #8b7355;
-            margin: 10px 0 8px;
-        }
-
-        .legend-journeys-title {
-            font-size: 12px;
-            color: #a89070;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold-dk) 30%, var(--gold-dk) 70%, transparent);
+            margin: 12px 0 10px;
         }
 
         .legend-section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 8px;
         }
 
-        .legend-section-header .legend-journeys-title {
-            margin-bottom: 0;
+        .legend-section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--fade);
         }
 
         .legend-section-toggle {
-            font-size: 11px;
-            color: #8b7355;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--fade);
             cursor: pointer;
             user-select: none;
             background: none;
-            border: 1px solid #5a4a36;
-            border-radius: 4px;
-            padding: 2px 7px;
-            font-family: inherit;
+            border: 1px solid rgba(160,112,16,0.5);
+            border-radius: 2px;
+            padding: 2px 8px;
             transition: color 0.2s, border-color 0.2s, background 0.2s;
         }
-
         .legend-section-toggle:hover {
-            color: #e8d9b0;
-            border-color: #8b7355;
-            background: rgba(90, 74, 54, 0.4);
+            color: var(--gold-lt);
+            border-color: var(--gold-dk);
+            background: rgba(201,164,53,0.06);
         }
 
-        .journey-toggle {
-            display: flex;
-            align-items: center;
-            padding: 5px 0;
-            cursor: pointer;
-            user-select: none;
-            transition: color 0.2s;
-        }
-
-        .journey-toggle:hover {
-            color: #f0e6cc;
-        }
-
-        .journey-toggle.disabled {
-            opacity: 0.4;
-        }
-
-        .journey-line {
-            width: 24px;
-            height: 3px;
-            margin-right: 8px;
-            flex-shrink: 0;
-            border-top: 3px dashed;
-        }
-
-        .journey-label {
-            font-size: 12px;
-        }
-
+        /* ── Bascules (toggles) ── */
         .coord-toggle-row {
-            display: flex;
-            align-items: center;
-            padding: 8px 0 4px;
+            display: flex; align-items: center;
+            padding: 7px 0 3px;
             cursor: pointer;
             user-select: none;
         }
 
         .coord-toggle-switch {
-            width: 32px;
-            height: 18px;
-            border-radius: 9px;
-            background: #5a4a36;
+            width: 30px; height: 16px;
+            border-radius: 8px;
+            background: rgba(160,112,16,0.2);
+            border: 1px solid var(--gold-dk);
             position: relative;
-            margin-right: 8px;
+            margin-right: 9px;
             flex-shrink: 0;
-            transition: background 0.2s;
+            transition: background 0.2s, border-color 0.2s;
         }
-
         .coord-toggle-switch::after {
             content: '';
             position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 14px;
-            height: 14px;
+            top: 2px; left: 2px;
+            width: 10px; height: 10px;
             border-radius: 50%;
-            background: #8b7355;
+            background: var(--fade);
             transition: transform 0.2s, background 0.2s;
         }
-
         .coord-toggle-row.active .coord-toggle-switch {
-            background: #6a9f5b;
+            background: rgba(74,138,58,0.5);
+            border-color: var(--verdigris);
         }
-
         .coord-toggle-row.active .coord-toggle-switch::after {
             transform: translateX(14px);
-            background: #d4c5a9;
+            background: var(--ink);
         }
 
         .coord-toggle-label {
-            font-size: 12px;
-            color: #a89070;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 13.5px;
+            color: var(--quill);
             transition: color 0.2s;
         }
+        .coord-toggle-row.active .coord-toggle-label { color: var(--ink); }
 
-        .coord-toggle-row.active .coord-toggle-label {
-            color: #d4c5a9;
-        }
-
-        /* Instructions toast */
+        /* ══════════════════════════════════
+           Toast
+        ══════════════════════════════════ */
         #toast {
             position: absolute;
-            bottom: 24px;
-            left: 50%;
+            bottom: 24px; left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(44, 36, 24, 0.92);
-            border: 1px solid #8b7355;
-            border-radius: 8px;
-            padding: 10px 20px;
-            color: #d4c5a9;
-            font-size: 13px;
+            background: rgba(235, 221, 188, 0.96);
+            border: 1px solid var(--gold-dk);
+            border-radius: 2px;
+            padding: 9px 22px;
+            color: var(--quill);
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 14px;
+            font-style: italic;
             opacity: 1;
             transition: opacity 1s ease;
             pointer-events: none;
             text-align: center;
+            letter-spacing: 0.3px;
         }
+        #toast.hidden { opacity: 0; }
 
-        #toast.hidden {
-            opacity: 0;
-        }
-
-        /* Splash overlay */
+        /* ══════════════════════════════════
+           Écran de bienvenue (frontispice)
+        ══════════════════════════════════ */
         #splash-overlay {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             z-index: 2000;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.4s ease;
+            background: rgba(0, 0, 0, 0.78);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
         }
-        #splash-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        #splash-overlay.hidden { opacity: 0; pointer-events: none; }
+
         .splash-card {
-            background: #2c2418;
-            border: 2px solid #8b7355;
-            border-radius: 10px;
-            padding: 32px 28px 24px;
-            max-width: 480px;
-            width: 90%;
-            color: #d4c5a9;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .splash-card h2 {
-            color: #e8d9b0;
-            font-size: 22px;
-            letter-spacing: 2px;
+            background-color: var(--panel);
+            /* Double cadre via background-image */
+            background-image:
+                linear-gradient(var(--gold-rule), var(--gold-rule)),
+                linear-gradient(var(--gold-rule), var(--gold-rule)),
+                linear-gradient(var(--gold-rule), var(--gold-rule)),
+                linear-gradient(var(--gold-rule), var(--gold-rule));
+            background-size:
+                calc(100% - 24px) 1px,
+                calc(100% - 24px) 1px,
+                1px calc(100% - 24px),
+                1px calc(100% - 24px);
+            background-position:
+                12px 12px,
+                12px calc(100% - 12px),
+                12px 12px,
+                calc(100% - 12px) 12px;
+            background-repeat: no-repeat;
+            border: 2px solid var(--gold);
+            border-radius: 3px;
+            padding: 36px 32px 28px;
+            max-width: 460px; width: 90%;
+            color: var(--ink);
+            box-shadow: 0 16px 60px rgba(0,0,0,0.8);
+            max-height: 90vh; overflow-y: auto;
             text-align: center;
-            margin-bottom: 16px;
         }
-        .splash-card p {
-            font-size: 14px;
-            line-height: 1.6;
+
+        .splash-fleuron {
+            font-size: 28px;
+            color: var(--gold);
+            display: block;
             margin-bottom: 12px;
+            line-height: 1;
         }
+
+        .splash-card h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+
+        .splash-rule {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+            margin: 14px auto;
+            width: 80%;
+        }
+
+        .splash-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: var(--quill);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .splash-year {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--gold);
+            margin-top: 2px;
+        }
+
+        .splash-body {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .splash-card p.splash-intro {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 15.5px;
+            line-height: 1.6;
+            color: var(--quill);
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
         .splash-card ul {
-            list-style: none;
-            padding: 0;
+            list-style: none; padding: 0;
             margin: 0 0 16px;
+            text-align: left;
         }
         .splash-card ul li {
-            font-size: 13px;
-            line-height: 1.5;
-            padding: 3px 0 3px 16px;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 14.5px;
+            line-height: 1.55;
+            padding: 3px 0 3px 20px;
+            color: var(--quill);
             position: relative;
         }
         .splash-card ul li::before {
-            content: '\00b7';
-            position: absolute;
-            left: 2px;
-            color: #8b7355;
-            font-weight: bold;
+            content: '❧';
+            position: absolute; left: 0;
+            color: var(--gold-dk);
+            font-size: 13px;
         }
-        .splash-card .splash-disclaimer {
-            font-size: 11px;
-            color: #8b7355;
-            margin-top: 8px;
-            margin-bottom: 20px;
+
+        .splash-disclaimer {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 12px;
             font-style: italic;
+            color: var(--fade);
+            margin: 12px 0 22px;
+            text-align: left;
         }
+
         .splash-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: #c9a435;
-            color: #1a1a1a;
-            border: none;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: bold;
-            letter-spacing: 1px;
+            display: block; width: 100%;
+            padding: 13px;
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 2px;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.25s, color 0.25s;
         }
         .splash-btn:hover {
-            background: #d4b445;
+            background: var(--gold);
+            color: var(--ink);
         }
 
-        /* Info button */
+        /* ══════════════════════════════════
+           Bouton info
+        ══════════════════════════════════ */
         #info-btn {
-            position: fixed;
-            bottom: 32px;
-            right: 16px;
+            position: fixed; bottom: 32px; right: 16px;
             z-index: 1000;
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             border-radius: 50%;
-            background: rgba(44, 36, 24, 0.9);
-            border: 1px solid #8b7355;
-            color: #8b7355;
-            font-size: 14px;
-            font-family: Georgia, serif;
-            font-style: italic;
+            background: var(--panel);
+            border: 1px solid var(--gold-dk);
+            color: var(--fade);
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 15px; font-style: italic;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             transition: color 0.2s, border-color 0.2s;
         }
-        #info-btn:hover {
-            color: #e8d9b0;
-            border-color: #d4c5a9;
-        }
+        #info-btn:hover { color: var(--gold-lt); border-color: var(--gold); }
 
-        /* Copyright disclaimer */
+        /* ══════════════════════════════════
+           Copyright
+        ══════════════════════════════════ */
         #map-copyright {
-            position: fixed;
-            bottom: 8px;
-            right: 16px;
+            position: fixed; bottom: 8px; right: 16px;
             z-index: 1000;
-            font-size: 10px;
-            color: #8b7355;
-            opacity: 0.7;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 10px; font-style: italic;
+            color: var(--fade);
+            opacity: 0.6;
             pointer-events: none;
+            letter-spacing: 0.3px;
         }
 
-        /* Distance measure tool */
+        /* ══════════════════════════════════
+           Outil de mesure
+        ══════════════════════════════════ */
         .measure-active #map { cursor: crosshair; }
 
         #measure-display {
-            position: absolute;
-            bottom: 60px;
-            left: 16px;
+            position: absolute; bottom: 60px; left: 16px;
             z-index: 1000;
-            background: rgba(44, 36, 24, 0.95);
-            border: 2px solid #8b7355;
-            border-radius: 8px;
-            padding: 10px 14px;
-            color: #d4c5a9;
+            background: rgba(235, 221, 188, 0.97);
+            border: 2px solid var(--gold);
+            border-radius: 3px;
+            padding: 9px 14px;
+            color: var(--ink);
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 14px;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* ══════════════════════════════════
+           Affichage coordonnées
+        ══════════════════════════════════ */
+        #coord-display {
+            position: absolute; bottom: 24px; left: 16px;
+            z-index: 1000;
+            background: rgba(235, 221, 188, 0.97);
+            border: 2px solid var(--gold-dk);
+            border-radius: 3px;
+            padding: 9px 14px;
+            color: var(--quill);
+            font-family: 'EB Garamond', Georgia, serif;
             font-size: 13px;
-            font-family: monospace;
             pointer-events: none;
             display: none;
         }
@@ -632,54 +701,59 @@
 </head>
 <body>
     <nav id="nav-bar">
-        <a href="index.html" class="nav-link active">&#x1f5fa;&#xfe0e; Map</a>
-        <span class="nav-title">Middle-earth</span>
-        <a href="timeline.html" class="nav-link">&#x23f3;&#xfe0e; Timeline</a>
+        <a href="index.html" class="nav-link active">&#x1f5fa;&#xfe0e;&ensp;Carte</a>
+        <span class="nav-title">Paris &middot; 1553</span>
+        <a href="timeline.html" class="nav-link">&#x23f3;&#xfe0e; Chronologie</a>
     </nav>
     <main>
     <div id="map"></div>
 
     <div id="legend">
-        <h2>Events of Middle-earth<button id="legend-close">&times;</button></h2>
+        <h2>Lieux de Paris<button id="legend-close">&times;</button></h2>
         <div id="legend-content"></div>
     </div>
 
-    <button id="collapse-btn"><div class="menu-icon"><span></span><span></span><span></span></div> Legend</button>
+    <button id="collapse-btn">
+        <div class="menu-icon"><span></span><span></span><span></span></div>
+        Légende
+    </button>
 
     <div id="measure-display"></div>
-    <div id="toast">Scroll to zoom &middot; Drag to pan &middot; Click markers for details</div>
+    <div id="toast">Molette pour zoomer &middot; Glisser pour naviguer &middot; Cliquer sur un marqueur</div>
 
     <div id="splash-overlay" class="hidden">
         <div class="splash-card">
-            <h2>Welcome to Middle-earth</h2>
-            <p>An interactive map of Tolkien&#8217;s Middle-earth, with events from across the legendarium plotted as markers.</p>
-            <ul>
-                <li>Click markers to read about key events</li>
-                <li>Use the Legend panel to filter by book or toggle journey paths</li>
-                <li>Enable &#8220;Measure distance&#8221; in the Legend to measure between two points</li>
-                <li>Visit the <a href="timeline.html" style="color:#c9a435;">Timeline page</a> for a chronological view</li>
-            </ul>
-            <p class="splash-disclaimer">The base map image is sourced from the internet and is used here for fan/educational purposes. We do not claim copyright over the map artwork.</p>
-            <button class="splash-btn" id="splash-enter">Enter Middle-earth</button>
+            <span class="splash-fleuron"></span>
+            <h2>Paris</h2>
+            <div class="splash-rule"></div>
+            <p class="splash-subtitle">Carte de Truschet &amp; Hoyau</p>
+            <p class="splash-year">1553</p>
+            <div class="splash-rule"></div>
+            <div class="splash-body">
+                <p class="splash-intro">Une des plus anciennes représentations topographiques de Paris, dessinée vers 1553 sous Henri II. Elle représente la ville médiévale dans toute sa densité : cathédrale, palais royaux, ponts habités, portes fortifiées.</p>
+                <ul>
+                    <li>Cliquez sur un marqueur pour découvrir le lieu</li>
+                    <li>Utilisez la Légende pour filtrer par type de lieu</li>
+                    <li>Activez &laquo;&thinsp;Mesurer les distances&thinsp;&raquo; pour estimer des distances</li>
+                    <li>Cliquez sur la carte pour afficher les coordonnées en pixel</li>
+                    <li>Consultez la <a href="timeline.html">Chronologie</a> pour explorer les événements liés à cette carte</li>
+                </ul>
+            </div>
+            <button class="splash-btn" id="splash-enter">Explorer Paris</button>
         </div>
     </div>
 
-    <button id="info-btn" title="About this map">i</button>
-    <div id="map-copyright">Map artwork is not owned by this project and is used for fan/educational purposes only.</div>
+    <button id="info-btn" title="À propos de cette carte">i</button>
+    <div id="map-copyright">Truschet &amp; Hoyau, c.&thinsp;1553 &mdash; domaine public</div>
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="data.js"></script>
     <script>
-        // Events, COLORS, CATEGORY_LABELS, CATEGORY_ICONS, FELLOWSHIP_PATH,
-        // JOURNEYS, IMG_W, IMG_H loaded from data.js
+        // ── Coordonnées pixel → Leaflet ──────────
+        function toLatLng(px, py) { return [py, px]; }
 
-        // ── Helper: pixel coords → Leaflet coords ──────
-        function toLatLng(px, py) {
-            return [py, px];
-        }
-
-        // ── Map Setup ───────────────────────────────────
+        // ── Initialisation de la carte ───────────
         const MapCRS = L.Util.extend({}, L.CRS.Simple, {
             transformation: new L.Transformation(1, 0, 1, 0)
         });
@@ -705,194 +779,73 @@
             noWrap: true,
             bounds: bounds
         };
-        const mapTiles = L.tileLayer('tiles/{z}/{x}/{y}.jpg', tileOpts).addTo(map);
-        const satTiles = L.tileLayer('tiles-sat/{z}/{x}/{y}.jpg', tileOpts);
+        L.tileLayer('tiles/{z}/{x}/{y}.jpg', tileOpts).addTo(map);
         map.fitBounds(bounds);
         const PAD = Math.max(IMG_W, IMG_H);
         map.setMaxBounds([[-PAD, -PAD], [IMG_H + PAD, IMG_W + PAD]]);
 
-        // ── Create Markers ──────────────────────────────
-        const categoryLayers = {
-            silmarillion: L.layerGroup(),
-            hobbit: L.layerGroup(),
-            fellowship: L.layerGroup(),
-            towers: L.layerGroup(),
-            king: L.layerGroup(),
-            appendix: L.layerGroup()
-        };
+        // ── Couches par catégorie ────────────────
+        const categoryLayers = {};
+        Object.keys(CATEGORY_LABELS).forEach(cat => {
+            categoryLayers[cat] = L.layerGroup();
+        });
 
+        // ── Marqueurs ────────────────────────────
+        const markerById = {};
         events.forEach(evt => {
             const latlng = toLatLng(evt.px, evt.py);
             const color = COLORS[evt.category];
             const icon = L.divIcon({
                 className: '',
                 html: `<div class="event-marker" style="
-                    width: 22px; height: 22px;
-                    background: radial-gradient(circle at 35% 35%, ${color}, ${darken(color, 40)});
+                    width:22px;height:22px;
+                    background:radial-gradient(circle at 35% 35%,${color},${darken(color,45)});
                 ">${CATEGORY_ICONS[evt.category]}</div>`,
                 iconSize: [22, 22],
                 iconAnchor: [11, 11],
-                popupAnchor: [0, -14]
+                popupAnchor: [0, -15]
             });
 
             const marker = L.marker(latlng, { icon })
                 .bindPopup(`
-                    <div style="max-width: 260px;">
+                    <div class="popup-inner">
                         <div class="popup-title">${evt.name}</div>
-                        <div class="popup-book">${CATEGORY_LABELS[evt.category]}</div>
+                        <div class="popup-category">${CATEGORY_LABELS[evt.category]}</div>
+                        <div class="popup-rule"></div>
                         <div class="popup-description">${evt.description}</div>
-                        <div class="popup-characters"><strong>Key figures:</strong> ${evt.characters}</div>
+                        <div class="popup-quartier">&#9670; ${evt.quartier}</div>
                     </div>
-                `, { maxWidth: 300, autoPanPaddingTopLeft: L.point(10, 54) });
+                `, { maxWidth: 320, autoPanPaddingTopLeft: L.point(10, 56) });
 
             marker._eventData = evt;
+            markerById[evt.id] = marker;
             categoryLayers[evt.category].addLayer(marker);
         });
 
         Object.values(categoryLayers).forEach(layer => layer.addTo(map));
 
-        // Catmull-Rom spline interpolation for smooth journey paths
-        // Only interpolate segments longer than minDist to avoid loops on close points
-        // Points with a truthy third element (e.g. [x, y, 1]) are always smoothed
-        function smoothPoints(points, segments = 6, minDist = 100) {
-            if (points.length < 3) return points;
-            const result = [];
-            for (let i = 0; i < points.length - 1; i++) {
-                const p1 = points[i];
-                const p2 = points[i + 1];
-                const forceSmooth = p1[2] && p2[2];
-                if (!forceSmooth) {
-                    const dx = p2[0] - p1[0];
-                    const dy = p2[1] - p1[1];
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < minDist) {
-                        result.push(p1);
-                        continue;
-                    }
-                }
-                const p0 = points[Math.max(0, i - 1)];
-                const p3 = points[Math.min(points.length - 1, i + 2)];
-                for (let t = 0; t < segments; t++) {
-                    const tt = t / segments;
-                    const tt2 = tt * tt;
-                    const tt3 = tt2 * tt;
-                    result.push([
-                        0.5 * ((2*p1[0]) + (-p0[0]+p2[0])*tt + (2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*tt2 + (-p0[0]+3*p1[0]-3*p2[0]+p3[0])*tt3),
-                        0.5 * ((2*p1[1]) + (-p0[1]+p2[1])*tt + (2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*tt2 + (-p0[1]+3*p1[1]-3*p2[1]+p3[1])*tt3)
-                    ]);
-                }
-            }
-            result.push(points[points.length - 1]);
-            return result;
+        // ── Deep-link from timeline (?place=ID) ──
+        const _urlPlace = new URLSearchParams(window.location.search).get('place');
+        if (_urlPlace && markerById[_urlPlace]) {
+            const _m = markerById[_urlPlace];
+            map.setView(_m.getLatLng(), 0, { animate: false });
+            setTimeout(() => _m.openPopup(), 250);
         }
 
-        const journeyLayers = {};
-
-        Object.keys(JOURNEYS).forEach(key => {
-            const journey = JOURNEYS[key];
-            const lines = [];
-            const smoothed = smoothPoints(journey.points);
-            const latlngs = smoothed.map(([px, py]) => toLatLng(px, py));
-            lines.push(L.polyline(latlngs, {
-                color: journey.color,
-                weight: 3,
-                dashArray: '10 6',
-                opacity: 0.7,
-                className: 'journey-path'
-            }));
-            if (journey.branches) {
-                Object.values(journey.branches).forEach(branch => {
-                    const branchPoints = Array.isArray(branch) ? branch : branch.points;
-                    const branchColor = Array.isArray(branch) ? journey.color : (branch.color || journey.color);
-                    const smoothedBranch = smoothPoints(branchPoints);
-                    const branchLatLngs = smoothedBranch.map(([px, py]) => toLatLng(px, py));
-                    lines.push(L.polyline(branchLatLngs, {
-                        color: branchColor,
-                        weight: 3,
-                        dashArray: '10 6',
-                        opacity: 0.7,
-                        className: 'journey-path'
-                    }));
-                });
-            }
-            journeyLayers[key] = L.layerGroup(lines);
-        });
-
-        // ── Legend ───────────────────────────────────────
+        // ── Légende ──────────────────────────────
         const legendEl = document.getElementById('legend-content');
 
-        // ── Journey Toggles (top of legend) ───────────
-        const journeyHeader = document.createElement('div');
-        journeyHeader.className = 'legend-section-header';
-        const journeyTitle = document.createElement('div');
-        journeyTitle.className = 'legend-journeys-title';
-        journeyTitle.textContent = 'Journeys';
-        const journeyClearBtn = document.createElement('button');
-        journeyClearBtn.className = 'legend-section-toggle';
-        journeyClearBtn.textContent = 'show all';
-        journeyHeader.appendChild(journeyTitle);
-        journeyHeader.appendChild(journeyClearBtn);
-        legendEl.appendChild(journeyHeader);
-
-        const journeyToggles = [];
-        Object.keys(JOURNEYS).forEach(key => {
-            const journey = JOURNEYS[key];
-            const toggle = document.createElement('div');
-            toggle.className = 'journey-toggle disabled';
-            toggle.dataset.key = key;
-            toggle.innerHTML = `
-                <div class="journey-line" style="border-color: ${journey.color};"></div>
-                <span class="journey-label">${journey.label}</span>
-            `;
-            toggle.addEventListener('click', () => {
-                toggle.classList.toggle('disabled');
-                if (toggle.classList.contains('disabled')) {
-                    map.removeLayer(journeyLayers[key]);
-                } else {
-                    map.addLayer(journeyLayers[key]);
-                }
-                updateJourneyClearBtn();
-            });
-            journeyToggles.push(toggle);
-            legendEl.appendChild(toggle);
-        });
-
-        function updateJourneyClearBtn() {
-            const anyEnabled = journeyToggles.some(t => !t.classList.contains('disabled'));
-            journeyClearBtn.textContent = anyEnabled ? 'clear all' : 'show all';
-        }
-
-        journeyClearBtn.addEventListener('click', () => {
-            const anyEnabled = journeyToggles.some(t => !t.classList.contains('disabled'));
-            journeyToggles.forEach(toggle => {
-                const key = toggle.dataset.key;
-                if (anyEnabled) {
-                    toggle.classList.add('disabled');
-                    map.removeLayer(journeyLayers[key]);
-                } else {
-                    toggle.classList.remove('disabled');
-                    map.addLayer(journeyLayers[key]);
-                }
-            });
-            updateJourneyClearBtn();
-        });
-
-        const divider = document.createElement('hr');
-        divider.className = 'legend-divider';
-        legendEl.appendChild(divider);
-
-        // ── Book Categories ────────────────────────────
-        const eventsHeader = document.createElement('div');
-        eventsHeader.className = 'legend-section-header';
-        const eventsTitle = document.createElement('div');
-        eventsTitle.className = 'legend-journeys-title';
-        eventsTitle.textContent = 'Events';
-        const eventsClearBtn = document.createElement('button');
-        eventsClearBtn.className = 'legend-section-toggle';
-        eventsClearBtn.textContent = 'clear all';
-        eventsHeader.appendChild(eventsTitle);
-        eventsHeader.appendChild(eventsClearBtn);
-        legendEl.appendChild(eventsHeader);
+        const placesHeader = document.createElement('div');
+        placesHeader.className = 'legend-section-header';
+        const placesTitle = document.createElement('div');
+        placesTitle.className = 'legend-section-title';
+        placesTitle.textContent = 'Lieux';
+        const placesClearBtn = document.createElement('button');
+        placesClearBtn.className = 'legend-section-toggle';
+        placesClearBtn.textContent = 'masquer tout';
+        placesHeader.appendChild(placesTitle);
+        placesHeader.appendChild(placesClearBtn);
+        legendEl.appendChild(placesHeader);
 
         const categoryDivs = [];
         Object.keys(CATEGORY_LABELS).forEach(cat => {
@@ -904,16 +857,15 @@
 
             div.innerHTML = `
                 <div class="legend-category-header">
-                    <div class="legend-dot" style="background: ${COLORS[cat]};"></div>
+                    <div class="legend-dot" style="background:${COLORS[cat]};"></div>
                     <span class="legend-category-label">${CATEGORY_LABELS[cat]}</span>
                     <span class="legend-toggle">&#9660;</span>
                 </div>
                 <div class="legend-items">
-                    ${catEvents.map((e, i) => `<div class="legend-item" data-index="${events.indexOf(e)}">${e.name.split('—')[0].trim()}</div>`).join('')}
+                    ${catEvents.map(e => `<div class="legend-item" data-id="${e.id}">${e.name}</div>`).join('')}
                 </div>
             `;
 
-            // Toggle category visibility
             div.querySelector('.legend-category-header').addEventListener('click', () => {
                 div.classList.toggle('disabled');
                 const toggle = div.querySelector('.legend-toggle');
@@ -924,22 +876,18 @@
                     map.addLayer(categoryLayers[cat]);
                     toggle.innerHTML = '&#9660;';
                 }
-                updateEventsClearBtn();
+                updatePlacesClearBtn();
             });
 
-            // Click legend item to fly to marker
             div.querySelectorAll('.legend-item').forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const evt = events[parseInt(item.dataset.index)];
-                    const latlng = toLatLng(evt.px, evt.py);
-                    map.flyTo(latlng, 1, { duration: 0.8 });
-
-                    // Open the popup
+                    const evt = events.find(ev => ev.id === item.dataset.id);
+                    if (!evt) return;
+                    map.flyTo(toLatLng(evt.px, evt.py), 1, { duration: 0.8 });
                     categoryLayers[evt.category].eachLayer(marker => {
-                        if (marker._eventData === evt) {
+                        if (marker._eventData === evt)
                             setTimeout(() => marker.openPopup(), 400);
-                        }
                     });
                 });
             });
@@ -948,12 +896,12 @@
             legendEl.appendChild(div);
         });
 
-        function updateEventsClearBtn() {
+        function updatePlacesClearBtn() {
             const anyEnabled = categoryDivs.some(d => !d.classList.contains('disabled'));
-            eventsClearBtn.textContent = anyEnabled ? 'clear all' : 'show all';
+            placesClearBtn.textContent = anyEnabled ? 'masquer tout' : 'afficher tout';
         }
 
-        eventsClearBtn.addEventListener('click', () => {
+        placesClearBtn.addEventListener('click', () => {
             const anyEnabled = categoryDivs.some(d => !d.classList.contains('disabled'));
             categoryDivs.forEach(div => {
                 const cat = div.dataset.category;
@@ -968,10 +916,10 @@
                     toggle.innerHTML = '&#9660;';
                 }
             });
-            updateEventsClearBtn();
+            updatePlacesClearBtn();
         });
 
-        // ── Coordinate Toggle (bottom of legend) ──────
+        // ── Bascules d'outils ─────────────────────
         const coordDivider = document.createElement('hr');
         coordDivider.className = 'legend-divider';
         legendEl.appendChild(coordDivider);
@@ -981,21 +929,17 @@
         coordToggleRow.className = 'coord-toggle-row active';
         coordToggleRow.innerHTML = `
             <div class="coord-toggle-switch"></div>
-            <span class="coord-toggle-label">Show coordinates</span>
+            <span class="coord-toggle-label">Afficher les coordonnées</span>
         `;
         coordToggleRow.addEventListener('click', () => {
             coordsEnabled = !coordsEnabled;
             coordToggleRow.classList.toggle('active', coordsEnabled);
-            if (!coordsEnabled) {
-                coordDisplay.style.display = 'none';
-            }
+            if (!coordsEnabled) coordDisplay.style.display = 'none';
         });
         legendEl.appendChild(coordToggleRow);
 
-        // ── Distance Measure Tool ───────────────────
-        const PIXELS_PER_MILE = 4.05;
-        const MILES_PER_LEAGUE = 3;
-
+        // ── Mesure de distance ────────────────────
+        const PIXELS_PER_METER = 3.0;
         let measureEnabled = false;
         let measurePoints = [];
         let measureLayers = [];
@@ -1005,7 +949,7 @@
         measureToggleRow.className = 'coord-toggle-row';
         measureToggleRow.innerHTML = `
             <div class="coord-toggle-switch"></div>
-            <span class="coord-toggle-label">Measure distance</span>
+            <span class="coord-toggle-label">Mesurer les distances</span>
         `;
         measureToggleRow.addEventListener('click', () => {
             measureEnabled = !measureEnabled;
@@ -1014,25 +958,6 @@
             if (!measureEnabled) clearMeasure();
         });
         legendEl.appendChild(measureToggleRow);
-
-        // ── Satellite View Toggle ─────────────────────
-        const satToggleRow = document.createElement('div');
-        satToggleRow.className = 'coord-toggle-row';
-        satToggleRow.innerHTML = `
-            <div class="coord-toggle-switch"></div>
-            <span class="coord-toggle-label">Satellite view</span>
-        `;
-        satToggleRow.addEventListener('click', () => {
-            const active = satToggleRow.classList.toggle('active');
-            if (active) {
-                map.removeLayer(mapTiles);
-                map.addLayer(satTiles);
-            } else {
-                map.removeLayer(satTiles);
-                map.addLayer(mapTiles);
-            }
-        });
-        legendEl.appendChild(satToggleRow);
 
         function clearMeasure() {
             measurePoints = [];
@@ -1043,79 +968,42 @@
 
         map.on('click', function(e) {
             if (!measureEnabled) return;
-
-            // Third click — clear and start fresh
             if (measurePoints.length >= 2) clearMeasure();
-
             measurePoints.push(e.latlng);
-
-            // Place circle marker at clicked point
             const circle = L.circleMarker(e.latlng, {
-                radius: 5,
-                color: '#c9a435',
-                fillColor: '#c9a435',
-                fillOpacity: 0.8,
-                weight: 2
+                radius: 5, color: '#c9a435', fillColor: '#c9a435',
+                fillOpacity: 0.85, weight: 2
             }).addTo(map);
             measureLayers.push(circle);
-
-            // Second click — draw line and show distance
             if (measurePoints.length === 2) {
                 const line = L.polyline(measurePoints, {
-                    color: '#c9a435',
-                    weight: 2,
-                    dashArray: '8 6',
-                    opacity: 0.8
+                    color: '#c9a435', weight: 2, dashArray: '8 5', opacity: 0.85
                 }).addTo(map);
                 measureLayers.push(line);
-
-                const pxA = measurePoints[0];
-                const pxB = measurePoints[1];
-                const dx = pxA.lng - pxB.lng;
-                const dy = pxA.lat - pxB.lat;
-                const pxDist = Math.sqrt(dx * dx + dy * dy);
-                const miles = pxDist / PIXELS_PER_MILE;
-                const leagues = miles / MILES_PER_LEAGUE;
-
-                measureDisplay.textContent = `A \u2192 B: ${Math.round(miles)} miles (${leagues.toFixed(1)} leagues)`;
+                const dx = measurePoints[0].lng - measurePoints[1].lng;
+                const dy = measurePoints[0].lat - measurePoints[1].lat;
+                const m = Math.sqrt(dx*dx + dy*dy) / PIXELS_PER_METER;
+                measureDisplay.textContent = `A → B : ${m < 1000 ? Math.round(m)+' m' : (m/1000).toFixed(2)+' km'} (approx.)`;
                 measureDisplay.style.display = 'block';
             }
         });
 
-        // ── Legend Collapse ────────────────────
+        // ── Repliage de la légende ────────────────
         const legend = document.getElementById('legend');
         const collapseBtn = document.getElementById('collapse-btn');
         const legendClose = document.getElementById('legend-close');
 
-        function hideLegend() {
-            legend.style.display = 'none';
-            collapseBtn.style.display = 'flex';
-        }
-
-        function showLegend() {
-            legend.style.display = 'block';
-            collapseBtn.style.display = 'none';
-        }
+        function hideLegend() { legend.style.display = 'none'; collapseBtn.style.display = 'flex'; }
+        function showLegend() { legend.style.display = 'block'; collapseBtn.style.display = 'none'; }
 
         legendClose.addEventListener('click', hideLegend);
         collapseBtn.addEventListener('click', showLegend);
+        if (window.innerWidth < 600) hideLegend();
+        map.on('click', () => { if (window.innerWidth < 600) hideLegend(); });
 
-        // Auto-collapse on mobile
-        if (window.innerWidth < 600) {
-            hideLegend();
-        }
-
-        // Close legend on map click (mobile)
-        map.on('click', () => {
-            if (window.innerWidth < 600) {
-                hideLegend();
-            }
-        });
-
-        // ── Coordinate Picker (calibration tool) ────────
+        // ── Coordonnées au clic ───────────────────
         const coordDisplay = document.createElement('div');
         coordDisplay.id = 'coord-display';
-        coordDisplay.style.cssText = 'position:absolute;bottom:24px;left:16px;z-index:1000;background:rgba(44,36,24,0.95);border:2px solid #8b7355;border-radius:8px;padding:10px 14px;color:#d4c5a9;font-size:13px;font-family:monospace;pointer-events:none;display:none;';
         document.body.appendChild(coordDisplay);
 
         map.on('click', function(e) {
@@ -1134,54 +1022,22 @@
             const text = `px: ${px}, py: ${py}`;
             navigator.clipboard.writeText(text);
             coordDisplay.style.display = 'block';
-            coordDisplay.textContent = `${text}  (copied)`;
+            coordDisplay.textContent = `${text}  (copié)`;
         });
 
-        // ── Toast auto-hide ─────────────────────────────
-        setTimeout(() => {
-            document.getElementById('toast').classList.add('hidden');
-        }, 5000);
+        // ── Toast ─────────────────────────────────
+        setTimeout(() => document.getElementById('toast').classList.add('hidden'), 5000);
 
-        // ── Utility: darken a hex color ─────────────────
+        // ── Utilitaire : assombrir une couleur ────
         function darken(hex, amount) {
             hex = hex.replace('#', '');
-            const r = Math.max(0, parseInt(hex.substring(0, 2), 16) - amount);
-            const g = Math.max(0, parseInt(hex.substring(2, 4), 16) - amount);
-            const b = Math.max(0, parseInt(hex.substring(4, 6), 16) - amount);
-            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+            const r = Math.max(0, parseInt(hex.substring(0,2),16) - amount);
+            const g = Math.max(0, parseInt(hex.substring(2,4),16) - amount);
+            const b = Math.max(0, parseInt(hex.substring(4,6),16) - amount);
+            return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
         }
 
-        // ── Cross-page navigation (from timeline) ─────
-        (function() {
-            const params = new URLSearchParams(window.location.search);
-            const fly = params.get('fly');
-            const eventName = params.get('event');
-            if (fly) {
-                const [px, py] = fly.split(',').map(Number);
-                const latlng = toLatLng(px, py);
-                setTimeout(() => {
-                    map.flyTo(latlng, 1, { duration: 1.2 });
-                    if (eventName) {
-                        Object.values(categoryLayers).forEach(layer => {
-                            layer.eachLayer(marker => {
-                                if (marker.getPopup() && marker.getPopup().getContent().includes(eventName)) {
-                                    setTimeout(() => marker.openPopup(), 1200);
-                                }
-                            });
-                        });
-                    }
-                }, 500);
-            }
-
-            // ?view=satellite activates satellite tiles on load
-            if (params.get('view') === 'satellite') {
-                map.removeLayer(mapTiles);
-                map.addLayer(satTiles);
-                satToggleRow.classList.add('active');
-            }
-        })();
-
-        // ── Splash Screen ────────────────────────────────
+        // ── Écran de bienvenue ────────────────────
         (function() {
             const overlay = document.getElementById('splash-overlay');
             const enterBtn = document.getElementById('splash-enter');
@@ -1189,28 +1045,22 @@
 
             function showSplash() {
                 overlay.style.display = 'flex';
-                // Force reflow so transition triggers
                 overlay.offsetHeight;
                 overlay.classList.remove('hidden');
             }
-
             function hideSplash() {
                 overlay.classList.add('hidden');
-                localStorage.setItem('me-map-welcomed', '1');
-                overlay.addEventListener('transitionend', function handler() {
+                localStorage.setItem('paris-map-welcomed', '1');
+                overlay.addEventListener('transitionend', function h() {
                     overlay.style.display = 'none';
-                    overlay.removeEventListener('transitionend', handler);
+                    overlay.removeEventListener('transitionend', h);
                 });
             }
 
-            if (!localStorage.getItem('me-map-welcomed')) {
-                showSplash();
-            }
-
+            if (!localStorage.getItem('paris-map-welcomed')) showSplash();
             enterBtn.addEventListener('click', hideSplash);
             infoBtn.addEventListener('click', showSplash);
         })();
-
     </script>
 </body>
 </html>

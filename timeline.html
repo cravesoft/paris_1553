@@ -1,529 +1,404 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Middle-earth &mdash; Timeline &amp; Narrative</title>
-    <meta name="description" content="A chronological timeline of Middle-earth spanning the First, Second, and Third Ages. Follow events from The Silmarillion through The Lord of the Rings with playback controls and category filters.">
-    <link rel="canonical" href="https://frasermarlow.github.io/middle-earth-map/timeline.html">
+    <title>Paris 1553 &mdash; Chronologie</title>
+    <meta name="description" content="Chronologie de l'histoire de Paris des origines au XVIe siècle, d'après la carte de Truschet et Hoyau (1553).">
+    <link rel="canonical" href="https://cravesoft.github.io/paris_1553/timeline.html">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Middle-earth — Timeline &amp; Narrative">
-    <meta property="og:description" content="A chronological timeline of Middle-earth spanning the First, Second, and Third Ages. Follow events from The Silmarillion through The Lord of the Rings.">
-    <meta property="og:url" content="https://frasermarlow.github.io/middle-earth-map/timeline.html">
-    <meta property="og:image" content="https://frasermarlow.github.io/middle-earth-map/og-image.jpg">
+    <meta property="og:title" content="Paris 1553 — Chronologie">
+    <meta property="og:description" content="Chronologie de l'histoire de Paris des origines au XVIe siècle, d'après la carte de Truschet et Hoyau (1553).">
+    <meta property="og:url" content="https://cravesoft.github.io/paris_1553/timeline.html">
+    <meta property="og:image" content="https://cravesoft.github.io/paris_1553/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Middle-earth — Timeline &amp; Narrative">
-    <meta name="twitter:description" content="A chronological timeline of Middle-earth spanning the First, Second, and Third Ages. Follow events from The Silmarillion through The Lord of the Rings.">
-    <meta name="twitter:image" content="https://frasermarlow.github.io/middle-earth-map/og-image.jpg">
+    <meta name="twitter:title" content="Paris 1553 — Chronologie">
+    <meta name="twitter:description" content="Chronologie de l'histoire de Paris des origines au XVIe siècle, d'après la carte de Truschet et Hoyau (1553).">
+    <meta name="twitter:image" content="https://cravesoft.github.io/paris_1553/og-image.jpg">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Middle-earth Timeline & Narrative",
-        "url": "https://frasermarlow.github.io/middle-earth-map/timeline.html",
-        "description": "A chronological timeline of Middle-earth spanning the First, Second, and Third Ages.",
+        "name": "Paris 1553 — Chronologie",
+        "url": "https://cravesoft.github.io/paris_1553/timeline.html",
+        "description": "Chronologie de l'histoire de Paris des origines au XVIe siècle.",
         "isPartOf": {
             "@type": "WebSite",
-            "name": "Middle-earth Interactive Map",
-            "url": "https://frasermarlow.github.io/middle-earth-map/"
+            "name": "Paris 1553 — Carte interactive de Truschet et Hoyau",
+            "url": "https://cravesoft.github.io/paris_1553/"
         }
     }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg:        #e0cfa0;       /* Parchemin page */
+            --gold:      #c9a435;
+            --gold-lt:   #8a5a08;       /* Ambre foncé, lisible sur parchemin */
+            --gold-dk:   #8a6820;
+            --gold-rule: rgba(160,112,16,0.5);
+            /* Parchment card palette */
+            --parch:     #f0e6c8;       /* Card background */
+            --parch-dk:  #d8c898;       /* Hover / chip background */
+            --parch-bd:  #b8962c;       /* Card border */
+            --ink:       #1a0e04;       /* Main text on parchment */
+            --ink-md:    #4a3018;       /* Secondary text on parchment */
+            --ink-lt:    #7a5020;       /* Tertiary text on parchment */
+            /* Text for page areas (date column, nav) — now dark on light bg */
+            --on-dark:   #1a0e04;
+            --on-dark-lt:#4a3018;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
-            background: #1a1a1a;
-            color: #d4c5a9;
+            font-family: 'EB Garamond', Georgia, serif;
+            background: var(--bg);
+            color: var(--ink);
             overflow-x: hidden;
         }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #8b7355; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dk); border-radius: 3px; }
 
-        /* ── Nav Bar ───────────────────────────── */
+        /* ── Nav ─────────────────────────────────── */
         #nav-bar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 44px;
-            z-index: 1100;
-            background: rgba(26, 26, 26, 0.92);
-            border-bottom: 1px solid #5a4a36;
-            display: flex;
-            align-items: center;
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 44px; z-index: 1100;
+            background: rgba(235,221,188,0.97);
+            border-bottom: 1px solid var(--gold-rule);
+            display: flex; align-items: center;
             justify-content: space-between;
             padding: 0 20px;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
         .nav-link {
-            color: #8b7355;
+            font-family: 'Cinzel', serif;
+            color: var(--on-dark);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             padding: 6px 14px;
-            border-radius: 4px;
+            border-radius: 3px;
             transition: color 0.2s, background 0.2s;
         }
         .nav-link:hover, .nav-link.active {
-            color: #e8d9b0;
-            background: rgba(139, 115, 85, 0.2);
+            color: var(--gold-lt);
+            background: rgba(201,164,53,0.09);
         }
         .nav-title {
-            font-size: 15px;
-            color: #e8d9b0;
-            letter-spacing: 2px;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            color: var(--gold);
+            letter-spacing: 3px;
         }
 
-        /* ── Controls Bar ──────────────────────── */
+        /* ── Controls ────────────────────────────── */
         #controls {
-            position: fixed;
-            top: 44px; left: 0; right: 0;
+            position: fixed; top: 44px; left: 0; right: 0;
             z-index: 1000;
-            background: rgba(26, 26, 26, 0.95);
-            border-bottom: 1px solid #5a4a36;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            background: rgba(235,221,188,0.97);
+            border-bottom: 1px solid var(--gold-rule);
+            padding: 8px 20px;
+            display: flex; align-items: center; gap: 12px;
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
         }
-
-        #play-controls {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-
+        #play-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
         #play-controls button, #speed-select {
-            background: rgba(44, 36, 24, 0.95);
-            border: 1px solid #5a4a36;
-            border-radius: 4px;
-            color: #d4c5a9;
+            font-family: 'Cinzel', serif;
+            background: rgba(245,238,220,0.95);
+            border: 1px solid var(--gold-dk);
+            border-radius: 3px;
+            color: var(--on-dark);
             padding: 5px 10px;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 13px;
-            transition: background 0.2s, border-color 0.2s;
+            font-size: 11px;
+            letter-spacing: 0.8px;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
         #play-controls button:hover, #speed-select:hover {
-            border-color: #8b7355;
-            background: rgba(60, 48, 30, 0.95);
+            border-color: var(--gold);
+            background: rgba(215,200,160,0.95);
+            color: var(--gold-lt);
         }
-        #speed-select { padding: 4px 6px; font-size: 12px; }
-        #speed-select option { background: #2c2418; }
+        #speed-select { padding: 4px 6px; }
+        #speed-select option { background: #f5eedc; color: var(--ink); }
 
-        #scrubber-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-        }
+        #scrubber-container { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
         #scrubber {
-            flex: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 4px;
-            background: #5a4a36;
-            border-radius: 2px;
-            outline: none;
-            min-width: 60px;
+            flex: 1; -webkit-appearance: none; appearance: none;
+            height: 3px; background: rgba(160,112,16,0.3);
+            border-radius: 2px; outline: none; min-width: 60px;
         }
         #scrubber::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            background: #c9a435;
-            border: 2px solid #e8d9b0;
-            cursor: pointer;
+            width: 13px; height: 13px; border-radius: 50%;
+            background: var(--gold); border: 2px solid var(--gold-lt); cursor: pointer;
         }
         #scrubber::-moz-range-thumb {
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            background: #c9a435;
-            border: 2px solid #e8d9b0;
-            cursor: pointer;
+            width: 13px; height: 13px; border-radius: 50%;
+            background: var(--gold); border: 2px solid var(--gold-lt); cursor: pointer;
         }
         #scrubber-label {
-            font-size: 11px;
-            color: #8b7355;
-            white-space: nowrap;
-            min-width: 80px;
+            font-family: 'Cinzel', serif;
+            font-size: 10px; color: var(--on-dark);
+            white-space: nowrap; min-width: 120px; letter-spacing: 0.5px;
         }
 
         #filter-toggle {
             display: none;
-            background: rgba(44, 36, 24, 0.95);
-            border: 1px solid #5a4a36;
-            border-radius: 4px;
-            color: #d4c5a9;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 12px;
+            font-family: 'Cinzel', serif;
+            background: rgba(245,238,220,0.95);
+            border: 1px solid var(--gold-dk);
+            border-radius: 3px;
+            color: var(--on-dark); padding: 5px 10px;
+            cursor: pointer; font-size: 10px; letter-spacing: 1px;
         }
-        #filter-panel {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        #filter-panel { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .filter-label {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            white-space: nowrap;
-            color: #a89070;
-            transition: color 0.2s;
+            display: flex; align-items: center; gap: 5px;
+            font-family: 'Cinzel', serif;
+            font-size: 8.5px; letter-spacing: 0.8px; text-transform: uppercase;
+            cursor: pointer; white-space: nowrap;
+            color: var(--on-dark); transition: color 0.2s;
         }
-        .filter-label:hover { color: #e8d9b0; }
+        .filter-label:hover { color: var(--gold-lt); }
         .filter-checkbox { display: none; }
-        .filter-dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: opacity 0.2s;
-        }
-        .filter-checkbox:not(:checked) ~ .filter-dot { opacity: 0.3; }
-        .filter-checkbox:not(:checked) ~ .filter-name { text-decoration: line-through; opacity: 0.5; }
+        .filter-dot { width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); transition: opacity 0.2s; }
+        .filter-checkbox:not(:checked) ~ .filter-dot { opacity: 0.25; }
+        .filter-checkbox:not(:checked) ~ .filter-name { text-decoration: line-through; opacity: 0.4; }
 
-        /* ── Timeline Container ────────────────── */
+        /* ── Timeline container ───────────────────── */
         #timeline-container {
-            max-width: 820px;
-            margin: 0 auto;
-            padding: 110px 20px 60px 20px;
+            max-width: 820px; margin: 0 auto;
+            padding: 106px 20px 80px 20px;
             position: relative;
         }
-
-        /* Vertical line */
         .timeline-line {
             position: absolute;
-            left: 118px;
-            top: 110px;
-            bottom: 60px;
-            width: 2px;
-            background: linear-gradient(to bottom, transparent, #5a4a36 2%, #5a4a36 98%, transparent);
+            left: 138px; top: 106px; bottom: 80px;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--gold-rule) 2%, var(--gold-rule) 98%, transparent);
         }
 
-        /* ── Era Headers ───────────────────────── */
-        .era-header {
+        /* ── Period headers ───────────────────────── */
+        .period-header {
             text-align: center;
-            padding: 48px 0 28px;
-            position: relative;
+            padding: 52px 0 28px;
         }
-        .era-header h2 {
-            font-size: 24px;
-            color: #e8d9b0;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-weight: normal;
+        .period-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 17px; font-weight: 400;
+            color: var(--gold-lt);
+            letter-spacing: 5px; text-transform: uppercase;
         }
-        .era-header .era-range {
+        .period-sub {
             display: block;
-            font-size: 12px;
-            color: #8b7355;
-            font-style: italic;
-            margin-top: 4px;
+            font-family: 'EB Garamond', serif;
+            font-style: italic; font-size: 14px;
+            color: var(--on-dark); margin-top: 4px;
         }
-        .era-header::after {
-            content: '';
+        .period-range {
             display: block;
-            width: 200px;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #8b7355, transparent);
-            margin: 16px auto 0;
+            font-family: 'Cinzel', serif;
+            font-size: 9.5px; letter-spacing: 2px;
+            color: var(--on-dark-lt); margin-top: 6px;
+        }
+        .period-rule {
+            width: 220px; height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold-rule), transparent);
+            margin: 14px auto 0;
         }
 
-        /* ── Time Gap ──────────────────────────── */
+        /* ── Time gaps ────────────────────────────── */
         .time-gap {
-            text-align: center;
-            padding: 12px 0;
-            color: #5a4a36;
-            font-size: 11px;
-            letter-spacing: 3px;
-            font-style: italic;
+            text-align: center; padding: 8px 0;
+            font-family: 'Cinzel', serif;
+            font-size: 9px; letter-spacing: 3px;
+            color: var(--on-dark-lt);
         }
 
-        /* ── Event Cards ───────────────────────── */
+        /* ── Event cards ──────────────────────────── */
         .timeline-event {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: flex; align-items: flex-start;
+            margin-bottom: 18px;
+            opacity: 0; transform: translateY(14px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
             position: relative;
         }
-        .timeline-event.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .timeline-event.highlighted .event-card {
-            border-color: #c9a435;
-            box-shadow: 0 0 20px rgba(201, 164, 53, 0.15);
-        }
+        .timeline-event.visible { opacity: 1; transform: translateY(0); }
 
         .event-date {
-            width: 100px;
-            text-align: right;
-            padding-right: 14px;
-            flex-shrink: 0;
-            padding-top: 10px;
+            width: 118px; text-align: right;
+            padding-right: 14px; flex-shrink: 0; padding-top: 10px;
         }
-        .era-tag {
+        .date-str {
+            font-family: 'Cinzel', serif;
+            font-size: 11px; color: var(--on-dark); letter-spacing: 0.4px; line-height: 1.5;
             display: block;
-            font-size: 9px;
-            color: #8b7355;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
         }
-        .year-num {
-            font-size: 16px;
-            color: #e8d9b0;
-            font-weight: bold;
+        .period-tag {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 8px; color: var(--on-dark-lt);
+            text-transform: uppercase; letter-spacing: 0.8px; margin-top: 3px;
         }
 
         .event-dot {
-            width: 26px; height: 26px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            z-index: 2;
-            font-size: 11px;
-            margin-top: 8px;
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.18);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; z-index: 2; font-size: 15px; margin-top: 8px;
         }
 
         .event-card {
-            flex: 1;
-            margin-left: 14px;
-            background: rgba(44, 36, 24, 0.92);
-            border: 1px solid #3d3225;
-            border-radius: 6px;
-            padding: 14px 16px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            cursor: default;
+            flex: 1; margin-left: 14px;
+            background: var(--parch);
+            border: 1px solid var(--parch-bd);
+            border-radius: 4px;
+            padding: 14px 17px;
+            transition: border-color 0.25s, box-shadow 0.25s;
         }
-        .event-card:hover {
-            border-color: #5a4a36;
+        .event-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+        .timeline-event.highlighted .event-card {
+            border-color: var(--gold);
+            box-shadow: 0 0 22px rgba(201,164,53,0.35);
         }
 
         .event-card-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
+            display: flex; align-items: center;
+            gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
         }
         .category-badge {
-            font-size: 9px;
-            padding: 2px 7px;
-            border-radius: 3px;
-            color: rgba(255,255,255,0.85);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            flex-shrink: 0;
+            font-family: 'Cinzel', serif;
+            font-size: 9.5px; padding: 2px 9px; border-radius: 2px;
+            color: #fff;
+            text-transform: uppercase; letter-spacing: 0.8px; flex-shrink: 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.45);
         }
-        .event-name {
-            font-size: 15px;
-            color: #e8d9b0;
-            font-weight: bold;
-            line-height: 1.3;
+        .event-title {
+            font-family: 'EB Garamond', serif;
+            font-style: italic; font-size: 18px; font-weight: 500;
+            color: var(--ink); line-height: 1.3;
         }
 
-        .event-desc {
-            font-size: 13px;
-            line-height: 1.55;
-            color: #b8a88a;
-            margin: 6px 0;
+        .event-body {
+            font-family: 'EB Garamond', serif;
+            font-size: 15.5px; line-height: 1.68;
+            color: var(--ink); margin: 6px 0 11px;
         }
-        .event-desc.truncated { cursor: pointer; }
+        .event-body em { color: #6a3010; font-style: italic; font-weight: 500; }
         .desc-full { display: none; }
-        .desc-ellipsis { color: #8b7355; }
-        .read-toggle {
-            color: #c9a435;
-            cursor: pointer;
-            font-size: 12px;
-            border: none;
-            background: none;
-            font-family: inherit;
-            padding: 0;
-            margin-left: 4px;
-        }
-        .read-toggle:hover { color: #e8d9b0; }
 
-        .event-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
+        /* ── Place links ──────────────────────────── */
+        .event-places { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
+        .place-link {
+            font-family: 'Cinzel', serif;
+            font-size: 8.5px; letter-spacing: 0.7px; text-transform: uppercase;
+            color: var(--ink-md);
+            text-decoration: none;
+            background: var(--parch-dk);
+            border: 1px solid var(--parch-bd);
+            border-radius: 2px; padding: 3px 8px;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
         }
-        .event-characters {
-            font-size: 11px;
-            color: #8b7355;
-            font-style: italic;
-        }
-        .event-actions {
-            display: flex;
-            gap: 6px;
-        }
-        .event-actions button {
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 3px;
-            border: 1px solid #5a4a36;
-            background: transparent;
-            color: #a89070;
-            cursor: pointer;
-            font-family: inherit;
-            transition: color 0.2s, border-color 0.2s;
-        }
-        .event-actions button:hover {
-            color: #e8d9b0;
-            border-color: #8b7355;
+        .place-link::before { content: '⬥\00a0'; font-size: 7px; color: var(--gold-dk); }
+        .place-link:hover {
+            color: var(--ink);
+            border-color: var(--gold);
+            background: #c8a850;
         }
 
-        /* ── Links Panel ───────────────────────── */
-        .links-panel {
-            display: none;
-            margin-top: 10px;
-            padding-top: 8px;
-            border-top: 1px solid #3d3225;
-        }
-        .links-panel.open { display: block; }
-        .links-title {
-            font-size: 11px;
-            color: #8b7355;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        .link-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 0;
-            font-size: 12px;
-        }
-        .link-arrow { font-size: 12px; }
-        .link-type {
-            font-size: 10px;
-            color: #8b7355;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            min-width: 65px;
-        }
-        .link-target {
-            color: #c9a435;
-            cursor: pointer;
+        /* ── Related events ───────────────────────── */
+        .related-toggle {
+            font-family: 'Cinzel', serif;
+            font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase;
+            color: var(--ink-md);
+            background: none; border: none;
+            cursor: pointer; padding: 0; margin-top: 2px;
             transition: color 0.2s;
         }
-        .link-target:hover { color: #e8d9b0; }
-        .link-era {
-            font-size: 10px;
-            color: #5a4a36;
-            margin-left: 4px;
+        .related-toggle:hover { color: var(--ink); }
+        .related-panel { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--parch-bd); }
+        .related-panel.open { display: block; }
+        .related-panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 8.5px; color: var(--ink-lt);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
         }
+        .related-item { display: flex; align-items: baseline; gap: 8px; padding: 3px 0; }
+        .rel-type {
+            font-family: 'Cinzel', serif;
+            font-size: 8px; color: var(--ink-lt);
+            text-transform: uppercase; letter-spacing: 0.6px;
+            min-width: 72px; flex-shrink: 0;
+        }
+        .rel-target {
+            font-family: 'EB Garamond', serif;
+            font-style: italic; font-size: 15px;
+            color: #6a3010; cursor: pointer;
+            transition: color 0.2s;
+        }
+        .rel-target:hover { color: var(--ink); text-decoration: underline; }
 
-        /* Link type colors */
-        .link-item[data-type="cause"] .link-arrow { color: #b85c38; }
-        .link-item[data-type="sequel"] .link-arrow { color: #6a9f5b; }
-        .link-item[data-type="parallel"] .link-arrow { color: #c9a435; }
-        .link-item[data-type="legacy"] .link-arrow { color: #9b59b6; }
-        .link-item[data-type="location"] .link-arrow { color: #5b8fb9; }
-
-        /* ── Keyboard hint ─────────────────────── */
+        /* ── Keyboard hint ────────────────────────── */
         #keyboard-hint {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 11px;
-            color: #5a4a36;
-            opacity: 1;
-            transition: opacity 2s;
-            pointer-events: none;
-            white-space: nowrap;
+            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+            font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--on-dark-lt);
+            opacity: 1; transition: opacity 2s;
+            pointer-events: none; white-space: nowrap;
         }
         #keyboard-hint.hidden { opacity: 0; }
 
-        /* ── Responsive ────────────────────────── */
-        @media (max-width: 500px) {
-            .nav-title { display: none; }
-        }
+        /* ── Responsive ───────────────────────────── */
+        @media (max-width: 500px) { .nav-title { display: none; } }
         @media (max-width: 768px) {
             #controls { flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
             #filter-panel { display: none; }
             #filter-panel.open { display: flex; width: 100%; }
             #filter-toggle { display: block; }
-
             .timeline-line { left: 18px; }
-            .event-date {
-                width: auto;
-                text-align: left;
-                padding-left: 38px;
-                padding-right: 0;
-                padding-top: 0;
-                margin-bottom: 2px;
-            }
-            .era-tag, .year-num { display: inline; font-size: 11px; }
-            .era-tag { margin-right: 4px; }
-            .year-num { font-size: 13px; }
-
+            .event-date { width: auto; text-align: left; padding-left: 36px; padding-right: 0; padding-top: 0; margin-bottom: 2px; }
+            .period-tag { display: none; }
             .timeline-event { flex-wrap: wrap; }
-            .event-dot {
-                position: absolute;
-                left: 6px;
-                top: 2px;
-                width: 22px; height: 22px;
-                font-size: 10px;
-            }
-            .event-card {
-                margin-left: 0;
-                width: 100%;
-                padding: 10px 12px;
-            }
-            #timeline-container { padding: 100px 10px 50px 10px; }
+            .event-dot { position: absolute; left: 5px; top: 2px; width: 20px; height: 20px; font-size: 9px; }
+            .event-card { margin-left: 0; width: 100%; padding: 10px 12px; }
+            #timeline-container { padding: 98px 10px 50px 10px; }
         }
     </style>
 </head>
 <body>
     <nav id="nav-bar">
-        <a href="index.html" class="nav-link">&#x1f5fa;&#xfe0e; Map</a>
-        <span class="nav-title">Middle-earth</span>
-        <a href="timeline.html" class="nav-link active">&#x23f3;&#xfe0e; Timeline</a>
+        <a href="index.html" class="nav-link">&#x1f5fa;&#xfe0e;&nbsp;Carte</a>
+        <span class="nav-title">Paris &middot; MDLIII</span>
+        <a href="timeline.html" class="nav-link active">&#x29d7;&#xfe0e;&nbsp;Chronologie</a>
     </nav>
 
-    <main>
     <div id="controls">
         <div id="play-controls">
-            <button id="play-btn" title="Play / Pause (Space)">&#9654;</button>
-            <button id="prev-btn" title="Previous (&larr;)">&#9664;&#9664;</button>
-            <button id="next-btn" title="Next (&rarr;)">&#9654;&#9654;</button>
-            <select id="speed-select" title="Playback speed">
-                <option value="4000">Slow</option>
+            <button id="play-btn" title="Lecture / Pause (Espace)">&#9654;</button>
+            <button id="prev-btn" title="Pr&eacute;c&eacute;dent (&larr;)">&#9664;&#9664;</button>
+            <button id="next-btn" title="Suivant (&rarr;)">&#9654;&#9654;</button>
+            <select id="speed-select">
+                <option value="4000">Lent</option>
                 <option value="2000" selected>Normal</option>
-                <option value="800">Fast</option>
+                <option value="800">Rapide</option>
             </select>
         </div>
         <div id="scrubber-container">
             <input type="range" id="scrubber" min="0" max="100" value="0">
             <span id="scrubber-label"></span>
         </div>
-        <button id="filter-toggle">Filter &darr;</button>
+        <button id="filter-toggle">Filtres &#x25be;</button>
         <div id="filter-panel"></div>
     </div>
 
@@ -532,428 +407,1099 @@
         <div id="timeline-content"></div>
     </div>
 
-    <div id="keyboard-hint">Space: play &middot; &larr;&rarr;: navigate &middot; Esc: stop</div>
-    </main>
+    <div id="keyboard-hint">Espace&nbsp;: lecture &middot; &larr;&rarr;&nbsp;: naviguer &middot; &Eacute;chap&nbsp;: arr&ecirc;ter</div>
 
-    <script src="data.js"></script>
     <script>
-    (function() {
-        'use strict';
+    (function () {
+    'use strict';
 
-        // ── Helpers ──────────────────────────────────
-        const ERA_LABELS = { FA: 'First Age', SA: 'Second Age', TA: 'Third Age' };
-        const ERA_ORDER = ['FA', 'SA', 'TA'];
-        const ERA_RANGES = {
-            FA: 'Years of the Sun \u2014 FA 590',
-            SA: 'SA 1 \u2014 SA 3441',
-            TA: 'TA 1 \u2014 TA 3021'
+    const PERIODS = {
+        antiquite:   { label: 'Antiquité',                sub: 'Lutèce gauloise et romaine',         range: '~250 av. J.-C. – 486 ap. J.-C.' },
+        francs:      { label: 'Les Francs',                    sub: 'Mérovingiens et Carolingiens',        range: '486 – 987' },
+        capetiens:   { label: 'L’Essor capétien',    sub: 'De Hugues Capet à Philippe Auguste', range: '987 – 1220' },
+        gothique:    { label: 'Paris gothique',                sub: 'Grandeur et prospérité',         range: '1220 – 1350' },
+        crises:      { label: 'Crises et résilience',     sub: 'Guerres, pestes et occupations',          range: '1350 – 1450' },
+        renaissance: { label: 'La Renaissance',                sub: 'Les Valois et l’humanisme',          range: '1450 – 1559' },
+    };
+
+    const CATEGORIES = {
+        politique: { label: 'Politique',        color: '#8b7355', icon: '⚔' },
+        religion:  { label: 'Religion',         color: '#5b8fb9', icon: '✝' },
+        urbain:    { label: 'Urbanisme',        color: '#6a9f5b', icon: '⚒' },
+        culture:   { label: 'Culture & Savoir', color: '#9b59b6', icon: '✶' },
+        societe:   { label: 'Société',color: '#b85c38', icon: '⚖' },
+        royal:     { label: 'Histoire royale',  color: '#c9a435', icon: '♛' },
+    };
+
+    const REL_LABELS = {
+        cause:    'Entraîne',
+        sequel:   'Fait suite à',
+        legacy:   'Héritage de',
+        parallel: 'Simultané à',
+    };
+
+    const HISTORY = [
+
+        // ── ANTIQUITÉ ─────────────────────────────────────────────
+        {
+            id: 'parisii',
+            date: '~250 av. J.-C.',
+            sortKey: -250,
+            period: 'antiquite',
+            category: 'politique',
+            title: 'Les Parisii s’établissent sur l’île',
+            body: 'La tribu gauloise des Parisii — « ceux de la barque » — s’installe sur l’île naturelle de la Seine. Navigateurs et marchands spécialisés dans la batellerie, ils frappent leur propre monnaie d’or et contrôlent un carrefour fluvial stratégique entre la Méditerranée et la mer du Nord. Leur oppidum insulaire, prototypique des villes médiévales avec son île fortifiée et ses ponts contrôlés, deviendra le berceau de Paris.',
+            places: [
+                { id: 'ile_cite', name: 'Île de la Cité' },
+            ],
+            related: [
+                { id: 'labiénus', rel: 'sequel' },
+            ],
+        },
+        {
+            id: 'labiénus',
+            date: '52 av. J.-C.',
+            sortKey: -52,
+            period: 'antiquite',
+            category: 'politique',
+            title: 'Labiénus assiège Lutèce',
+            body: 'Lors de la guerre des Gaules, le légat romain Titus Labiénus marche sur Lutèce. Les Parisii, sous leur chef Camulogenè, incendient leurs ponts et une partie de la ville pour interdire le passage, puis tombent à la bataille de Melun. Jules César mentionne Lutèce dans ses <em>Commentarii de Bello Gallico</em> : première mention historique de la ville. Lutèce est déjà suffisamment importante pour justifier une opération militaire de grande envergure.',
+            places: [
+                { id: 'ile_cite', name: 'Île de la Cité' },
+                { id: 'petit_pont', name: 'Petit Pont (site antique)' },
+            ],
+            related: [
+                { id: 'parisii', rel: 'sequel' },
+                { id: 'lutece_romaine', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'lutece_romaine',
+            date: 'Ier – IIIe s.',
+            sortKey: 100,
+            period: 'antiquite',
+            category: 'urbain',
+            title: 'Lutèce romaine : forum, thermes et amphithéâtre',
+            body: 'La paix romaine transforme Lutèce en ville planifiée. Sur la Rive Gauche s’élèvent un forum, un amphithéâtre (l’actuelle arène de Lutèce, redécouverte en 1869) et deux complexes de thermes. Les plus imposants, les <em>Thermes de Julien</em>, s’étendent sur plusieurs hectares : leur frigidarium voûté subsiste à l’intérieur de l’Hôtel de Cluny. Un axe nord-sud (le <em>cardo maximus</em>) relie les deux rives par le Petit Pont et le Grand Pont, poésie de pierre dont les descendants sont encore visibles.',
+            places: [
+                { id: 'hotel_cluny', name: 'Hôtel de Cluny (thermes romains)' },
+                { id: 'petit_pont', name: 'Petit Pont' },
+                { id: 'quartier_latin', name: 'Rive Gauche' },
+            ],
+            related: [
+                { id: 'julien', rel: 'legacy' },
+            ],
+        },
+        {
+            id: "saint_denis_martyr",
+            date: "vers 258",
+            sortKey: 258,
+            period: "antiquite",
+            category: "religion",
+            title: "Martyre de saint Denis, premier évêque de Paris",
+            body: "Denis, envoyé par Rome pour évangéliser la Gaule, est décapité avec ses compagnons sur la butte de Montmartre — le <em>Mons Martyrum</em>. Selon la tradition, il aurait ramassé sa tête et marché jusqu'à l'emplacement de la future basilique de Saint-Denis. Son tombeau devient aussitôt un lieu de pèlerinage ; la colline où il mourut gardera son nom à jamais. Premier évêque de Lutèce et futur patron des rois de France, sa mémoire structurera l'identité religieuse de Paris pour des siècles.",
+            places: [
+                { id: "crypte_martyrium_saint_denis", name: "Crypte du Martyrium (Montmartre)" },
+                { id: "montmartre", name: "La Butte Montmartre" },
+            ],
+            related: [
+                { id: "lutece_romaine", rel: "parallel" },
+                { id: "geneviève", rel: "legacy" },
+            ],
+        },
+        {
+            id: "julien",
+            date: "357 – 360",
+            sortKey: 357,
+            period: "antiquite",
+            category: "royal",
+            title: "Julien l'Apostat proclamé Auguste à Lutèce",
+            body: "L'empéreur Julien passe deux hivers à Lutèce, qu'il décrit comme une « petite île dans la rivière, ceinte de murs et reliée aux deux rives par deux ponts de bois ». En 360, ses soldats le proclament Auguste dans la salle des thermes. Julien évoque dans ses écrits la vigne cultivée sur l'île, l'hiver doux, les eaux limpides de la Seine : première description littéraire de Paris.",
+            places: [
+                { id: "ile_cite", name: "Île de la Cité" },
+                { id: "hotel_cluny", name: "Thermes (site de la proclamation)" },
+            ],
+            related: [
+                { id: "geneviève", rel: "legacy" },
+            ],
+        },
+        {
+            id: "saint_marcel_mort",
+            date: "436",
+            sortKey: 436,
+            period: "antiquite",
+            category: "religion",
+            title: "Mort de saint Marcel — fondation d'un sanctuaire pérenne",
+            body: "Marcel, huitième évêque de Paris, s'éteint dans son faubourg méridional. La tradition lui attribue un miracle célèbre : ayant affronté un dragon ravageant les cimetières, il aurait repoussé le monstre par la seule force de sa prière. Son tombeau attire rapidement des pèlerins ; une chapelle puis une collégiale s'y édifient sur le chemin menant vers le sud. Saint Marcel et Geneviève incarnent ensemble la figure de l'évêque-protecteur qui donne à Lutèce son identité chrétienne au moment même où l'Empire romain se désagrège.",
+            places: [
+                { id: "collegiale_saint_marcel", name: "Collégiale Saint-Marcel" },
+            ],
+            related: [
+                { id: "saint_denis_martyr", rel: "legacy" },
+                { id: "geneviève", rel: "parallel" },
+            ],
+        },
+        {
+            id: "geneviève",
+            date: "451",
+            sortKey: 451,
+            period: "antiquite",
+            category: "religion",
+            title: "Sainte Geneviève et la menace d'Attila",
+            body: "Alors qu'Attila et ses Huns ravagent la Gaule, la jeune vierge Geneviève convainc les Parisiens de ne pas fuir : les Huns dévient vers Orléans et épargnent Paris. Vendue comme protectrice de la cité de son vivant, elle mourra vers 512. Son tombeau sur la Montagne Sainte-Geneviève devient le haut lieu de piété de la ville. Ses reliques seront portées en procession lors de chaque crise majeure. Elle est la patronne de Paris.",
+            places: [
+                { id: "abbaye_sainte_genevieve", name: "Abbaye Sainte-Geneviève" },
+                { id: "ile_cite", name: "Île de la Cité" },
+            ],
+            related: [
+                { id: "clovis_capitale", rel: "legacy" },
+            ],
+        },
+
+        // ── LES FRANCS ────────────────────────────────────────────
+        {
+            id: 'clovis_capitale',
+            date: '508',
+            sortKey: 508,
+            period: 'francs',
+            category: 'royal',
+            title: 'Clovis Ier fait de Paris la capitale des Francs',
+            body: 'Après sa victoire de Tolbiac (496) et son baptême par l’évêque Rémi, Clovis Ier s’installe dans le palais de l’île de la Cité. Paris devient la capitale du royaume franc, premier État chrétien d’Occident. Clovis et Clotilde sont inhumés sur la Montagne Sainte-Geneviève. Ses successeurs mérovingiens fractureront le royaume, mais Paris conserve son prestige symbolique de capitale : le Palais de la Cité est le foyer du pouvoir royal.',
+            places: [
+                { id: 'palais_cite', name: 'Palais de la Cité' },
+                { id: 'ile_cite', name: 'Île de la Cité' },
+                { id: 'abbaye_sainte_genevieve', name: 'Abbaye Sainte-Geneviève (tombeau)' },
+            ],
+            related: [
+                { id: 'geneviève', rel: 'sequel' },
+                { id: 'saint_germain_fond', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'saint_germain_fond',
+            date: '543',
+            sortKey: 543,
+            period: 'francs',
+            category: 'religion',
+            title: 'Fondation de l’abbaye Saint-Germain-des-Prés',
+            body: 'Childebert Ier, fils de Clovis, fait bâtir une basilique hors les murs pour abriter la tunique de saint Vincent ramenée d’Espagne. L’évêque Germain de Paris y est inhumé en 576, donnant son nom à l’abbaye. Les bénédictins en font l’un des grands centres monastiques de France, avec scriptorium, nécropole mérovingienne et vastes domaines fonciers, dont le faubourg portant son nom jusqu’à la Révolution.',
+            places: [
+                { id: 'saint_germain_des_pres', name: 'Abbaye Saint-Germain-des-Prés' },
+                { id: 'foire_saint_germain', name: 'Foire Saint-Germain (terres abbatiales)' },
+            ],
+            related: [
+                { id: 'clovis_capitale', rel: 'sequel' },
+            ],
+        },
+        {
+            id: 'hotel_dieu_fond',
+            date: 'vers 651',
+            sortKey: 651,
+            period: 'francs',
+            category: 'religion',
+            title: "Saint Landry fonde l'Hôtel-Dieu",
+            body: "L’évêque de Paris Landry crée sur l’île de la Cité, au pied de la cathédrale, un hôpital destiné aux pauvres et aux pèlerins : c’est l’Hôtel-Dieu, le plus ancien hôpital de Paris et l’un des plus anciens du monde encore en activité. Des sœurs augustiniennes assurent les soins sans médecin attitré ; malades et indigents y partagent parfois le même lit. En 1553, neuf siècles après sa fondation, l’institution accueille toujours des milliers de malheureux sur l’île de la Cité, miroir vivant de la charité chrétienne médiévale.",
+            places: [
+                { id: 'hotel_dieu', name: 'Hôtel-Dieu de Paris' },
+                { id: 'notre_dame', name: 'Cathédrale Notre-Dame (voisine)' },
+                { id: 'ile_cite', name: 'Île de la Cité' },
+            ],
+            related: [
+                { id: 'clovis_capitale', rel: 'sequel' },
+                { id: 'saint_germain_fond', rel: 'parallel' },
+                { id: 'notre_dame_fond', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'vikings',
+            date: '845 – 887',
+            sortKey: 845,
+            period: 'francs',
+            category: 'politique',
+            title: 'Les grandes invasions vikings',
+            body: 'Ragnar Lothbrok remonte la Seine en 845 avec 120 drakkars et ravage Paris ; Charles le Chauve paie 7 000 livres d’argent pour s’en débarrasser. En 885–886, une flotte de plusieurs centaines de bateaux assiège la ville pendant un an. Le comte Eudes défend héroïquement l’île en s’appuyant sur le Grand Châtelet et le Petit Châtelet, refusant aux Normands le passage fluvial. Sa bravoure lui vaut la couronne : il sera élu roi de France en 888, fondant la préfigure de la ligne capétienne.',
+            places: [
+                { id: 'ile_cite', name: 'Île de la Cité' },
+                { id: 'grand_chatelet', name: 'Grand Châtelet' },
+                { id: 'petit_chatelet', name: 'Petit Châtelet' },
+            ],
+            related: [
+                { id: 'hugues_capet', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'hugues_capet',
+            date: '987',
+            sortKey: 987,
+            period: 'francs',
+            category: 'royal',
+            title: 'Avènement des Capétiens — Hugues Capet',
+            body: 'À la mort du dernier Carolingien, les grands du royaume élisent Hugues Capet roi de France. Issu d’une lignée de comtes de Paris, il fixe sa résidence au Palais de la Cité. Contrairement aux Carolingiens itinérants, les premiers Capétiens ancrent définitivement le pouvoir royal à Paris. La dynastie régnera sans interruption de mâle en mâle jusqu’en 1328, faisant de Paris le pivot incontestable du royaume.',
+            places: [
+                { id: 'palais_cite', name: 'Palais de la Cité' },
+            ],
+            related: [
+                { id: 'vikings', rel: 'sequel' },
+                { id: 'halles_louis6', rel: 'legacy' },
+            ],
+        },
+
+        // ── L'ESSOR CAPÉTIEN ──────────────────────────────────────
+        {
+            id: 'prieure_saint_martin_fond',
+            date: '1067',
+            sortKey: 1067,
+            period: 'capetiens',
+            category: 'religion',
+            title: 'Henri Ier fonde le Prieuré Saint-Martin-des-Champs',
+            body: 'Le roi Henri Ier transforme une petite collégiale royale en prieuré clunisien, l’une des premières implantations de l’ordre de Cluny dans le domaine royal. Le prieuré s’enrichit rapidement de donations, développant une église romane remarquable et de vastes bâtiments conventuels. Ses terres couvrent tout le nord du Marais. Ses bâtiments abritent aujourd’hui le Musée des Arts et Métiers.',
+            places: [
+                { id: 'prieure_saint_martin', name: 'Prieuré Saint-Martin-des-Champs' },
+            ],
+            related: [
+                { id: 'halles_louis6', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'halles_louis6',
+            date: '1137',
+            sortKey: 1137,
+            period: 'capetiens',
+            category: 'urbain',
+            title: 'Louis VI établit le marché des Champeaux',
+            body: 'Louis VI le Gros installe le grand marché de Paris sur des terres marécageuses au nord de l’île, les « Champeaux ». Ce marché couvert de draps, grains et denées devient le poumon commercial de la Rive Droite, entouré des corporations de bouchers, merciers et drapiers. Philippe Auguste le clôturera dès 1183 en halles couvertes. Il sera rebaptisé « les Halles » et restera le ventre de Paris jusqu’en 1969.',
+            places: [
+                { id: 'les_halles', name: 'Les Halles' },
+                { id: 'cimetiere_innocents', name: 'Cimetière des Innocents (voisin)' },
+            ],
+            related: [
+                { id: 'enceinte_philippe', rel: 'legacy' },
+                { id: 'paris_200k', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'notre_dame_fond',
+            date: '1163',
+            sortKey: 1163,
+            period: 'capetiens',
+            category: 'religion',
+            title: 'Pose de la première pierre de Notre-Dame',
+            body: 'L’évêque Maurice de Sully convainc Louis VII de financer un chantier colossal sur l’île de la Cité : une cathédrale gothique entièrement nouvelle. En 1182, le chœur est achevé et consacré en présence de Philippe Auguste. La nef suivra au XIIIe siècle ; les tours seront achevées vers 1345. Deux siècles de travaux mobilisent des générations d’architectes, de tailleurs de pierre, de maîtres verriers. Haut lieu d’une architecture qui défie la pesanteur.',
+            places: [
+                { id: 'notre_dame', name: 'Cathédrale Notre-Dame' },
+                { id: 'ile_cite', name: 'Île de la Cité' },
+            ],
+            related: [
+                { id: 'sainte_chapelle_fond', rel: 'parallel' },
+                { id: 'enceinte_philippe', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'enceinte_philippe',
+            date: '1190 – 1215',
+            sortKey: 1190,
+            period: 'capetiens',
+            category: 'urbain',
+            title: 'L’enceinte de Philippe Auguste',
+            body: 'Avant de partir en croisade, Philippe Auguste commande une muraille continue autour de Paris. Côté Rive Droite, le Grand Châtelet et le Petit Châtelet contrôlent les accès fluviaux. Côté Rive Gauche, la Tour de Nesle fait face à la forteresse du Louvre de l’autre côté du fleuve. C’est la première définition physique de la ville : Paris devient une entité close, protégée, dont les murs dessinent pour la première fois une identité urbaine.',
+            places: [
+                { id: 'grand_chatelet', name: 'Grand Châtelet' },
+                { id: 'petit_chatelet', name: 'Petit Châtelet' },
+                { id: 'tour_nesle', name: 'Tour de Nesle' },
+                { id: 'porte_nesle', name: 'Porte de Nesle' },
+                { id: 'louvre', name: 'Le Louvre (forteresse)' },
+            ],
+            related: [
+                { id: 'notre_dame_fond', rel: 'parallel' },
+                { id: 'enceinte_charles5', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'universite',
+            date: '~1208',
+            sortKey: 1208,
+            period: 'capetiens',
+            category: 'culture',
+            title: 'Naissance de l’Université de Paris',
+            body: 'Les étudiants et maîtres de la Rive Gauche, rassemblés autour de la cathédrale Notre-Dame puis du mont Sainte-Geneviève depuis le milieu du XIIe siècle, obtiennent une charte d’autonomie royale. La <em>Studiorum Universitas</em> devient la plus grande institution intellectuelle d’Europe, attirant des milliers d’étudiants du continent. L’usage du latin y est universel, d’où le nom de « Quartier Latin » : une ville dans la ville.',
+            places: [
+                { id: 'sorbonne', name: 'La Sorbonne' },
+                { id: 'quartier_latin', name: 'Quartier Latin' },
+                { id: 'college_bernardins', name: 'Collège des Bernardins' },
+            ],
+            related: [
+                { id: 'robert_sorbon', rel: 'legacy' },
+                { id: 'college_france_fond', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'sainte_chapelle_fond',
+            date: '1242 – 1248',
+            sortKey: 1242,
+            period: 'capetiens',
+            category: 'religion',
+            title: 'Louis IX fait ériger la Sainte-Chapelle',
+            body: 'Saint Louis achète à l’Empereur latin de Constantinople la Couronne d’épines du Christ pour la somme colossale de 135 000 livres — soit le double du coût de la chapelle construite pour l’abriter. Consacrée en 1248, la Sainte-Chapelle est le chef-d’œuvre du « gothique rayonnant » : ses murs sont remplacés par 600 m² de vitraux représentant 1113 scènes bibliques. La relique est portée en procession chaque vendredi saint.',
+            places: [
+                { id: 'sainte_chapelle', name: 'Sainte-Chapelle' },
+                { id: 'palais_cite', name: 'Palais de la Cité' },
+            ],
+            related: [
+                { id: 'notre_dame_fond', rel: 'parallel' },
+                { id: 'robert_sorbon', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'robert_sorbon',
+            date: '1257',
+            sortKey: 1257,
+            period: 'capetiens',
+            category: 'culture',
+            title: 'Robert de Sorbon fonde son collège',
+            body: 'Le chapelain de Louis IX, Robert de Sorbon, obtient du roi des terres et des fonds pour fonder un collège destiné aux étudiants pauvres en théologie. La maison de Sorbon deviendra bientôt le siège de la faculté de théologie, puis donnera son nom à l’ensemble de l’Université. Libraires, imprimeurs, copistes et étudiants densifient le Quartier Latin jusqu’à en faire une ville dans la ville.',
+            places: [
+                { id: 'sorbonne', name: 'La Sorbonne' },
+                { id: 'quartier_latin', name: 'Quartier Latin' },
+                { id: 'jacobins', name: 'Couvent des Jacobins (dominicains, voisins)' },
+            ],
+            related: [
+                { id: 'universite', rel: 'sequel' },
+                { id: 'college_navarre_fond', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'prevot_marchands',
+            date: '1263',
+            sortKey: 1263,
+            period: 'capetiens',
+            category: 'politique',
+            title: 'Naissance de la municipalité parisienne',
+            body: 'Louis IX reconnaît officiellement le rôle du « prévôt des marchands », chef de la puissante guilde des marchands de l’eau qui contrôle le commerce fluvial depuis le XIIe siècle. Avec ses quatre échevins, il constitue le premier gouvernement municipal de Paris. La devise de la ville — <em>Fluctuat nec mergitur</em> (« il est battu par les flots mais ne sombre pas ») — exprime cette identité marchande et nautique. La Place de Grève et le Port de la Grève en sont le cœur économique.',
+            places: [
+                { id: 'hotel_de_ville', name: 'Hôtel de Ville (futur site)' },
+                { id: 'place_greve', name: 'Place de Grève' },
+                { id: 'port_greve', name: 'Port de la Grève' },
+            ],
+            related: [
+                { id: 'etienne_marcel', rel: 'legacy' },
+                { id: 'hotel_de_ville_fond', rel: 'legacy' },
+            ],
+        },
+
+        // ── PARIS GOTHIQUE ────────────────────────────────────────
+        {
+            id: 'college_navarre_fond',
+            date: '1304',
+            sortKey: 1304,
+            period: 'gothique',
+            category: 'culture',
+            title: 'Jeanne de Navarre fonde le Collège de Navarre',
+            body: 'La reine Jeanne, épouse de Philippe IV le Bel, lègue par testament un collège à trois cents étudiants pauvres de la Montagne Sainte-Geneviève. Grammairiens, logiciens et théologiens bénéficient de bourses et de logements. Le Collège de Navarre devient l’un des plus prestigieux de l’Université ; Henri V d’Angleterre y séjourne lors de l’occupation ; en 1794, il est transformé en École Polytechnique.',
+            places: [
+                { id: 'college_navarre', name: 'Collège de Navarre' },
+                { id: 'abbaye_sainte_genevieve', name: 'Montagne Sainte-Geneviève' },
+            ],
+            related: [
+                { id: 'robert_sorbon', rel: 'sequel' },
+                { id: 'college_france_fond', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'enclos_temple_hosp',
+            date: '1312',
+            sortKey: 1312,
+            period: 'gothique',
+            category: 'religion',
+            title: 'L’Enclos du Temple passe aux Hospitaliers',
+            body: 'Après que Philippe IV le Bel a fait arrêter les Templiers (1307) et que le pape Clément V a dissous l’Ordre en 1312, leurs biens parisiens — la commanderie avec sa puissante tour, son église et ses maisons — sont transmis aux Chevaliers Hospitaliers. L’enclos, juridiction autonome dans la ville, reste un refuge pour débiteurs et artisans hors jurandes. Sa tour, écrin inexpugnable, accueillera Louis XVI en 1792.',
+            places: [
+                { id: 'enclos_temple', name: 'Enclos du Temple' },
+            ],
+            related: [
+                { id: 'tour_nesle_scandale', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'tour_nesle_scandale',
+            date: '1314',
+            sortKey: 1314,
+            period: 'gothique',
+            category: 'societe',
+            title: 'Le scandale de la Tour de Nesle',
+            body: 'La belle-fille de Philippe IV, Marguerite de Bourgogne, est accusée de recevoir ses amants dans la tour d’angle de l’enceinte sur la Rive Gauche. Arrêtée, elle est condamnée au rasage et à l’emprisonnement au château Gaillard, où elle mourra en 1315. L’affaire déclenche la crise dynastique des « rois maudits » : les trois fils de Philippe IV mourront sans héritier mâle, ouvrant la voie aux Valois.',
+            places: [
+                { id: 'tour_nesle', name: 'Tour de Nesle' },
+                { id: 'palais_cite', name: 'Palais de la Cité (Parlement)' },
+            ],
+            related: [
+                { id: 'paris_200k', rel: 'parallel' },
+                { id: 'enclos_temple_hosp', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'gibet_marigny',
+            date: 'c. 1315',
+            sortKey: 1315,
+            period: 'gothique',
+            category: 'societe',
+            title: 'Le Gibet de Montfaucon et la pendaison de Marigny',
+            body: 'Sous Philippe IV le Bel, un gibet de pierre permanent est érigé hors les murs au nord de Paris, sur la colline de Montfaucon. Sa structure colossale — seize piliers de grès d’environ dix mètres de haut reliés par des poutres de fer — peut exposer simultanément des dizaines de corps. En 1315, Louis X y fait pendre Enguerrand de Marigny, le puissant surintendant des finances de son père : retournement spectaculaire, la justice du roi frappe au sommet. Pendant trois siècles, les suppliciés y resteront exposés des mois, voire des années, en avertissement visible depuis les champs environnants.',
+            places: [
+                { id: 'gibet_montfaucon', name: 'Gibet de Montfaucon' },
+            ],
+            related: [
+                { id: 'tour_nesle_scandale', rel: 'parallel' },
+                { id: 'paris_200k', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'chambre_comptes_fond',
+            date: 'janvier 1319',
+            sortKey: 1319,
+            period: 'gothique',
+            category: 'politique',
+            title: 'Fondation de la Chambre des comptes',
+            body: 'Philippe V le Long institue par ordonnance la Chambre des comptes en cour souveraine, héritière des contrôleurs financiers que Saint Louis avait mis en place dès 1256. Installée au Palais de la Cité, elle vérifie les recettes et dépenses du domaine royal, enregistre les actes et garde les archives de la Couronne. Son existence, aux côtés du Parlement (justice), illustre la lente construction d’un État administratif : Paris n’est pas seulement la capitale d’un roi, mais le siège d’une monarchie bureaucratique en gestation.',
+            places: [
+                { id: 'chambre_comptes', name: 'Chambre des comptes' },
+                { id: 'palais_cite', name: 'Palais de la Cité' },
+            ],
+            related: [
+                { id: 'gibet_marigny', rel: 'parallel' },
+                { id: 'paris_200k', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'paris_200k',
+            date: '~1328',
+            sortKey: 1328,
+            period: 'gothique',
+            category: 'societe',
+            title: 'Paris, plus grande ville d’Occident',
+            body: 'Le recensement fiscal de 1328 dénombre environ 200 000 à 220 000 Parisiens — trois fois plus que Londres ou Cologne, deux fois plus que Venise. La ville déborde depuis longtemps de l’enceinte de Philippe Auguste : des faubourgs denses s’étendent dans toutes les directions. Les Halles, le Cimetière des Innocents, le Quartier Latin et le Marais fourmillent. Paris est la plus grande cité chrétienne de son époque.',
+            places: [
+                { id: 'les_halles', name: 'Les Halles' },
+                { id: 'cimetiere_innocents', name: 'Cimetière des Innocents' },
+                { id: 'ile_cite', name: 'Île de la Cité' },
+                { id: 'marais', name: 'Le Marais' },
+            ],
+            related: [
+                { id: 'halles_louis6', rel: 'sequel' },
+                { id: 'peste_noire', rel: 'cause' },
+            ],
+        },
+
+        // ── CRISES ET RÉSILIENCE ──────────────────────────────────
+        {
+            id: 'peste_noire',
+            date: '1348 – 1349',
+            sortKey: 1348,
+            period: 'crises',
+            category: 'societe',
+            title: 'La Peste Noire frappe Paris',
+            body: 'La grande peste bubonique arrive à Paris à l’été 1348. En quelques mois, elle tue entre un tiers et la moitié de la population — peut-être 50 000 morts. Le Cimetière des Innocents est saturé ; des fosses communes sont creusées hors les murs. Les médecins de la Sorbonne tentent d’en expliquer la cause par une conjonction de Saturne, Jupiter et Mars. La ville met des années à se repeupler. La main-d’œuvre se raréfie, les gages montent, les tensions sociales s’exacerbent.',
+            places: [
+                { id: 'cimetiere_innocents', name: 'Cimetière des Innocents' },
+                { id: 'les_halles', name: 'Les Halles' },
+            ],
+            related: [
+                { id: 'paris_200k', rel: 'sequel' },
+                { id: 'etienne_marcel', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'etienne_marcel',
+            date: '1357 – 1358',
+            sortKey: 1357,
+            period: 'crises',
+            category: 'politique',
+            title: 'La révolte d’Étienne Marcel',
+            body: 'Le prévôt des marchands Étienne Marcel profite de la captivité du roi Jean II (fait prisonnier à Poitiers en 1356) pour imposer des réformes au dauphin Charles. En février 1358, il fait assassiner deux maréchaux devant le dauphin dans le Palais de la Cité. Marcel ouvre les portes de la ville aux partisans de Charles le Mauvais. Trahi, il est assassiné le 31 juillet 1358 devant la Porte Saint-Antoine. La révolte échoue, mais elle annonce un Paris qui n’accepte pas passivement son sort.',
+            places: [
+                { id: 'place_greve', name: 'Place de Grève' },
+                { id: 'hotel_de_ville', name: 'Hôtel de Ville (prévôté)' },
+                { id: 'palais_cite', name: 'Palais de la Cité' },
+                { id: 'porte_saint_antoine', name: 'Porte Saint-Antoine' },
+            ],
+            related: [
+                { id: 'peste_noire', rel: 'sequel' },
+                { id: 'bastille_fond', rel: 'cause' },
+                { id: 'prevot_marchands', rel: 'sequel' },
+            ],
+        },
+        {
+            id: 'bastille_fond',
+            date: '1357 – 1382',
+            sortKey: 1358,
+            period: 'crises',
+            category: 'urbain',
+            title: 'Construction de la Bastille',
+            body: 'Pour défendre l’entrée est de la ville après les désordres de la révolte Marcel et les menaces anglaises, Charles V fait construire une puissante forteresse à double enceinte flanquée de huit tours rondes. La Bastille double la protection de la Porte Saint-Antoine et sert bientôt de trésor royal et de prison d’État pour les prisonniers de la Couronne. Sa prise le 14 juillet 1789 marquera le début de la Révolution française.',
+            places: [
+                { id: 'bastille', name: 'La Bastille' },
+                { id: 'porte_saint_antoine', name: 'Porte Saint-Antoine' },
+                { id: 'arsenal', name: 'Arsenal de Paris' },
+            ],
+            related: [
+                { id: 'etienne_marcel', rel: 'sequel' },
+                { id: 'enceinte_charles5', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'enceinte_charles5',
+            date: '1370 – 1383',
+            sortKey: 1370,
+            period: 'crises',
+            category: 'urbain',
+            title: 'L’enceinte de Charles V englobe les faubourgs',
+            body: 'Charles V ordonne une nouvelle muraille côté Rive Droite pour englober les faubourgs densifiant depuis un siècle. Longue de 5 km, dotée de portes monumentales (Portes Saint-Denis, Saint-Martin, Montmartre, du Temple, Saint-Honoré) et précédée d’un fossé, cette enceinte délimite Paris jusqu’au XVIIe siècle. Les Grands Boulevards suivent aujourd’hui son tracé exactement.',
+            places: [
+                { id: 'porte_saint_martin', name: 'Porte Saint-Martin' },
+                { id: 'porte_saint_denis', name: 'Porte Saint-Denis' },
+                { id: 'porte_montmartre', name: 'Porte Montmartre' },
+                { id: 'porte_saint_honore', name: 'Porte Saint-Honoré' },
+                { id: 'porte_du_temple', name: 'Porte du Temple' },
+            ],
+            related: [
+                { id: 'enceinte_philippe', rel: 'sequel' },
+                { id: 'bastille_fond', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'tournelles_royal',
+            date: '1404 – 1436',
+            sortKey: 1404,
+            period: 'crises',
+            category: 'royal',
+            title: 'L’Hôtel des Tournelles, entre ducs et rois',
+            body: 'Louis, duc d’Orléans, acquiert en 1404 l’hôtel des Tournelles dans le Marais et en fait une somptueuse résidence princière. Assassiné en 1407, il laisse le palais à ses héritiers avant que Charles VI ne s’y installe en 1417, fuyant le Louvre jugé trop sombre. Lors de l’occupation anglaise (1420–1436), le régent Bedford l’agrandit et l’embellit encore. Après la reconquête, les rois de France lui préfèrent sa modernité au Palais de la Cité : Louis XI, Charles VIII, Louis XII, François Ier et Henri II y séjournent. Au milieu du XVIe siècle, les Tournelles rivalisent avec le Louvre comme premier palais de Paris.',
+            places: [
+                { id: 'hotel_tournelles', name: 'Hôtel des Tournelles' },
+                { id: 'marais', name: 'Le Marais' },
+            ],
+            related: [
+                { id: 'occupation_anglaise', rel: 'parallel' },
+                { id: 'henri2_mort', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'occupation_anglaise',
+            date: '1420 – 1437',
+            sortKey: 1420,
+            period: 'crises',
+            category: 'politique',
+            title: 'L’occupation anglaise de Paris',
+            body: 'Le traité de Troyes (1420) livre Paris aux Anglais : Henri V d’Angleterre et Catherine de Valois y font leur entrée solennelle. Pendant dix-sept ans, Paris est la capitale d’un royaume bicphéale franco-anglais. La Sorbonne et le haut clergé soutiennent majoritairement les occupants. La ville se vide : la population tombe peut-être à 100 000 habitants. Les loups pénètrent dans les rues désertes en hiver.',
+            places: [
+                { id: 'palais_cite', name: 'Palais de la Cité' },
+                { id: 'grand_chatelet', name: 'Grand Châtelet' },
+                { id: 'porte_saint_denis', name: 'Porte Saint-Denis' },
+            ],
+            related: [
+                { id: 'jeanne_darc', rel: 'parallel' },
+                { id: 'charles7_rentree', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'jeanne_darc',
+            date: '8 septembre 1429',
+            sortKey: 1429,
+            period: 'crises',
+            category: 'politique',
+            title: 'Jeanne d’Arc assiège Paris',
+            body: 'Forte de la victoire d’Orléans et du sacre de Charles VII à Reims, Jeanne d’Arc lance l’assaut sur Paris. Elle attaque la Porte Saint-Honoré, est blessée d’un carreau d’arbalète à la cuisse, et doit se retirer après une journée de combats infructueux. Paris reste aux Anglais encore huit ans. La blessure de Jeanne à la Porte Saint-Honoré entrera dans la légende de la ville.',
+            places: [
+                { id: 'porte_saint_honore', name: 'Porte Saint-Honoré' },
+            ],
+            related: [
+                { id: 'occupation_anglaise', rel: 'parallel' },
+                { id: 'charles7_rentree', rel: 'cause' },
+            ],
+        },
+
+        // ── LA RENAISSANCE ────────────────────────────────────────
+        {
+            id: 'charles7_rentree',
+            date: '12 novembre 1437',
+            sortKey: 1437,
+            period: 'renaissance',
+            category: 'royal',
+            title: 'Charles VII rentre dans Paris',
+            body: 'Après dix-sept ans d’occupation, Charles VII entre enfin dans sa capitale par la Porte Saint-Denis, au milieu des acclamations. La ville commence sa lente renaissance : reconstruction, repeuplement, retour des marchands et des clercs. La Sorbonne, qui avait soutenu les Anglais, est épurée. Paris retrouve progressivement son rang de première ville du royaume et commence à hériter des formes nouvelles venues d’Italie.',
+            places: [
+                { id: 'porte_saint_denis', name: 'Porte Saint-Denis' },
+                { id: 'palais_cite', name: 'Palais de la Cité' },
+            ],
+            related: [
+                { id: 'jeanne_darc', rel: 'sequel' },
+                { id: 'occupation_anglaise', rel: 'sequel' },
+                { id: 'pont_nd_reconstruit', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'pont_nd_reconstruit',
+            date: '1499 – 1507',
+            sortKey: 1499,
+            period: 'renaissance',
+            category: 'urbain',
+            title: 'Le Pont Notre-Dame : première rue numérotée',
+            body: 'L’ancien pont de bois, effondrdé en 1499, est remplacé par un ouvrage en pierre de soixante-huit maisons identiques à deux étages, construites sur piliers au-dessus de l’eau. Le roi Louis XII impose qu’elles soient numérotées : c’est la première rue numérotée de Paris, et une curiosité admirée par tous les voyageurs. Boutiques et logements s’y superposent, formant une rue-pont animée reliant la Rive Droite à l’île.',
+            places: [
+                { id: 'pont_notre_dame', name: 'Pont Notre-Dame' },
+                { id: 'pont_au_change', name: 'Pont au Change' },
+                { id: 'ile_cite', name: 'Île de la Cité' },
+            ],
+            related: [
+                { id: 'charles7_rentree', rel: 'sequel' },
+                { id: 'francois1_entree', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'francois1_entree',
+            date: '15 février 1515',
+            sortKey: 1515,
+            period: 'renaissance',
+            category: 'royal',
+            title: 'L’entrée solennelle de François Ier',
+            body: 'À vingt ans, François Ier fait son entrée royale dans Paris par la Porte Saint-Denis, sous des arcs de triomphe et au son des trompettes. Fasciné par la Renaissance italienne (Marignan, Léonard de Vinci, Chambord), il décide en 1528 de s’installer au Louvre — premier roi depuis Charles V à résider durablement à Paris. Son règne marque le début de la Renaissance parisienne, à l’afflux des artistes et des humanistes.',
+            places: [
+                { id: 'porte_saint_denis', name: 'Porte Saint-Denis' },
+                { id: 'saint_germain_auxerrois', name: 'Saint-Germain-l’Auxerrois (paroisse royale)' },
+                { id: 'louvre', name: 'Le Louvre' },
+            ],
+            related: [
+                { id: 'pont_nd_reconstruit', rel: 'sequel' },
+                { id: 'louvre_lescot', rel: 'legacy' },
+                { id: 'college_france_fond', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'college_france_fond',
+            date: '1530',
+            sortKey: 1530,
+            period: 'renaissance',
+            category: 'culture',
+            title: 'Fondation du Collège de France',
+            body: 'Sur les conseils de l’humaniste Guillaume Budé, François Ier crée les « Lecteurs Royaux », savants payés par le roi pour enseigner le grec, l’hébreu, les mathématiques et la médecine — hors du monopole de la Sorbonne. Ces lecteurs représentent l’humanisme français à son apogée : libre examen des textes, philologie rigoureuse, sciences naissantes. Institution toujours active, le Collège de France n’a jamais délivré de diplômes.',
+            places: [
+                { id: 'college_france', name: 'Collège de France' },
+                { id: 'sorbonne', name: 'La Sorbonne (institution rivale)' },
+                { id: 'quartier_latin', name: 'Quartier Latin' },
+            ],
+            related: [
+                { id: 'universite', rel: 'legacy' },
+                { id: 'francois1_entree', rel: 'sequel' },
+                { id: 'saint_eustache_fond', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'saint_eustache_fond',
+            date: '1532',
+            sortKey: 1532,
+            period: 'renaissance',
+            category: 'urbain',
+            title: 'Début de la construction de Saint-Eustache',
+            body: 'La riche paroisse des Halles décide de se doter d’une vaste église à la mesure de sa prospérité. Saint-Eustache sera gothique dans sa structure (croisées d’ogives, chapelles rayonnantes) mais Renaissance dans son décor (pilastres, entablements, colonnes antiques) — synthèse typique de la France du XVIe siècle. Le chantier durera 105 ans ; en 1553, la nef est encore une forêt d’échafaudages.',
+            places: [
+                { id: 'saint_eustache', name: 'Église Saint-Eustache' },
+                { id: 'les_halles', name: 'Les Halles (paroisse)' },
+            ],
+            related: [
+                { id: 'college_france_fond', rel: 'parallel' },
+                { id: 'hotel_de_ville_fond', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'hotel_de_ville_fond',
+            date: '1533',
+            sortKey: 1533,
+            period: 'renaissance',
+            category: 'urbain',
+            title: 'François Ier lance la reconstruction de l’Hôtel de Ville',
+            body: 'La prévôté des marchands siège dans la « Maison aux Piliers » sur la Place de Grève, édifice gothique vétuste. François Ier décide une reconstruction monumentale en style Renaissance, confiée à l’architecte florentin Domenico da Cortona dit « Boccador ». En 1553, le chantier avance lentement faute de fonds ; l’édifice ne sera achevé qu’en 1628. Détruit pendant la Commune en 1871, il sera reconstruit à l’identique.',
+            places: [
+                { id: 'hotel_de_ville', name: 'Hôtel de Ville' },
+                { id: 'place_greve', name: 'Place de Grève' },
+                { id: 'port_greve', name: 'Port de la Grève' },
+            ],
+            related: [
+                { id: 'saint_eustache_fond', rel: 'parallel' },
+                { id: 'louvre_lescot', rel: 'parallel' },
+                { id: 'prevot_marchands', rel: 'sequel' },
+            ],
+        },
+        {
+            id: 'voeux_montmartre',
+            date: '15 août 1534',
+            sortKey: 1534,
+            period: 'renaissance',
+            category: 'religion',
+            title: 'Vœux de Montmartre : naissance de la Compagnie de Jésus',
+            body: 'Dans la crypte du Martyrium sur la butte Montmartre, Ignace de Loyola et six compagnons — dont François Xavier — prononcent leurs vœux de pauvreté et de chasteté, en présence du prêtre Pierre Favre. Cet acte fondateur, confirmé par le pape Paul III en 1540, donnera naissance à la Compagnie de Jésus. Les Jésuites deviendront la principale force missionnaire de la Contre-Réforme, évangélisant les Amériques, l’Asie et l’Afrique. Un événement de portée mondiale se noue ainsi dans une modeste crypte parisienne.',
+            places: [
+                { id: 'crypte_martyrium_saint_denis', name: 'Crypte du Martyrium (Montmartre)' },
+                { id: 'montmartre', name: 'La Butte Montmartre' },
+            ],
+            related: [
+                { id: 'college_france_fond', rel: 'parallel' },
+                { id: 'hotel_de_ville_fond', rel: 'parallel' },
+                { id: 'saint_eustache_fond', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'louvre_lescot',
+            date: '1546',
+            sortKey: 1546,
+            period: 'renaissance',
+            category: 'urbain',
+            title: 'Pierre Lescot reconstruit le Louvre',
+            body: 'Henri II commande à Pierre Lescot l’aile occidentale d’un nouveau palais carré en remplacement de la forteresse médiévale. Lescot invente un style Renaissance français original : colonnes superposées, lucarnes sculptées, bas-reliefs de Jean Goujon. Ce premier « Louvre de Lescot » est le noyau de ce qui deviendra le plus grand palais d’Europe. En 1553, les travaux sont en plein essor ; la cour et les appartements royaux s’y installent progressivement.',
+            places: [
+                { id: 'louvre', name: 'Le Louvre' },
+                { id: 'saint_germain_auxerrois', name: 'Saint-Germain-l’Auxerrois (paroisse)' },
+            ],
+            related: [
+                { id: 'francois1_entree', rel: 'sequel' },
+                { id: 'fontaine_innocents_fond', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'dolet_maubert',
+            date: '3 août 1546',
+            sortKey: 1546,
+            period: 'renaissance',
+            category: 'societe',
+            title: 'Étienne Dolet brûlé place Maubert',
+            body: 'Imprimeur et humaniste lyonnais établi à Paris, Étienne Dolet est condamné par la Sorbonne comme hérétique et athée pour avoir traduit un dialogue de Platon laissant entendre que l’âme mortelle s’éteint avec le corps. Le 3 août 1546, il est étranglé puis brûlé place Maubert avec ses livres. Son supplice illustre la violence de la répression intellectuelle à l’heure où Paris oscille entre l’humanisme florissant du Collège de France et l’orthodoxie sévère de la Sorbonne.',
+            places: [
+                { id: 'place_maubert', name: 'Place Maubert' },
+                { id: 'sorbonne', name: 'La Sorbonne (condamnation)' },
+                { id: 'college_france', name: 'Collège de France (contexte humaniste)' },
+            ],
+            related: [
+                { id: 'louvre_lescot', rel: 'parallel' },
+                { id: 'college_france_fond', rel: 'legacy' },
+                { id: 'fontaine_innocents_fond', rel: 'parallel' },
+            ],
+        },
+        {
+            id: 'fontaine_innocents_fond',
+            date: '1549',
+            sortKey: 1549,
+            period: 'renaissance',
+            category: 'culture',
+            title: 'Fontaine des Innocents : l’entrée d’Henri II',
+            body: 'Pour célébrer l’entrée solennelle d’Henri II dans Paris, Pierre Lescot et le sculpteur Jean Goujon créent une fontaine-loggia en marbre à l’angle du Cimetière des Innocents : premier monument Renaissance de l’espace public parisien. Ses nymphées en bas-relief incarnent le style Fontainebleau à son apogée. Déplacée au centre du square en 1788, elle est aujourd’hui l’une des plus anciennes fontaines de Paris encore en place.',
+            places: [
+                { id: 'fontaine_innocents', name: 'Fontaine des Innocents' },
+                { id: 'cimetiere_innocents', name: 'Cimetière des Innocents' },
+                { id: 'les_halles', name: 'Les Halles' },
+            ],
+            related: [
+                { id: 'louvre_lescot', rel: 'parallel' },
+                { id: 'paris_1553', rel: 'legacy' },
+            ],
+        },
+        {
+            id: 'paris_1553',
+            date: '1553',
+            sortKey: 1553,
+            period: 'renaissance',
+            category: 'societe',
+            title: 'Paris en 1553 : la ville de la carte',
+            body: 'Paris compte environ 280 000 habitants — la plus grande ville d’Europe occidentale. Les rues sont étroites, encombrdées de charrettes et d’animaux. L’eau est puisée à la Seine et vendue par porteurs. Les Halles, le Quartier Latin, le Marais et l’île de la Cité forment les quatre pôles d’une cité en pleine effervescence. Cette année-là, deux topographes parisiens, Olivier Truschet et Germain Hoyau, en réalisent un des premiers plans connus, gravé sur bois : la carte que vous explorez.',
+            places: [
+                { id: 'ile_cite', name: 'Île de la Cité' },
+                { id: 'les_halles', name: 'Les Halles' },
+                { id: 'quartier_latin', name: 'Quartier Latin' },
+                { id: 'marais', name: 'Le Marais' },
+                { id: 'montmartre', name: 'La Butte Montmartre' },
+            ],
+            related: [
+                { id: 'fontaine_innocents_fond', rel: 'sequel' },
+                { id: 'louvre_lescot', rel: 'sequel' },
+                { id: 'henri2_mort', rel: 'cause' },
+            ],
+        },
+        {
+            id: 'henri2_mort',
+            date: '10 juillet 1559',
+            sortKey: 1559,
+            period: 'renaissance',
+            category: 'royal',
+            title: 'La mort d’Henri II aux Tournelles',
+            body: 'Les 28 et 30 juin 1559, la rue Saint-Antoine est transformée en lice pour célébrer les noces d’Élisabeth de France avec Philippe II d’Espagne et de Marguerite avec le duc de Savoie. Henri II tient à jouter en personne. Au troisième passage contre Gabriel de Montgomery, la lance brise et un éclat franchit la visière du roi, lui traversant l’œil et pénétrant le crâne. Il agonise dix jours à l’Hôtel des Tournelles avant de mourir le 10 juillet. Catherine de Médicis, effondrée, jure de ne plus jamais revoir ces murs. En 1563, elle obtient des lettres patentes ordonnant la démolition du palais. Les matériaux serviront aux Tuileries. Le terrain vague restera à l’abandon jusqu’en 1612, date à laquelle Henri IV y fera élever la <em>Place Royale</em> — l’actuelle Place des Vosges.',
+            places: [
+                { id: 'hotel_tournelles', name: 'Hôtel des Tournelles' },
+            ],
+            related: [
+                { id: 'tournelles_royal', rel: 'sequel' },
+                { id: 'paris_1553', rel: 'sequel' },
+            ],
+        },
+    ];
+
+    // ── Lookups ───────────────────────────────────
+    const eventById = {};
+    HISTORY.forEach(e => { eventById[e.id] = e; });
+    let filteredEvents = HISTORY.slice();
+
+    // ── Helpers ───────────────────────────────────
+    function darken(hex, amt) {
+        hex = hex.replace('#', '');
+        const r = Math.max(0, parseInt(hex.slice(0,2),16) - amt);
+        const g = Math.max(0, parseInt(hex.slice(2,4),16) - amt);
+        const b = Math.max(0, parseInt(hex.slice(4,6),16) - amt);
+        return '#'+[r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+    }
+    function truncate(text, max) {
+        if (!text || text.length <= max) return { html: text, truncated: false };
+        const cut = text.substring(0, max).replace(/\s+\S*$/, '');
+        return {
+            html: `<span class="desc-short">${cut}<span style="color:var(--ink-lt)">&hellip;</span></span><span class="desc-full">${text}</span>`,
+            truncated: true
         };
-        const LINK_LABELS = {
-            cause: 'Leads to',
-            sequel: 'Follows from',
-            parallel: 'Simultaneous',
-            legacy: 'Legacy',
-            location: 'Same place'
-        };
-        const LINK_ARROWS = {
-            cause: '\u2192',
-            sequel: '\u2190',
-            parallel: '\u21c4',
-            legacy: '\u21dd',
-            location: '\u25cb'
-        };
+    }
 
-        function formatDate(evt) {
-            return ERA_LABELS[evt.era] + ' ' + evt.year;
-        }
-        function formatShortDate(evt) {
-            return evt.era + ' ' + evt.year;
-        }
-        function truncate(text, max) {
-            if (text.length <= max) return { html: text, truncated: false };
-            const cut = text.substring(0, max).replace(/\s+\S*$/, '');
-            return {
-                html: `<span class="desc-short">${cut}<span class="desc-ellipsis">\u2026</span></span><span class="desc-full">${text}</span>`,
-                truncated: true
-            };
-        }
+    // ── Render ────────────────────────────────────
+    function renderTimeline() {
+        const container = document.getElementById('timeline-content');
+        container.innerHTML = '';
+        let lastPeriod = null, lastSortKey = null;
 
-        // ── Sort events ─────────────────────────────
-        const sortedEvents = [...events].sort((a, b) => a.sortKey - b.sortKey);
-        let filteredEvents = sortedEvents.slice();
+        filteredEvents.forEach((evt, idx) => {
+            const cat = CATEGORIES[evt.category];
+            const period = PERIODS[evt.period];
 
-        // Build event lookup by id
-        const eventById = {};
-        events.forEach(e => { if (e.id) eventById[e.id] = e; });
+            if (evt.period !== lastPeriod) {
+                const hdr = document.createElement('div');
+                hdr.className = 'period-header';
+                hdr.innerHTML = `<h2>${period.label}</h2>
+                    <span class="period-sub">${period.sub}</span>
+                    <span class="period-range">${period.range}</span>
+                    <div class="period-rule"></div>`;
+                container.appendChild(hdr);
+                lastPeriod = evt.period;
+                lastSortKey = null;
+            }
 
-        // Build links lookup
-        const linksFrom = {};
-        const linksTo = {};
-        if (typeof EVENT_LINKS !== 'undefined') {
-            EVENT_LINKS.forEach(link => {
-                if (!linksFrom[link.from]) linksFrom[link.from] = [];
-                linksFrom[link.from].push(link);
-                if (!linksTo[link.to]) linksTo[link.to] = [];
-                linksTo[link.to].push(link);
-            });
-        }
-
-        // ── Render Timeline ─────────────────────────
-        function renderTimeline() {
-            const container = document.getElementById('timeline-content');
-            container.innerHTML = '';
-            let lastEra = null;
-            let lastYear = null;
-
-            filteredEvents.forEach((evt, idx) => {
-                // Era header
-                if (evt.era !== lastEra) {
-                    const header = document.createElement('div');
-                    header.className = 'era-header';
-                    header.innerHTML = `<h2>${ERA_LABELS[evt.era]}</h2><span class="era-range">${ERA_RANGES[evt.era]}</span>`;
-                    container.appendChild(header);
-                    lastEra = evt.era;
-                    lastYear = null;
+            if (lastSortKey !== null) {
+                const gap = evt.sortKey - lastSortKey;
+                if (gap > 60) {
+                    const g = document.createElement('div');
+                    g.className = 'time-gap';
+                    g.textContent = `· · · ${Math.round(gap)} ans · · ·`;
+                    container.appendChild(g);
                 }
+            }
+            lastSortKey = evt.sortKey;
 
-                // Time gap indicator
-                if (lastYear !== null && evt.era === lastEra) {
-                    const gap = Math.floor(evt.sortKey) - Math.floor(lastYear);
-                    if (gap > 100) {
-                        const gapEl = document.createElement('div');
-                        gapEl.className = 'time-gap';
-                        gapEl.textContent = `\u007e \u007e \u007e ${gap.toLocaleString()} years \u007e \u007e \u007e`;
-                        container.appendChild(gapEl);
-                    }
-                }
-                lastYear = evt.sortKey;
+            let placesHtml = '';
+            if (evt.places && evt.places.length) {
+                placesHtml = '<div class="event-places">' +
+                    evt.places.map(p => `<a class="place-link" href="index.html?place=${p.id}">${p.name}</a>`).join('') +
+                    '</div>';
+            }
 
-                // Event card
-                const el = document.createElement('div');
-                el.className = 'timeline-event';
-                el.dataset.id = evt.id || '';
-                el.dataset.sortkey = evt.sortKey;
-                el.dataset.category = evt.category;
-                el.dataset.index = idx;
+            let relatedHtml = '';
+            const rels = (evt.related || []).filter(r => eventById[r.id]);
+            if (rels.length) {
+                const items = rels.map(r => {
+                    const t = eventById[r.id];
+                    return `<div class="related-item">
+                        <span class="rel-type">${REL_LABELS[r.rel] || r.rel}</span>
+                        <span class="rel-target" data-id="${r.id}">${t.title}</span>
+                    </div>`;
+                }).join('');
+                relatedHtml = `<button class="related-toggle" data-id="${evt.id}">
+                    Événements liés (${rels.length}) ▾</button>
+                    <div class="related-panel" id="rel-${evt.id}">
+                        <div class="related-panel-title">Connexions historiques</div>
+                        ${items}
+                    </div>`;
+            }
 
-                const color = COLORS[evt.category];
-                const icon = CATEGORY_ICONS[evt.category];
-                const desc = truncate(evt.description, 220);
+            const bt = truncate(evt.body, 260);
 
-                // Count links
-                const outLinks = (linksFrom[evt.id] || []);
-                const inLinks = (linksTo[evt.id] || []);
-                const linkCount = outLinks.length + inLinks.length;
+            const el = document.createElement('div');
+            el.className = 'timeline-event';
+            el.dataset.id = evt.id;
+            el.dataset.sortkey = evt.sortKey;
+            el.dataset.category = evt.category;
+            el.dataset.index = idx;
 
-                el.innerHTML = `
-                    <div class="event-date">
-                        <span class="era-tag">${evt.era}</span>
-                        <span class="year-num">${evt.year}</span>
+            el.innerHTML = `
+                <div class="event-date">
+                    <span class="date-str">${evt.date}</span>
+                    <span class="period-tag">${period.label}</span>
+                </div>
+                <div class="event-dot" style="background:radial-gradient(circle at 35% 35%,${cat.color},${darken(cat.color,50)});">${cat.icon}</div>
+                <div class="event-card">
+                    <div class="event-card-header">
+                        <span class="category-badge" style="background:${cat.color};">${cat.label}</span>
+                        <span class="event-title">${evt.title}</span>
                     </div>
-                    <div class="event-dot" style="background: radial-gradient(circle at 35% 35%, ${color}, ${darken(color, 50)});">${icon}</div>
-                    <div class="event-card">
-                        <div class="event-card-header">
-                            <span class="category-badge" style="background: ${color};">${CATEGORY_LABELS[evt.category]}</span>
-                            <span class="event-name">${evt.name}</span>
-                        </div>
-                        <div class="event-desc${desc.truncated ? ' truncated' : ''}">${desc.html}</div>
-                        <div class="event-footer">
-                            <span class="event-characters">${evt.characters}</span>
-                            <div class="event-actions">
-                                <button class="view-map-btn" data-px="${evt.px}" data-py="${evt.py}" data-name="${evt.name}">View on Map</button>
-                                ${linkCount > 0 ? `<button class="show-links-btn" data-id="${evt.id}">Related (${linkCount})</button>` : ''}
-                            </div>
-                        </div>
-                        ${linkCount > 0 ? renderLinksPanel(evt) : ''}
-                    </div>
-                `;
-                container.appendChild(el);
-            });
-
-            // Attach event listeners
-            attachCardListeners();
-            observeVisibility();
-        }
-
-        function renderLinksPanel(evt) {
-            const outLinks = linksFrom[evt.id] || [];
-            const inLinks = linksTo[evt.id] || [];
-            let html = '<div class="links-panel"><div class="links-title">Related Events</div>';
-
-            outLinks.forEach(link => {
-                const target = eventById[link.to];
-                if (!target) return;
-                html += `<div class="link-item" data-type="${link.type}">
-                    <span class="link-arrow">${LINK_ARROWS[link.type]}</span>
-                    <span class="link-type">${LINK_LABELS[link.type]}</span>
-                    <span class="link-target" data-id="${link.to}">${target.name} <span class="link-era">${formatShortDate(target)}</span></span>
+                    <div class="event-body${bt.truncated ? ' truncated' : ''}">${bt.html}</div>
+                    ${placesHtml}
+                    ${relatedHtml}
                 </div>`;
-            });
-            inLinks.forEach(link => {
-                const source = eventById[link.from];
-                if (!source) return;
-                const reverseLabel = link.type === 'cause' ? 'Caused by'
-                    : link.type === 'sequel' ? 'Leads to'
-                    : LINK_LABELS[link.type];
-                html += `<div class="link-item" data-type="${link.type}">
-                    <span class="link-arrow">${LINK_ARROWS[link.type]}</span>
-                    <span class="link-type">${reverseLabel}</span>
-                    <span class="link-target" data-id="${link.from}">${source.name} <span class="link-era">${formatShortDate(source)}</span></span>
-                </div>`;
-            });
-
-            html += '</div>';
-            return html;
-        }
-
-        function attachCardListeners() {
-            // Read more / less
-            document.querySelectorAll('.event-desc.truncated').forEach(el => {
-                el.addEventListener('click', () => {
-                    const short = el.querySelector('.desc-short');
-                    const full = el.querySelector('.desc-full');
-                    if (full.style.display === 'inline') {
-                        full.style.display = 'none';
-                        short.style.display = 'inline';
-                    } else {
-                        full.style.display = 'inline';
-                        short.style.display = 'none';
-                    }
-                });
-            });
-
-            // View on Map
-            document.querySelectorAll('.view-map-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const px = btn.dataset.px;
-                    const py = btn.dataset.py;
-                    const name = btn.dataset.name;
-                    window.location.href = `index.html?fly=${px},${py}&event=${encodeURIComponent(name)}`;
-                });
-            });
-
-            // Show links
-            document.querySelectorAll('.show-links-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const card = btn.closest('.event-card');
-                    const panel = card.querySelector('.links-panel');
-                    if (panel) panel.classList.toggle('open');
-                });
-            });
-
-            // Link targets (scroll to event)
-            document.querySelectorAll('.link-target').forEach(el => {
-                el.addEventListener('click', () => {
-                    const targetId = el.dataset.id;
-                    scrollToEvent(targetId);
-                });
-            });
-        }
-
-        function scrollToEvent(id) {
-            const el = document.querySelector(`.timeline-event[data-id="${id}"]`);
-            if (!el) return;
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            el.classList.add('visible');
-            highlightEvent(el);
-        }
-
-        function highlightEvent(el) {
-            document.querySelectorAll('.timeline-event.highlighted').forEach(e => e.classList.remove('highlighted'));
-            el.classList.add('highlighted');
-            setTimeout(() => el.classList.remove('highlighted'), 3000);
-        }
-
-        // ── IntersectionObserver ─────────────────────
-        let observer;
-        function observeVisibility() {
-            if (observer) observer.disconnect();
-            observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
-            document.querySelectorAll('.timeline-event').forEach(el => observer.observe(el));
-        }
-
-        // ── Play Mode ───────────────────────────────
-        const STOPPED = 0, PLAYING = 1, PAUSED = 2;
-        let playState = STOPPED;
-        let currentIndex = 0;
-        let playTimer = null;
-        let playSpeed = 2000;
-
-        const playBtn = document.getElementById('play-btn');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const speedSelect = document.getElementById('speed-select');
-        const scrubber = document.getElementById('scrubber');
-        const scrubberLabel = document.getElementById('scrubber-label');
-
-        function play() {
-            playState = PLAYING;
-            updatePlayBtn();
-            advanceTo(currentIndex);
-        }
-        function pause() {
-            playState = PAUSED;
-            clearTimeout(playTimer);
-            updatePlayBtn();
-        }
-        function stop() {
-            playState = STOPPED;
-            clearTimeout(playTimer);
-            currentIndex = 0;
-            updatePlayBtn();
-            document.querySelectorAll('.timeline-event.highlighted').forEach(e => e.classList.remove('highlighted'));
-        }
-
-        function advanceTo(idx) {
-            if (idx < 0) idx = 0;
-            if (idx >= filteredEvents.length) { stop(); return; }
-            currentIndex = idx;
-
-            const evt = filteredEvents[idx];
-            const el = document.querySelector(`.timeline-event[data-id="${evt.id}"]`);
-            if (!el) {
-                if (playState === PLAYING) playTimer = setTimeout(() => advanceTo(idx + 1), 100);
-                return;
-            }
-
-            el.classList.add('visible');
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => highlightEvent(el), 300);
-
-            // Update scrubber
-            scrubber.value = Math.round((idx / Math.max(1, filteredEvents.length - 1)) * 100);
-            scrubberLabel.textContent = formatShortDate(evt);
-
-            if (playState === PLAYING) {
-                const next = filteredEvents[idx + 1];
-                const eraChange = next && next.era !== evt.era;
-                playTimer = setTimeout(() => advanceTo(idx + 1), eraChange ? playSpeed * 2 : playSpeed);
-            }
-        }
-
-        function updatePlayBtn() {
-            playBtn.innerHTML = playState === PLAYING ? '&#9646;&#9646;' : '&#9654;';
-            playBtn.title = playState === PLAYING ? 'Pause (Space)' : 'Play (Space)';
-        }
-
-        playBtn.addEventListener('click', () => {
-            if (playState === PLAYING) pause();
-            else play();
-        });
-        prevBtn.addEventListener('click', () => {
-            if (playState === PLAYING) pause();
-            advanceTo(currentIndex - 1);
-        });
-        nextBtn.addEventListener('click', () => {
-            if (playState === PLAYING) pause();
-            advanceTo(currentIndex + 1);
-        });
-        speedSelect.addEventListener('change', () => {
-            playSpeed = parseInt(speedSelect.value);
-        });
-        scrubber.addEventListener('input', () => {
-            const pct = parseInt(scrubber.value);
-            const idx = Math.round((pct / 100) * (filteredEvents.length - 1));
-            if (playState === PLAYING) pause();
-            advanceTo(idx);
+            container.appendChild(el);
         });
 
-        // ── Category Filters ────────────────────────
-        function buildFilters() {
-            const panel = document.getElementById('filter-panel');
-            const order = ['silmarillion', 'hobbit', 'fellowship', 'towers', 'king', 'appendix'];
-            order.forEach(cat => {
-                const label = document.createElement('label');
-                label.className = 'filter-label';
-                label.innerHTML = `<input type="checkbox" class="filter-checkbox" data-category="${cat}" checked>
-                    <span class="filter-dot" style="background: ${COLORS[cat]};"></span>
-                    <span class="filter-name">${CATEGORY_LABELS[cat]}</span>`;
-                label.querySelector('input').addEventListener('change', applyFilters);
-                panel.appendChild(label);
+        attachListeners();
+        observeVisibility();
+    }
+
+    function attachListeners() {
+        document.querySelectorAll('.event-body.truncated').forEach(el => {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', () => {
+                const sh = el.querySelector('.desc-short');
+                const fu = el.querySelector('.desc-full');
+                if (fu.style.display === 'inline') { fu.style.display = 'none'; sh.style.display = 'inline'; }
+                else { fu.style.display = 'inline'; sh.style.display = 'none'; }
             });
-        }
+        });
 
-        function applyFilters() {
-            const checked = new Set();
-            document.querySelectorAll('.filter-checkbox:checked').forEach(cb => checked.add(cb.dataset.category));
-            filteredEvents = sortedEvents.filter(e => checked.has(e.category));
-
-            document.querySelectorAll('.timeline-event').forEach(el => {
-                if (checked.has(el.dataset.category)) {
-                    el.style.display = '';
-                } else {
-                    el.style.display = 'none';
+        document.querySelectorAll('.related-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const panel = document.getElementById('rel-' + btn.dataset.id);
+                if (panel) {
+                    panel.classList.toggle('open');
+                    btn.textContent = btn.textContent.replace(/[▾▴]/, panel.classList.contains('open') ? '▴' : '▾');
                 }
             });
+        });
 
-            // Update era headers and time gaps visibility
-            document.querySelectorAll('.era-header, .time-gap').forEach(el => {
-                el.style.display = '';
+        document.querySelectorAll('.rel-target').forEach(el => {
+            el.addEventListener('click', () => scrollToEvent(el.dataset.id));
+        });
+    }
+
+    function scrollToEvent(id) {
+        const el = document.querySelector(`.timeline-event[data-id="${id}"]`);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('visible');
+        highlightEvent(el);
+    }
+
+    function highlightEvent(el) {
+        document.querySelectorAll('.timeline-event.highlighted').forEach(e => e.classList.remove('highlighted'));
+        el.classList.add('highlighted');
+        setTimeout(() => el.classList.remove('highlighted'), 3000);
+    }
+
+    let observer;
+    function observeVisibility() {
+        if (observer) observer.disconnect();
+        observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
             });
+        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+        document.querySelectorAll('.timeline-event').forEach(el => observer.observe(el));
+    }
 
-            if (playState !== STOPPED) { stop(); }
+    // ── Playback ──────────────────────────────────
+    const STOPPED = 0, PLAYING = 1, PAUSED = 2;
+    let playState = STOPPED, currentIndex = 0, playTimer = null, playSpeed = 2000;
+
+    const playBtn = document.getElementById('play-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const speedSelect = document.getElementById('speed-select');
+    const scrubber = document.getElementById('scrubber');
+    const scrubberLabel = document.getElementById('scrubber-label');
+
+    function updatePlayBtn() {
+        playBtn.innerHTML = playState === PLAYING ? '&#9646;&#9646;' : '&#9654;';
+        playBtn.title = playState === PLAYING ? 'Pause (Espace)' : 'Lecture (Espace)';
+    }
+    function stop() {
+        playState = STOPPED; clearTimeout(playTimer); currentIndex = 0; updatePlayBtn();
+        document.querySelectorAll('.timeline-event.highlighted').forEach(e => e.classList.remove('highlighted'));
+    }
+    function pause() { playState = PAUSED; clearTimeout(playTimer); updatePlayBtn(); }
+    function play() { playState = PLAYING; updatePlayBtn(); advanceTo(currentIndex); }
+
+    function advanceTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= filteredEvents.length) { stop(); return; }
+        currentIndex = idx;
+        const evt = filteredEvents[idx];
+        const el = document.querySelector(`.timeline-event[data-id="${evt.id}"]`);
+        if (!el) { if (playState === PLAYING) playTimer = setTimeout(() => advanceTo(idx+1), 100); return; }
+        el.classList.add('visible');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => highlightEvent(el), 300);
+        scrubber.value = Math.round((idx / Math.max(1, filteredEvents.length - 1)) * 100);
+        scrubberLabel.textContent = evt.date;
+        if (playState === PLAYING) {
+            const next = filteredEvents[idx + 1];
+            const periodChange = next && next.period !== evt.period;
+            playTimer = setTimeout(() => advanceTo(idx + 1), periodChange ? playSpeed * 2 : playSpeed);
         }
+    }
 
-        // Filter toggle for mobile
-        document.getElementById('filter-toggle').addEventListener('click', () => {
-            document.getElementById('filter-panel').classList.toggle('open');
+    playBtn.addEventListener('click', () => { playState === PLAYING ? pause() : play(); });
+    prevBtn.addEventListener('click', () => { if (playState === PLAYING) pause(); advanceTo(currentIndex - 1); });
+    nextBtn.addEventListener('click', () => { if (playState === PLAYING) pause(); advanceTo(currentIndex + 1); });
+    speedSelect.addEventListener('change', () => { playSpeed = parseInt(speedSelect.value); });
+    scrubber.addEventListener('input', () => {
+        const pct = parseInt(scrubber.value);
+        const idx = Math.round((pct / 100) * (filteredEvents.length - 1));
+        if (playState === PLAYING) pause();
+        advanceTo(idx);
+    });
+
+    // ── Filters ───────────────────────────────────
+    function buildFilters() {
+        const panel = document.getElementById('filter-panel');
+        Object.entries(CATEGORIES).forEach(([key, cat]) => {
+            const lbl = document.createElement('label');
+            lbl.className = 'filter-label';
+            lbl.innerHTML = `<input type="checkbox" class="filter-checkbox" data-category="${key}" checked>
+                <span class="filter-dot" style="background:${cat.color};"></span>
+                <span class="filter-name">${cat.label}</span>`;
+            lbl.querySelector('input').addEventListener('change', applyFilters);
+            panel.appendChild(lbl);
         });
+    }
 
-        // ── Keyboard Controls ───────────────────────
-        document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-            switch (e.key) {
-                case ' ':
-                    e.preventDefault();
-                    playState === PLAYING ? pause() : play();
-                    break;
-                case 'ArrowRight':
-                case 'ArrowDown':
-                    e.preventDefault();
-                    if (playState === PLAYING) pause();
-                    advanceTo(currentIndex + 1);
-                    break;
-                case 'ArrowLeft':
-                case 'ArrowUp':
-                    e.preventDefault();
-                    if (playState === PLAYING) pause();
-                    advanceTo(Math.max(0, currentIndex - 1));
-                    break;
-                case 'Escape':
-                    stop();
-                    break;
-            }
+    function applyFilters() {
+        const checked = new Set();
+        document.querySelectorAll('.filter-checkbox:checked').forEach(cb => checked.add(cb.dataset.category));
+        filteredEvents = HISTORY.filter(e => checked.has(e.category));
+        document.querySelectorAll('.timeline-event').forEach(el => {
+            el.style.display = checked.has(el.dataset.category) ? '' : 'none';
         });
+        if (playState !== STOPPED) stop();
+    }
 
-        // ── Darken helper ───────────────────────────
-        function darken(hex, amount) {
-            hex = hex.replace('#', '');
-            const r = Math.max(0, parseInt(hex.substring(0, 2), 16) - amount);
-            const g = Math.max(0, parseInt(hex.substring(2, 4), 16) - amount);
-            const b = Math.max(0, parseInt(hex.substring(4, 6), 16) - amount);
-            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    document.getElementById('filter-toggle').addEventListener('click', () => {
+        document.getElementById('filter-panel').classList.toggle('open');
+    });
+
+    // ── Keyboard ──────────────────────────────────
+    document.addEventListener('keydown', e => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+        switch (e.key) {
+            case ' ': e.preventDefault(); playState === PLAYING ? pause() : play(); break;
+            case 'ArrowRight': case 'ArrowDown':
+                e.preventDefault(); if (playState === PLAYING) pause(); advanceTo(currentIndex + 1); break;
+            case 'ArrowLeft': case 'ArrowUp':
+                e.preventDefault(); if (playState === PLAYING) pause(); advanceTo(Math.max(0, currentIndex - 1)); break;
+            case 'Escape': stop(); break;
         }
+    });
 
-        // ── Init ────────────────────────────────────
-        buildFilters();
-        renderTimeline();
+    // ── Init ──────────────────────────────────────
+    buildFilters();
+    renderTimeline();
+    if (filteredEvents.length > 0) scrubberLabel.textContent = filteredEvents[0].date;
+    setTimeout(() => document.getElementById('keyboard-hint').classList.add('hidden'), 6000);
 
-        // Auto-hide keyboard hint
-        setTimeout(() => {
-            document.getElementById('keyboard-hint').classList.add('hidden');
-        }, 6000);
-
-        // Init scrubber label
-        if (filteredEvents.length > 0) {
-            scrubberLabel.textContent = formatShortDate(filteredEvents[0]);
-        }
     })();
     </script>
 </body>

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate 256x256 JPEG tiles from the Middle-earth source PNG.
+"""Generate 256x256 JPEG tiles from the source PNG.
 
 Output structure: tiles/{z}/{x}/{y}.jpg
   Dir zoom 0 (map zoom -2): 1/4 scale
@@ -11,7 +11,7 @@ import math
 import os
 from PIL import Image
 
-SRC = "middle_earth.png"
+SRC = "paris.jpeg"
 OUT = "tiles"
 TILE = 256
 QUALITY = 85

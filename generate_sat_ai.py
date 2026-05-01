@@ -155,7 +155,7 @@ def slice_to_tiles(img, zoom_level, dst_dir):
 
 def main():
     print("=" * 60)
-    print("Middle-earth Satellite Tile Generator (AI img2img)")
+    print("Satellite Tile Generator (AI img2img)")
     print("=" * 60)
 
     # ── Step 1: Assemble source image from highest native zoom ──

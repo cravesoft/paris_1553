@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate satellite-style tiles from the existing Middle-earth map tiles.
+"""Generate satellite-style tiles from the existing map tiles.
 
 Transforms the fantasy parchment map into realistic satellite imagery by:
 - Classifying terrain by color (forest, water, plains, mountains, snow)

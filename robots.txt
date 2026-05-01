@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://frasermarlow.github.io/middle-earth-map/sitemap.xml
+Sitemap: https://cravesoft.github.io/paris_1553/sitemap.xml
